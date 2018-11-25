@@ -8,15 +8,23 @@ Climate control and irrigation control is achieved by monitoring environmental s
 What it does
 
 Monitors
+
 soil moisture
+
 temperature
+
 humidity
+
 light
 
 Controls
+
 linear actuator window opener
+
 solenoid valve irrigation control
+
 fan
+
 heating pad
 
 Components
