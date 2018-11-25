@@ -114,5 +114,4 @@ crontab -e
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
 
 Wiring diagram 
-
 ![Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
