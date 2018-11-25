@@ -102,9 +102,13 @@ The powerout.py script writes file stored values, relays, and outputs to their d
 # Example crontab configuration
 
 sudo crontab -e
+
 \# reset default values, relays, and output states after a power outage
+
 @reboot python /home/pi/Greenhouse/powerout.py
 
 crontab -e
+
 \# execute the primary greenhouse automation script every two minutes
+
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
