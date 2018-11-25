@@ -112,3 +112,7 @@ crontab -e
 \# execute the primary greenhouse automation script every two minutes
 
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
+
+Wiring diagram 
+
+![My image](thegroundhogwhisperer.github.com/Ay-yahs-Greenhouse/blob/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
