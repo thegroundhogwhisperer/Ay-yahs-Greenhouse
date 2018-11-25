@@ -115,4 +115,4 @@ crontab -e
 
 Wiring diagram 
 
-![My image](thegroundhogwhisperer.github.com/Ay-yahs-Greenhouse/blob/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
+![My image](github.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/blob/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
