@@ -112,9 +112,6 @@ sudo crontab -e
 \# capture an image every five minutes
 */5 * * * * python /home/pi/Greenhouse/camera.py
 
-\# execute the primary greenhouse automation script
-#*/2 * * * * python /home/pi/Greenhouse/greenhouse.py
-
 crontab -e
 \# execute the primary greenhouse automation script every two minutes
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
