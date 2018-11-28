@@ -106,16 +106,22 @@ The camera.py script writes one high and one low resolution PNG image to /var/ww
 # Example crontab configuration
 
 sudo crontab -e
+
 \# reset default values, relays, and output states after a power outage
+
 @reboot python /home/pi/Greenhouse/powerout.py
 
 \# capture an image every five minutes
 
 */5 * * * * python /home/pi/Greenhouse/camera.py
 
+
 crontab -e
+
 \# execute the primary greenhouse automation script every two minutes
+
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
+
 
 Wiring diagram 
 ![Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
