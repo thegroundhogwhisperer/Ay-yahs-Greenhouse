@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-#encoding: utf-8
+# encoding: utf-8
 
+# greenhouse.py
 # Copyright (C) 2018 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,8 +22,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# This is a for-fun project created for the purpose of automating climate
+# control and irrigation in a small greenhouse. Climate control and
+# irrigation control is achieved by monitoring environmental sensor
+# measurements. The environmental sensors measurements are then used to
+# control a linear actuator, solenoid valve, small fan, and small heating
+# pad. The information produced is displayed on a 16x2 LCD screen,
+# broadcast via a wall message to the console, written to an HTML file,
+# and written to a CSV file.
+
 import subprocess
+import statistics
 import serial
+import math
 import Adafruit_DHT
 import time
 import automationhat
@@ -39,30 +51,39 @@ solenoidStatusFileName = '/home/pi/Greenhouse/solenoid.txt'
 # outputs status filename
 outputsStatusFileName = '/home/pi/Greenhouse/outputs.txt'
 
+# static webpage file name
+staticWebPageFileName = "/var/www/html/index.html"
+
+# CSV file name containing log data
+logDataCSVFileName = "/var/www/html/index.csv"
+
 # this actuators stroke is 406.4 mm at 10 mm per second
 # wait 40.6 seconds to open the window
 linearActuatorRunTime = 40.6
 
 # set the minimum value at 0.05VDC
-minimumSoilMoistureSensorValue = 0.05
+minimumSoilMoistureSensorValue = 1
 
-# set the minimum luminosity sensors value at 0.05VDC
-minimumLuminositySensorValue = 0.05
+# set the minimum luminosity sensors value at 0.01VDC
+minimumLuminositySensorValue = 0.01
 
 # define the 16x2 RGB LCD device name connect via USB serial backpack kit
 serialLCDDeviceName = '/dev/ttyACM0'
 
-# define the length of time in seconds to display each message on the LCD
-# screen
+# define the length of time in seconds to display each message on the LCD screen
 displayLCDMessageLength = .9
 
+wallMessagePrefixString = "Ay-yahs.Greenhouse.Garden.Area.One"
+
+webpageHeaderValue = "Ay-yah's Greenhouse Automation System"
+
 # minimum light and temp and humidity values relay #2 close the window
-minimumLuminositySensorValueActuatorRetract = 0.25
+minimumLuminositySensorValueActuatorRetract = 1.5
 minimumTemperatureActuatorRetract = 80
 minimumHumidityActuatorRetract = 90
 
 # minimum light and temp and humidity values relay #1 open the window
-minimumLuminositySensorValueActuatorExtend = 0.26
+minimumLuminositySensorValueActuatorExtend = 1.6
 minimumTemperatureActuatorExtend = 50
 minimumHumidityActuatorExtend = 20
 
@@ -72,27 +93,27 @@ minimumHumidityOutputOneOn = 70
 
 # minimum temp or humidity values output #1 turn off the fan
 minimumTemperatureOutputOneOff = 79
-minimumHumidityOutputOneOff = 50
+minimumHumidityOutputOneOff = 68
 
 # minimum temp value output #2 turn on the USB heating pad
-minimumTemperatureOutputTwoOn = 49
+minimumTemperatureOutputTwoOn = 35
 
 # minimum temp value output #2 turn off the USB heating pad
-minimumTemperatureOutputTwoOff = 50
+minimumTemperatureOutputTwoOff = 40
 
 # minimum soil moisture value relay #3 open solenoid valve
-minimumSoilMoistureSensorValueSolenoidOpen = 2.0
+minimumSoilMoistureSensorValueSolenoidOpen = 1.9
 
 # minimum soil moisture value relay #3 close solenoid valve
-minimumSoilMoistureSensorValueSolenoidClosed = 1.1
+minimumSoilMoistureSensorValueSolenoidClosed = 1.6
 
 ##################################################################
 #################### End Customizable Values #####################
 ##################################################################
 
-
-
 # temperature and humidity value read input subroutine
+
+
 def readTemperatureHumidityValues():
 
     # define the model tempature sensor
@@ -127,8 +148,7 @@ def readTemperatureHumidityValues():
             impossibleHumidity = 100
             if (currentHumidity > impossibleHumidity):
                 print(
-                    'DHT sensor error humidity value greater than 100 = %.2f Attempting reread' %
-                    currentHumidity)
+                    'DHT sensor error humidity value greater than 100 = %.2f Attempting reread' % currentHumidity)
 
             if (currentHumidity < impossibleHumidity):
                 return(currentHumidity, currentTemperature)
@@ -152,7 +172,6 @@ def controlOutputs(outputNumber, outputStatus):
         '\n')
 
     if (currentOutputStatusList[outputNumber] == outputStatus):
-        print('Output %d already in the desired state' % outputNumber)
         return(currentOutputStatus)
 
     else:
@@ -210,9 +229,6 @@ def linearActuatorExtensionRetraction(actuatorExtensionStatus):
     actuatorStatusFileHandle.close()
 
     if (currentActuatorExtensionStatus == actuatorExtensionStatus):
-        print(
-            'Linear actuator already in state: %s' %
-            currentActuatorExtensionStatus)
         return(currentActuatorExtensionStatus)
 
     else:
@@ -256,9 +272,6 @@ def solenoidValveOperation(solenoidValveStatus):
     solenoidStatusFileHandle.close()
 
     if (currentSolenoidValveStatus == solenoidValveStatus):
-        print(
-            'Solenoid valve already in state: %s' %
-            currentSolenoidValveStatus)
         return(currentSolenoidValveStatus)
 
     else:
@@ -292,20 +305,55 @@ def readSoilMoistureSensorValue():
 
     # the ADC may produce an erroneous moisture reading less than 0.05VDC
     # a for loop retrys the read process until a value > 0.05VDC is returned
-    for i in range(0, 10):
+    for i in range(0, 25):
         try:
 
-            # read the moisture value from analog to digital converter #1
-            currentSoilMoistureSensorValue = automationhat.analog[0].read()
-            time.sleep(0.5)
-            if (currentSoilMoistureSensorValue <
-                    minimumSoilMoistureSensorValue):
-                print(
-                    'ADC error read soil moisture value less than 0.05VDC = %.2f Attempting reread' %
-                    currentSoilMoistureSensorValue)
+            # initilized the counter variable
+            readCounter = 0
+            temporaryValue = float()
+            temporaryValuesList = list()
+            currentSoilMoistureSensorValue = float()
+            standardDeviationOfSensorValues = 0
 
-            if (currentSoilMoistureSensorValue >
-                    minimumSoilMoistureSensorValue):
+            # loop through multiple data reads
+            while readCounter < 2:
+                # read the moisture value from analog to
+                # digital converter #1
+                temporaryValue = automationhat.analog[0].read()
+                # keep one of the values in case the read is
+                # consistent
+                goodTemporaryValue = temporaryValue
+                time.sleep(.9)
+
+                # populate a list of values
+                temporaryValuesList.append(temporaryValue)
+                readCounter = readCounter + 1
+
+            # if the standard deviation of the series of
+            # readings is zero then the sensor produced
+            # multiple consistent values and we should
+            # consider the data reliable and take actions
+
+            # return the standard deviation of the list of values
+            standardDeviationOfSensorValues = math.sqrt(
+                statistics.pvariance(temporaryValuesList))
+            # if there is no difference in the values
+            # use the goodTemporaryValue they are all
+            # the same
+            if (standardDeviationOfSensorValues == 0):
+                currentSoilMoistureSensorValue = goodTemporaryValue
+
+            elif (standardDeviationOfSensorValues != 0):
+                # if there is a difference set the value
+                # to zero and try again for a consistent
+                # data read
+                currentSoilMoistureSensorValue = 0
+
+            if (currentSoilMoistureSensorValue <= .09):
+                print('ADC error read soil moisture value less than 0.05VDC = %.2f Attempting reread' %
+                      currentSoilMoistureSensorValue)
+
+            if (currentSoilMoistureSensorValue > minimumSoilMoistureSensorValue):
                 return(currentSoilMoistureSensorValue)
                 break
 
@@ -317,21 +365,53 @@ def readSoilMoistureSensorValue():
 # analog to digital converter #2 read light dependent resistor value subroutine
 def readLuminositySensorValue():
 
-    # the ADC may produce an erroneous luminisoty reading less than 0.05VDC
-    # a for loop retrys the read process until a value > 0.05VDC is returned
-    for i in range(0, 10):
+    # the ADC may produce an erroneous luminisoty reading less than 0.00VDC
+    # a for loop retrys the read process until a value > 0.00VDC is returned
+    for i in range(0, 25):
         try:
 
-            # read the light value from analog to digital converter #2
-            currentLuminositySensorValue = automationhat.analog[1].read()
-            currentLuminositySensorValue = automationhat.analog[1].read()
-            currentLuminositySensorValue = automationhat.analog[1].read()
-            time.sleep(0.5)
+            # initilized the counter variable
+            readCounter = 0
+            temporaryValue = float()
+            temporaryValuesList = list()
+            currentLuminositySensorValue = float()
+            standardDeviationOfSensorValues = 0
 
-            if (currentLuminositySensorValue < minimumLuminositySensorValue):
-                print(
-                    'ADC error read LDR value less than 0.05VDC = %0.2f Attempting reread' %
-                    currentLuminositySensorValue)
+            # loop through multiple data reads
+            while readCounter < 2:
+                # read the light value from analog to digital converter #2
+                temporaryValue = automationhat.analog[1].read()
+                # keep one of the values in case the read is
+                # consistent
+                goodTemporaryValue = temporaryValue
+                time.sleep(.9)
+
+                # populate a list of values
+                temporaryValuesList.append(temporaryValue)
+                readCounter = readCounter + 1
+
+            # If the standard deviation of the series of
+            # readings is zero then the sensor produced
+            # multiple consistent values and we should
+            # consider the data reliable and take actions
+            # return the standard deviation of the list of values
+            standardDeviationOfSensorValues = math.sqrt(
+                statistics.pvariance(temporaryValuesList))
+
+            # if there is no difference in the values
+            # use the goodTemporaryValue they are all
+            # the same
+            if (standardDeviationOfSensorValues == 0):
+                currentLuminositySensorValue = goodTemporaryValue
+            elif (standardDeviationOfSensorValues != 0):
+                # if there is a difference set the value
+                # to zero and try again for a consistent
+                # data read
+                currentLuminositySensorValue = 0
+
+            if (currentLuminositySensorValue < 0.05):
+                print('ADC error read LDR value less than 0.01VDC = %.3f Attempting reread' %
+                      currentLuminositySensorValue)
 
             if (currentLuminositySensorValue > minimumLuminositySensorValue):
                 return(currentLuminositySensorValue)
@@ -369,45 +449,42 @@ def writeLCDMessages(writeLCDMessageContent):
 def writeWallMessages(writeWallMessageContent):
 
     wallMessageText = '%s' % writeWallMessageContent
-    print(wallMessageText)
-    wallMessageCommandLine = ['wall', '-n', wallMessageText]
+    wallMessageText = wallMessageText + ' @' + wallMessagePrefixString
+    # the wall applications -n no banner
+    # option requires root thus sudo
+    wallMessageCommandLine = ['sudo', 'wall', '-n', wallMessageText]
     p = subprocess.Popen(wallMessageCommandLine)
 
 
-
+##################################################################
+#################### Begin Evaluation Process ####################
+##################################################################
 # begin the process of evaluating environmental conditions and respond accordingly
 # call the read luminosity sensor value subroutine
 currentLuminositySensorValue = readLuminositySensorValue()
-print("The light dependent resistor value is:")
-print(currentLuminositySensorValue)
 # display the luminosity value on the LCD
-# convert to a floating point
-currentLuminositySensorValueFloat = float(currentLuminositySensorValue)
-writeLCDMessageContent = 'Luminosity: %.2f' % currentLuminositySensorValueFloat
+currentLuminositySensorValue
+writeLCDMessageContent = 'Luminosity: %s' % currentLuminositySensorValue
 writeLCDMessages(writeLCDMessageContent)
 # display the luminosity value via a console broadcast message
-writeWallMessageContent = 'Luminosity: %.2f' % currentLuminositySensorValueFloat
+writeWallMessageContent = 'Luminosity: %s' % currentLuminositySensorValue
 writeWallMessages(writeWallMessageContent)
 
 
 # call our read temperature and humidity value subroutine
 currentHumidity, currentTemperature = readTemperatureHumidityValues()
-print("Our temperature value is:")
-print(currentTemperature)
 # display the temperature value on the LCD
-writeLCDMessageContent = 'Temp: %.2f' % currentTemperature
+writeLCDMessageContent = 'Temp: %s' % currentTemperature
 writeLCDMessages(writeLCDMessageContent)
 # display the temperature value via a console broadcast message
-writeWallMessageContent = 'Temp: %.2f' % currentTemperature
+writeWallMessageContent = 'Temp: %s' % currentTemperature
 writeWallMessages(writeWallMessageContent)
 
-print("Our humidity value is:")
-print(currentHumidity)
 # display the humidity value on the LCD
-writeLCDMessageContent = 'Humidity: %.2f' % currentHumidity
+writeLCDMessageContent = 'Humidity: %s' % currentHumidity
 writeLCDMessages(writeLCDMessageContent)
 # display the humidity value via a console broadcast message
-writeWallMessageContent = 'Humidity: %.2f' % currentHumidity
+writeWallMessageContent = 'Humidity: %s' % currentHumidity
 writeWallMessages(writeWallMessageContent)
 
 
@@ -415,9 +492,9 @@ writeWallMessages(writeWallMessageContent)
 if (currentLuminositySensorValue <= minimumLuminositySensorValueActuatorRetract and
     # if ( currentLuminositySensorValue <= 1 and
 
-            currentTemperature <= minimumTemperatureActuatorRetract and
-            currentHumidity <= minimumHumidityActuatorRetract
-        ):
+    currentTemperature <= minimumTemperatureActuatorRetract and
+    currentHumidity <= minimumHumidityActuatorRetract
+    ):
     # retract the linear actuator and close the window
     actuatorExtensionStatus = 'Retracted'
     currentActuatorExtensionStatus = linearActuatorExtensionRetraction(
@@ -434,8 +511,8 @@ elif (currentLuminositySensorValue >= minimumLuminositySensorValueActuatorExtend
 
    # evaulate if we need to enable output #1 turn on the fan
 if (currentTemperature >= minimumTemperatureOutputOneOn or
-            currentHumidity >= minimumHumidityOutputOneOn
-        ):
+    currentHumidity >= minimumHumidityOutputOneOn
+    ):
     outputNumber = 0
     outputStatus = 'On'
     currentOutputStatus = controlOutputs(outputNumber, outputStatus)
@@ -449,7 +526,7 @@ elif (currentTemperature <= minimumTemperatureOutputOneOff or
 
    # evaulate if we need to enable output #2 turn on the USB heating pad
 if (currentTemperature <= minimumTemperatureOutputTwoOn):
-    outputNumber = 0
+    outputNumber = 1
     outputStatus = 'On'
     currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
@@ -461,13 +538,10 @@ elif (currentTemperature >= minimumTemperatureOutputTwoOff):
 # call the read soil moisture sensor value subroutine
 currentSoilMoistureSensorValue = readSoilMoistureSensorValue()
 # display soil moisture sensor on the LCD
-writeLCDMessageContent = 'Soil moisture: %.2f' % currentSoilMoistureSensorValue
+writeLCDMessageContent = 'Soil moisture: %s' % currentSoilMoistureSensorValue
 writeLCDMessages(writeLCDMessageContent)
-print("The soil moisture value is:")
-currentSoilMoistureSensorValue = int(float(currentSoilMoistureSensorValue))
-print(currentSoilMoistureSensorValue)
 # display the soil moisture value via a console broadcast message
-writeWallMessageContent = 'Soil moisture: %.2f' % currentSoilMoistureSensorValue
+writeWallMessageContent = 'Soil moisture: %s' % currentSoilMoistureSensorValue
 writeWallMessages(writeWallMessageContent)
 
 # evaluate if output 1 should be on or off
@@ -480,6 +554,9 @@ elif (currentSoilMoistureSensorValue <= minimumSoilMoistureSensorValueSolenoidCl
     solenoidValveStatus = 'Closed'
     solenoidValveOperation(solenoidValveStatus)
 
+##################################################################
+##################### End Evaluation Process #####################
+##################################################################
 
 # read the current solenoid valve status
 solenoidStatusFileHandle = open(solenoidStatusFileName, 'r')
@@ -492,9 +569,6 @@ writeLCDMessages(writeLCDMessageContent)
 writeWallMessageContent = 'Solenoid: %s' % currentSolenoidValveStatus
 writeWallMessages(writeWallMessageContent)
 
-print("The solenoid value status is:")
-print(currentSolenoidValveStatus)
-
 # read the current linear actuator status
 actuatorStatusFileHandle = open(actuatorStatusFileName, 'r')
 currentActuatorExtensionStatus = actuatorStatusFileHandle.readline()
@@ -505,8 +579,6 @@ writeLCDMessages(writeLCDMessageContent)
 # display the linear actuator status via a console broadcast message
 writeWallMessageContent = 'Linear actuator: %s' % currentActuatorExtensionStatus
 writeWallMessages(writeWallMessageContent)
-print("The linear actuator status is:")
-print(currentActuatorExtensionStatus)
 
 
 # display the outputs status values via a console broadcast messages
@@ -518,11 +590,11 @@ currentOutputStatusList[0] = currentOutputStatusList[0].strip('\n')
 currentOutputStatusList[1] = currentOutputStatusList[1].strip('\n')
 currentOutputStatusList[2] = currentOutputStatusList[2].strip('\n')
 # display the outputs status on the LCD
-writeLCDMessageContent = r'Output \#1 status: %s' % currentOutputStatusList[0]
+writeLCDMessageContent = 'Output \#1 status: %s' % currentOutputStatusList[0]
 writeLCDMessages(writeLCDMessageContent)
-writeLCDMessageContent = r'Output \#2 status: %s' % currentOutputStatusList[1]
+writeLCDMessageContent = 'Output \#2 status: %s' % currentOutputStatusList[1]
 writeLCDMessages(writeLCDMessageContent)
-writeLCDMessageContent = r'Output \#3 status: %s' % currentOutputStatusList[2]
+writeLCDMessageContent = 'Output \#3 status: %s' % currentOutputStatusList[2]
 writeLCDMessages(writeLCDMessageContent)
 # display the outputs status via a console broadcast message
 writeWallMessageContent = 'Output #1 status: %s' % currentOutputStatusList[0]
@@ -532,3 +604,247 @@ writeWallMessages(writeWallMessageContent)
 writeWallMessageContent = 'Output #3 status: %s' % currentOutputStatusList[2]
 writeWallMessages(writeWallMessageContent)
 
+
+# begin file write of static HTML file to the web server root
+staticWebPageFileHandle = open(staticWebPageFileName, "w")
+
+staticWebPageFileHandle.write("""
+<html>
+
+<head>
+  <style>
+   table, th, td{
+    border: 1px solid #333;
+   }
+  </style>
+
+<meta http-equiv="refresh" content="120">
+
+<title>Greenhouse Automation System Status Information</title></head>
+
+<body bgcolor="#CCFFFF">
+""")
+
+staticWebPageFileHandle.write('<h3 align="center">')
+staticWebPageFileHandle.write(webpageHeaderValue)
+staticWebPageFileHandle.write('<br>Status Information</h3>')
+
+staticWebPageFileHandle.write(
+    '<a href="/greenhousehigh.jpg"><center><img src="/greenhouselow.jpg" alt="Greenhouse Camera Image"><br>Click for high resolution</center></a>')
+staticWebPageFileHandle.write('<center><table>')
+staticWebPageFileHandle.write('<caption>Current Environmental Data</caption>')
+staticWebPageFileHandle.write('<tr><th>Reading Type</th><th>Value</th></tr>')
+
+currentLuminositySensorValue = str(currentLuminositySensorValue)
+staticWebPageFileHandle.write('<tr><td>')
+staticWebPageFileHandle.write('Luminosity</td><td>')
+staticWebPageFileHandle.write(currentLuminositySensorValue)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+currentTemperature = str(currentTemperature)
+staticWebPageFileHandle.write('<tr><td>Temperature</td><td>')
+staticWebPageFileHandle.write(currentTemperature)
+staticWebPageFileHandle.write('F</td></tr>')
+
+currentHumidity = str(currentHumidity)
+staticWebPageFileHandle.write('<tr><td>Humidity</td><td>')
+staticWebPageFileHandle.write(currentHumidity)
+staticWebPageFileHandle.write('%</td></tr>')
+
+currentSoilMoistureSensorValue = str(currentSoilMoistureSensorValue)
+staticWebPageFileHandle.write('<tr><td>Soil moisture</td><td>')
+staticWebPageFileHandle.write(currentSoilMoistureSensorValue)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+staticWebPageFileHandle.write('<tr><td>Solenoid value</td><td>')
+staticWebPageFileHandle.write(currentSolenoidValveStatus)
+staticWebPageFileHandle.write('</td></tr>')
+
+staticWebPageFileHandle.write('<tr><td>Linear actuator</td><td>')
+staticWebPageFileHandle.write(currentActuatorExtensionStatus)
+staticWebPageFileHandle.write('</td></tr>')
+
+staticWebPageFileHandle.write(
+    '<tr><td>Output #1 status (fan)</td><td> %s </td></tr>' % currentOutputStatusList[0])
+staticWebPageFileHandle.write('<br>')
+staticWebPageFileHandle.write(
+    '<tr><td>Output #2 status (heat pad)</td><td> %s </td></tr>' % currentOutputStatusList[1])
+staticWebPageFileHandle.write('<br>')
+staticWebPageFileHandle.write('<tr><td>Output #3 status</td><td> %s </td></tr>' %
+                              currentOutputStatusList[2])
+staticWebPageFileHandle.write('</table>')
+
+
+staticWebPageFileHandle.write('<br><br><table>')
+staticWebPageFileHandle.write('<tr><td>CSV data file</td><td>')
+staticWebPageFileHandle.write('<a href="/index.csv">index.csv</a>')
+
+staticWebPageFileHandle.write('</td></tr>')
+staticWebPageFileHandle.write('<tr><td>Seconds since the epoch</td><td>')
+staticWebPageFileHandle.write('%s</td></tr></table>' % time.time())
+
+staticWebPageFileHandle.write('<br><br><table>')
+staticWebPageFileHandle.write(
+    '<caption>Current Configuration Values</caption>')
+staticWebPageFileHandle.write('<tr><th>Value Type</th><th>Value</th></tr>')
+
+linearActuatorRunTime = str(linearActuatorRunTime)
+staticWebPageFileHandle.write('<tr><td>linearActuatorRunTime</td><td>')
+staticWebPageFileHandle.write(linearActuatorRunTime)
+staticWebPageFileHandle.write(' Sec</td></tr>')
+
+minimumSoilMoistureSensorValue = str(minimumSoilMoistureSensorValue)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumSoilMoistureSensorValue</td><td>')
+staticWebPageFileHandle.write(minimumSoilMoistureSensorValue)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+minimumLuminositySensorValue = str(minimumLuminositySensorValue)
+staticWebPageFileHandle.write('<tr><td>minimumLuminositySensorValue</td><td>')
+staticWebPageFileHandle.write(minimumLuminositySensorValue)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+minimumLuminositySensorValueActuatorRetract = str(
+    minimumLuminositySensorValueActuatorRetract)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumLuminositySensorValueActuatorRetract</td><td>')
+staticWebPageFileHandle.write(minimumLuminositySensorValueActuatorRetract)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+minimumTemperatureActuatorRetract = str(minimumTemperatureActuatorRetract)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumTemperatureActuatorRetract</td><td>')
+staticWebPageFileHandle.write(minimumTemperatureActuatorRetract)
+staticWebPageFileHandle.write('F</td></tr>')
+
+minimumHumidityActuatorRetract = str(minimumHumidityActuatorRetract)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumHumidityActuatorRetract</td><td>')
+staticWebPageFileHandle.write(minimumHumidityActuatorRetract)
+staticWebPageFileHandle.write('%</td></tr>')
+
+minimumLuminositySensorValueActuatorExtend = str(
+    minimumLuminositySensorValueActuatorExtend)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumLuminositySensorValueActuatorExtend</td><td>')
+staticWebPageFileHandle.write(minimumLuminositySensorValueActuatorExtend)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+minimumTemperatureActuatorExtend = str(minimumTemperatureActuatorExtend)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumTemperatureActuatorExtend</td><td>')
+staticWebPageFileHandle.write(minimumTemperatureActuatorExtend)
+staticWebPageFileHandle.write('F</td></tr>')
+
+minimumHumidityActuatorExtend = str(minimumHumidityActuatorExtend)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumHumidityActuatorExtend</td><td>')
+staticWebPageFileHandle.write(minimumHumidityActuatorExtend)
+staticWebPageFileHandle.write('%</td></tr>')
+
+minimumTemperatureOutputOneOn = str(minimumTemperatureOutputOneOn)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumTemperatureOutputOneOn</td><td>')
+staticWebPageFileHandle.write(minimumTemperatureOutputOneOn)
+staticWebPageFileHandle.write('F</td></tr>')
+
+minimumTemperatureOutputOneOff = str(minimumTemperatureOutputOneOff)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumTemperatureOutputOneOff</td><td>')
+staticWebPageFileHandle.write(minimumTemperatureOutputOneOff)
+staticWebPageFileHandle.write('F</td></tr>')
+
+minimumHumidityOutputOneOn = str(minimumHumidityOutputOneOn)
+staticWebPageFileHandle.write('<tr><td>minimumHumidityOutputOneOn</td><td>')
+staticWebPageFileHandle.write(minimumHumidityOutputOneOn)
+staticWebPageFileHandle.write('%</td></tr>')
+
+minimumHumidityOutputOneOff = str(minimumHumidityOutputOneOff)
+staticWebPageFileHandle.write('<tr><td>minimumHumidityOutputOneOff</td><td>')
+staticWebPageFileHandle.write(minimumHumidityOutputOneOff)
+staticWebPageFileHandle.write('%</td></tr>')
+
+minimumTemperatureOutputTwoOn = str(minimumTemperatureOutputTwoOn)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumTemperatureOutputTwoOn</td><td>')
+staticWebPageFileHandle.write(minimumTemperatureOutputTwoOn)
+staticWebPageFileHandle.write('F</td></tr>')
+
+minimumTemperatureOutputTwoOff = str(minimumTemperatureOutputTwoOff)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumTemperatureOutputTwoOff</td><td>')
+staticWebPageFileHandle.write(minimumTemperatureOutputTwoOff)
+staticWebPageFileHandle.write('F</td></tr>')
+
+minimumSoilMoistureSensorValueSolenoidOpen = str(
+    minimumSoilMoistureSensorValueSolenoidOpen)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumSoilMoistureSensorValueSolenoidOpen</td><td>')
+staticWebPageFileHandle.write(minimumSoilMoistureSensorValueSolenoidOpen)
+staticWebPageFileHandle.write('VDC</td></tr>')
+
+minimumSoilMoistureSensorValueSolenoidClosed = str(
+    minimumSoilMoistureSensorValueSolenoidClosed)
+staticWebPageFileHandle.write(
+    '<tr><td>minimumSoilMoistureSensorValueSolenoidClosed</td><td>')
+staticWebPageFileHandle.write(minimumSoilMoistureSensorValueSolenoidClosed)
+staticWebPageFileHandle.write('VDC</td></tr>')
+staticWebPageFileHandle.write('</table></center><br><br>')
+
+staticWebPageFileHandle.write(
+    '<center><a href="/wiring.png"><img src="/wiringlow.png" alt="Automation System Wiring Diagram"><a></center>')
+
+staticWebPageFileHandle.write('</body></html>')
+
+staticWebPageFileHandle.close
+
+
+# begin file append of CSV file to the web server root
+# "Luminosity","Temperature","Humidity","Moisture",
+# "Solenoid","Actuator","Output1","Output2","Output3","Epoch"
+
+csvFileHandle = open(logDataCSVFileName, "a")
+
+csvFileHandle.write('"')
+csvFileHandle.write(currentLuminositySensorValue)
+csvFileHandle.write('",\"')
+
+csvFileHandle.write('')
+csvFileHandle.write(currentTemperature)
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write(currentHumidity)
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write(currentSoilMoistureSensorValue)
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write(currentSolenoidValveStatus)
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write(currentActuatorExtensionStatus)
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write('%s' % currentOutputStatusList[0])
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write('%s' % currentOutputStatusList[1])
+csvFileHandle.write('","')
+
+csvFileHandle.write('')
+csvFileHandle.write('%s' % currentOutputStatusList[2])
+csvFileHandle.write('","')
+
+# second since the epoch
+csvFileHandle.write('')
+csvFileHandle.write('%s' % time.time())
+csvFileHandle.write('"' + '\n')
+csvFileHandle.write('')
+
+staticWebPageFileHandle.close
