@@ -124,6 +124,7 @@ crontab -e
 
 
 <p align="center">Wiring diagram</p>
+
 ![Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
 
 
