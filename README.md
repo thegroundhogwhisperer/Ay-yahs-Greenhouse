@@ -110,6 +110,7 @@ sudo crontab -e
 @reboot python /home/pi/Greenhouse/powerout.py
 
 \# capture an image every five minutes
+
 */5 * * * * python /home/pi/Greenhouse/camera.py
 
 crontab -e
