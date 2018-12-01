@@ -87,7 +87,7 @@ Choose Back
 
 Choose Finish
 
-Place all related file in /home/pi/Greenhouse/
+Place all related files in /home/pi/Greenhouse/
 
 Configure execute permissions on greenhouse.py and powerout.py.
 
@@ -98,6 +98,32 @@ sudo chmod +x powerout.py
 The greenhouse.py script performs environmental monitoring and the conditional evaluation process. Configure cron to execute greenhouse.py, the primary automation script, every two minutes.
 
 The powerout.py script writes file stored values, relays, and outputs to their default due to power outage. Configure cron to execute powerout.py, the power outage reset defaults script, at boot.
+
+Place all related files in /var/www/html/
+
+Configure execute permissions on closeoutputonemanual.py, closeoutputthreemanual.py, closeoutputtwomanual.py, closewatermanual.py, closewindowmanual.py, openoutputonemanual.py, openoutputthreemanual.py, openoutputtwomanual.py, openwatermanual.py, openwindowmanual.py
+
+sudo chmod +x /var/www/html/closeoutputonemanual.py
+
+sudo chmod +x /var/www/html/closeoutputthreemanual.py
+
+sudo chmod +x /var/www/html/closeoutputtwomanual.py
+
+sudo chmod +x /var/www/html/closewatermanual.py
+
+sudo chmod +x /var/www/html/closewindowmanual.py
+
+sudo chmod +x /var/www/html/openoutputonemanual.py
+
+sudo chmod +x /var/www/html/openoutputthreemanual.py
+
+sudo chmod +x /var/www/html/openoutputtwomanual.py
+
+sudo chmod +x /var/www/html/openwatermanual.py
+
+sudo chmod +x /var/www/html/openwindowmanual.py
+
+The xxxxxxxxmanual.py scripts allow the operator to trigger manual operations such as opening and closing the window and opening and closing the solenoid valve.
 
 # Example crontab configuration
 
