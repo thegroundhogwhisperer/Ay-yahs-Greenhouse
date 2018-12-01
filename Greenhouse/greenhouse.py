@@ -31,14 +31,32 @@
 # broadcast via a wall message to the console, written to an HTML file,
 # and written to a CSV file.
 
-import subprocess
-import statistics
-import serial
-import math
+# sqlite3 /var/www/html/greenhouse.db table creation command
+# CREATE TABLE greenhouse(id INTEGER PRIMARY KEY AUTOINCREMENT, luminosity
+#  NUMERIC, temperature NUMERIC, humidity NUMERIC, soilmoisture NUMERIC,
+#  solenoidstatus TEXT, actuatorstatus TEXT, outputonestatus TEXT,
+#  outputtwostatus TEXT, outputthreestatus TEXT, currentdate DATE,
+#  currenttime TIME);
+
 import Adafruit_DHT
+import datetime
+import math
 import time
 import automationhat
 time.sleep(0.1)  # short pause after ads1015 class creation recommended
+import serial
+import statistics
+import subprocess
+import sqlite3
+import numpy as np
+import matplotlib as plt
+plt.use('Agg') # initilized because it needs a different backend for the display to not crash when executed from the console
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib import style
+style.use('fivethirtyeight') # select the style of graph
+from dateutil import parser
+
 
 ##################################################################
 ###################### Customizable Values #######################
@@ -51,11 +69,35 @@ solenoidStatusFileName = '/home/pi/Greenhouse/solenoid.txt'
 # outputs status filename
 outputsStatusFileName = '/home/pi/Greenhouse/outputs.txt'
 
+# luminosity graph image local output file name
+graphImageLuminosity = "/var/www/html/ghouselumi.png"
+# temperature graph image local output file name
+graphImageTemperature = "/var/www/html/ghousetemp.png"
+# humidity graph image local output file name
+graphImageHumidity = "/var/www/html/ghousehumi.png"
+# soil moisture graph image local output file name
+graphImageSoilMoisture = "/var/www/html/ghousesoil.png"
+
+# luminosity graph image web/url file name
+graphImageLuminosityURL = "/ghouselumi.png"
+# temperature graph image web/url file name
+graphImageTemperatureURL = "/ghousetemp.png"
+# humidity graph image web/url file name
+graphImageHumidityURL = "/ghousehumi.png"
+# soil moisture graph image web/url file name
+graphImageSoilMoistureURL = "/ghousesoil.png"
+
+# sqlite database file name
+sqliteDatabaseFileName = '/var/www/html/greenhouse.db'
+
 # static webpage file name
 staticWebPageFileName = "/var/www/html/index.html"
 
-# CSV file name containing log data
+# CSV output local file name
 logDataCSVFileName = "/var/www/html/index.csv"
+
+# CSV web/url file name
+logDataCSVFileNameURL = "index.csv"
 
 # this actuators stroke is 406.4 mm at 10 mm per second
 # wait 40.6 seconds to open the window
@@ -89,7 +131,7 @@ minimumHumidityActuatorExtend = 20
 
 # minimum temp or humidity values output #1 turn on the fan
 minimumTemperatureOutputOneOn = 80
-minimumHumidityOutputOneOn = 70
+minimumHumidityOutputOneOn = 50
 
 # minimum temp or humidity values output #1 turn off the fan
 minimumTemperatureOutputOneOff = 79
@@ -111,9 +153,12 @@ minimumSoilMoistureSensorValueSolenoidClosed = 1.6
 #################### End Customizable Values #####################
 ##################################################################
 
+
+##################################################################
+################## Begin Subroutine Defintions ###################
+##################################################################
+
 # temperature and humidity value read input subroutine
-
-
 def readTemperatureHumidityValues():
 
     # define the model tempature sensor
@@ -456,10 +501,371 @@ def writeWallMessages(writeWallMessageContent):
     p = subprocess.Popen(wallMessageCommandLine)
 
 
+# write CSV output file subroutine
+def writeCSVOutputFile(currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue, currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList):
+
+    # begin file append of CSV file to the web server root
+    # "Luminosity","Temperature","Humidity","Moisture",
+    # "Solenoid","Actuator","Output1","Output2","Output3","Epoch"
+
+    csvFileHandle = open(logDataCSVFileName, "a")
+
+    csvFileHandle.write('"')
+    csvFileHandle.write(str(currentLuminositySensorValue))
+    csvFileHandle.write('",\"')
+
+    csvFileHandle.write('')
+    csvFileHandle.write(str(currentTemperature))
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write(str(currentHumidity))
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write(str(currentSoilMoistureSensorValue))
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write(currentSolenoidValveStatus)
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write(currentActuatorExtensionStatus)
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write('%s' % currentOutputStatusList[0])
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write('%s' % currentOutputStatusList[1])
+    csvFileHandle.write('","')
+
+    csvFileHandle.write('')
+    csvFileHandle.write('%s' % currentOutputStatusList[2])
+    csvFileHandle.write('","')
+
+    # second since the epoch
+    csvFileHandle.write('')
+    csvFileHandle.write('%s' % time.time())
+    csvFileHandle.write('"' + '\n')
+    csvFileHandle.write('')
+    csvFileHandle.close
+
+
+# write sqlite database subroutine
+def writeDatabaseOutput(currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue, currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList):
+    # begin file table data insert of row
+    try:
+        # establish a connection to the database
+        connectionSQLiteDatabase = sqlite3.connect(sqliteDatabaseFileName)
+        curs = connectionSQLiteDatabase.cursor()
+
+        # insert data rows into the table
+        curs.execute("INSERT INTO greenhouse (luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime) VALUES((?), (?), (?), (?), (?), (?), (?), (?), (?), date('now'), time('now'))",
+                     (currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue,  currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList[0], currentOutputStatusList[1], currentOutputStatusList[2]))
+        # commit the changes
+        connectionSQLiteDatabase.commit()
+        curs.close
+        connectionSQLiteDatabase.close()
+
+    except sqlite3.IntegrityError as e:
+        print('Sqlite Error: ', e.args[0])  # error output
+
+
+# read sqlite database generate graphs subroutine
+def readDatabaseOutputGraphs():
+    # begin file append of CSV file to the web server root
+    # read a sqlite database table and generate a graph
+
+    try:
+        # establish a connection to the database
+        connectionSQLiteDatabase = sqlite3.connect(sqliteDatabaseFileName)
+        curs = connectionSQLiteDatabase.cursor()
+
+        # select data rows from the table
+    # curs.execute("INSERT INTO greenhouse (luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime) VALUES((?), (?), (?), (?), (?), (?), (?), (?), (?), date('now'), time('now'))", (currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue,  currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList[0], currentOutputStatusList[1], currentOutputStatusList[2]))
+        curs.execute('SELECT luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime FROM greenhouse LIMIT 2000')
+    #  curs.execute('SELECT temperature, currentdate FROM greenhouse LIMIT 2000')
+
+        dataRowFetchedAll = curs.fetchall()
+        dateValues = []
+        dateValuesNoYear = []
+        valuesLuminosity = []
+        valuesTemperature = []
+        valuesHumidity = []
+        valuesSoilMoisture = []
+
+        for row in dataRowFetchedAll:
+            valuesLuminosity.append(row[0])
+            valuesTemperature.append(row[1])
+            valuesHumidity.append(row[2])
+            valuesSoilMoisture.append(row[3])
+            dateValues.append(parser.parse(row[9]))
+            tempString = row[9].split("-", 1)
+            dateValuesNoYear.append(tempString[1])
+
+    #  plt.plot(dateValuesNoYear, valuesTemperature, '-')
+        plt.figure(0)
+        plt.plot(dateValuesNoYear, valuesLuminosity, '-')
+
+    #  plt.plot(valuesLuminosity, dateValues)
+        plt.show(block=True)
+        plt.savefig(graphImageLuminosity)
+
+        plt.figure(1)
+        plt.plot(dateValuesNoYear, valuesTemperature, '-')
+        plt.show(block=True)
+        plt.savefig(graphImageTemperature)
+
+        plt.figure(2)
+        plt.plot(dateValuesNoYear, valuesHumidity, '-')
+        plt.show(block=True)
+        plt.savefig(graphImageHumidity)
+
+        plt.figure(3)
+        plt.plot(dateValuesNoYear, valuesSoilMoisture, '-')
+        plt.show(block=True)
+        plt.savefig(graphImageSoilMoisture)
+
+        # commit the changes
+        connectionSQLiteDatabase.commit()
+        curs.close
+        connectionSQLiteDatabase.close()
+
+    except sqlite3.IntegrityError as e:
+        print('Sqlite Error: ', e.args[0])  # error output
+
+
+# write static HTML file subroutine
+def writeStaticHTMLFile(currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue, currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList, linearActuatorRunTime, minimumSoilMoistureSensorValue, webpageHeaderValue, minimumLuminositySensorValue, minimumLuminositySensorValueActuatorRetract, minimumTemperatureActuatorRetract, minimumHumidityActuatorRetract, minimumLuminositySensorValueActuatorExtend, minimumTemperatureActuatorExtend, minimumHumidityActuatorExtend, minimumTemperatureOutputOneOn, minimumHumidityOutputOneOn, minimumTemperatureOutputOneOff, minimumHumidityOutputOneOff, minimumTemperatureOutputTwoOn, minimumTemperatureOutputTwoOff, minimumSoilMoistureSensorValueSolenoidOpen, minimumSoilMoistureSensorValueSolenoidClosed):
+    # begin file write of static HTML file to the web server root
+    staticWebPageFileHandle = open(staticWebPageFileName, "w")
+
+    staticWebPageFileHandle.write("""
+    <html>
+
+    <head>
+      <style>
+       table, th, td{
+        border: 1px solid #333;
+       }
+      </style>
+
+    <meta http-equiv="refresh" content="120">
+
+    <title>Greenhouse Automation System Status Information</title></head>
+
+    <body bgcolor="#CCFFFF">
+    """)
+
+    staticWebPageFileHandle.write('<h3 align="center">')
+    staticWebPageFileHandle.write(webpageHeaderValue)
+    staticWebPageFileHandle.write('<br>Status Information</h3>')
+
+    staticWebPageFileHandle.write(
+        '<center><a href="/greenhousehigh.jpg"><img src="/greenhouselow.jpg" alt="Greenhouse Camera Image"  height="240" width="320"><br>Click for high resolution</center></a>')
+    staticWebPageFileHandle.write('<center><table>')
+    staticWebPageFileHandle.write(
+        '<caption>Current Environmental Data</caption>')
+    staticWebPageFileHandle.write(
+        '<tr><th>Reading Type</th><th>Value</th></tr>')
+
+    currentLuminositySensorValue = str(currentLuminositySensorValue)
+    staticWebPageFileHandle.write('<tr><td>')
+    staticWebPageFileHandle.write('Luminosity</td><td>')
+    staticWebPageFileHandle.write('<img src="')
+    staticWebPageFileHandle.write(graphImageLuminosityURL)
+    staticWebPageFileHandle.write(
+        '" alt="Greenhouse Luminosity Last 2000 Data Points" height="240" width="320"><a><br><center>')
+    staticWebPageFileHandle.write(currentLuminositySensorValue)
+    staticWebPageFileHandle.write('VDC</center></td></tr>')
+
+    currentTemperature = str(currentTemperature)
+    staticWebPageFileHandle.write('<tr><td>Temperature</td><td>')
+    staticWebPageFileHandle.write('<img src="')
+    staticWebPageFileHandle.write(graphImageTemperatureURL)
+    staticWebPageFileHandle.write(
+        '" alt="Greenhouse Temperature Last 2000 Data Points" height="240" width="320"><a><br><center>')
+    staticWebPageFileHandle.write(currentTemperature)
+    staticWebPageFileHandle.write('F</center></td></tr>')
+
+    currentHumidity = str(currentHumidity)
+    staticWebPageFileHandle.write('<tr><td>Humidity</td><td>')
+    staticWebPageFileHandle.write('<img src="')
+    staticWebPageFileHandle.write(graphImageHumidityURL)
+    staticWebPageFileHandle.write(
+        '" alt="Greenhouse Humidity Last 2000 Data Points" height="240" width="320"><a><br><center>')
+    staticWebPageFileHandle.write(currentHumidity)
+    staticWebPageFileHandle.write('%</center></td></tr>')
+
+    currentSoilMoistureSensorValue = str(currentSoilMoistureSensorValue)
+    staticWebPageFileHandle.write('<tr><td>Soil moisture</td><td>')
+    staticWebPageFileHandle.write('<img src="')
+    staticWebPageFileHandle.write(graphImageSoilMoistureURL)
+    staticWebPageFileHandle.write(
+        '" alt="Greenhouse Soil Moisture Last 2000 Data Points" height="240" width="320"><a><br><center>')
+    staticWebPageFileHandle.write(currentSoilMoistureSensorValue)
+    staticWebPageFileHandle.write('VDC</center></td></tr>')
+
+    staticWebPageFileHandle.write('<tr><td>Solenoid value</td><td>')
+    staticWebPageFileHandle.write(currentSolenoidValveStatus)
+    staticWebPageFileHandle.write('</td></tr>')
+
+    staticWebPageFileHandle.write('<tr><td>Linear actuator</td><td>')
+    staticWebPageFileHandle.write(currentActuatorExtensionStatus)
+    staticWebPageFileHandle.write('</td></tr>')
+
+    staticWebPageFileHandle.write(
+        '<tr><td>Output #1 status (fan)</td><td> %s </td></tr>' % currentOutputStatusList[0])
+    staticWebPageFileHandle.write('<br>')
+    staticWebPageFileHandle.write(
+        '<tr><td>Output #2 status (heat pad)</td><td> %s </td></tr>' % currentOutputStatusList[1])
+    staticWebPageFileHandle.write('<br>')
+    staticWebPageFileHandle.write('<tr><td>Output #3 status</td><td> %s </td></tr>' %
+                                  currentOutputStatusList[2])
+    staticWebPageFileHandle.write('</table>')
+
+    staticWebPageFileHandle.write('<br><br><table>')
+    staticWebPageFileHandle.write('<tr><td>CSV data file</td><td>')
+    staticWebPageFileHandle.write('<a href="/')
+    staticWebPageFileHandle.write(logDataCSVFileNameURL)
+    staticWebPageFileHandle.write('">')
+    staticWebPageFileHandle.write(logDataCSVFileNameURL)
+    staticWebPageFileHandle.write('</a>')
+
+    staticWebPageFileHandle.write('</td></tr>')
+    staticWebPageFileHandle.write('<tr><td>Seconds since the epoch</td><td>')
+    staticWebPageFileHandle.write('%s</td></tr></table>' % time.time())
+
+    staticWebPageFileHandle.write('<br><br><table>')
+    staticWebPageFileHandle.write(
+        '<caption>Current Configuration Values</caption>')
+    staticWebPageFileHandle.write('<tr><th>Value Type</th><th>Value</th></tr>')
+
+    linearActuatorRunTime = str(linearActuatorRunTime)
+    staticWebPageFileHandle.write('<tr><td>linearActuatorRunTime</td><td>')
+    staticWebPageFileHandle.write(linearActuatorRunTime)
+    staticWebPageFileHandle.write(' Sec</td></tr>')
+
+    minimumSoilMoistureSensorValue = str(minimumSoilMoistureSensorValue)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumSoilMoistureSensorValue</td><td>')
+    staticWebPageFileHandle.write(minimumSoilMoistureSensorValue)
+    staticWebPageFileHandle.write('VDC</td></tr>')
+
+    minimumLuminositySensorValue = str(minimumLuminositySensorValue)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumLuminositySensorValue</td><td>')
+    staticWebPageFileHandle.write(minimumLuminositySensorValue)
+    staticWebPageFileHandle.write('VDC</td></tr>')
+
+    minimumLuminositySensorValueActuatorRetract = str(
+        minimumLuminositySensorValueActuatorRetract)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumLuminositySensorValueActuatorRetract</td><td>')
+    staticWebPageFileHandle.write(minimumLuminositySensorValueActuatorRetract)
+    staticWebPageFileHandle.write('VDC</td></tr>')
+
+    minimumTemperatureActuatorRetract = str(minimumTemperatureActuatorRetract)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumTemperatureActuatorRetract</td><td>')
+    staticWebPageFileHandle.write(minimumTemperatureActuatorRetract)
+    staticWebPageFileHandle.write('F</td></tr>')
+
+    minimumHumidityActuatorRetract = str(minimumHumidityActuatorRetract)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumHumidityActuatorRetract</td><td>')
+    staticWebPageFileHandle.write(minimumHumidityActuatorRetract)
+    staticWebPageFileHandle.write('%</td></tr>')
+
+    minimumLuminositySensorValueActuatorExtend = str(
+        minimumLuminositySensorValueActuatorExtend)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumLuminositySensorValueActuatorExtend</td><td>')
+    staticWebPageFileHandle.write(minimumLuminositySensorValueActuatorExtend)
+    staticWebPageFileHandle.write('VDC</td></tr>')
+
+    minimumTemperatureActuatorExtend = str(minimumTemperatureActuatorExtend)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumTemperatureActuatorExtend</td><td>')
+    staticWebPageFileHandle.write(minimumTemperatureActuatorExtend)
+    staticWebPageFileHandle.write('F</td></tr>')
+
+    minimumHumidityActuatorExtend = str(minimumHumidityActuatorExtend)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumHumidityActuatorExtend</td><td>')
+    staticWebPageFileHandle.write(minimumHumidityActuatorExtend)
+    staticWebPageFileHandle.write('%</td></tr>')
+
+    minimumTemperatureOutputOneOn = str(minimumTemperatureOutputOneOn)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumTemperatureOutputOneOn</td><td>')
+    staticWebPageFileHandle.write(minimumTemperatureOutputOneOn)
+    staticWebPageFileHandle.write('F</td></tr>')
+
+    minimumTemperatureOutputOneOff = str(minimumTemperatureOutputOneOff)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumTemperatureOutputOneOff</td><td>')
+    staticWebPageFileHandle.write(minimumTemperatureOutputOneOff)
+    staticWebPageFileHandle.write('F</td></tr>')
+
+    minimumHumidityOutputOneOn = str(minimumHumidityOutputOneOn)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumHumidityOutputOneOn</td><td>')
+    staticWebPageFileHandle.write(minimumHumidityOutputOneOn)
+    staticWebPageFileHandle.write('%</td></tr>')
+
+    minimumHumidityOutputOneOff = str(minimumHumidityOutputOneOff)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumHumidityOutputOneOff</td><td>')
+    staticWebPageFileHandle.write(minimumHumidityOutputOneOff)
+    staticWebPageFileHandle.write('%</td></tr>')
+
+    minimumTemperatureOutputTwoOn = str(minimumTemperatureOutputTwoOn)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumTemperatureOutputTwoOn</td><td>')
+    staticWebPageFileHandle.write(minimumTemperatureOutputTwoOn)
+    staticWebPageFileHandle.write('F</td></tr>')
+
+    minimumTemperatureOutputTwoOff = str(minimumTemperatureOutputTwoOff)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumTemperatureOutputTwoOff</td><td>')
+    staticWebPageFileHandle.write(minimumTemperatureOutputTwoOff)
+    staticWebPageFileHandle.write('F</td></tr>')
+
+    minimumSoilMoistureSensorValueSolenoidOpen = str(
+        minimumSoilMoistureSensorValueSolenoidOpen)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumSoilMoistureSensorValueSolenoidOpen</td><td>')
+    staticWebPageFileHandle.write(minimumSoilMoistureSensorValueSolenoidOpen)
+    staticWebPageFileHandle.write('VDC</td></tr>')
+
+    minimumSoilMoistureSensorValueSolenoidClosed = str(
+        minimumSoilMoistureSensorValueSolenoidClosed)
+    staticWebPageFileHandle.write(
+        '<tr><td>minimumSoilMoistureSensorValueSolenoidClosed</td><td>')
+    staticWebPageFileHandle.write(minimumSoilMoistureSensorValueSolenoidClosed)
+    staticWebPageFileHandle.write('VDC</td></tr>')
+    staticWebPageFileHandle.write('</table></center><br><br>')
+
+    staticWebPageFileHandle.write(
+        '<center><a href="/wiring.png"><img src="/wiringlow.png" alt="Automation System Wiring Diagram"><a></center>')
+    staticWebPageFileHandle.write('</body></html>')
+    staticWebPageFileHandle.close
+
 ##################################################################
-#################### Begin Evaluation Process ####################
+################### End Subroutine Defintions ####################
 ##################################################################
-# begin the process of evaluating environmental conditions and respond accordingly
+
+
+##################################################################
+###### Begin Reading Input Write LCD Broadcast Wall Message ######
+##################################################################
+# begin the process reading evaluating environmental data
+# display the current information on the 16x2 LCD and in
+# the console window via wall messages
 # call the read luminosity sensor value subroutine
 currentLuminositySensorValue = readLuminositySensorValue()
 # display the luminosity value on the LCD
@@ -469,7 +875,6 @@ writeLCDMessages(writeLCDMessageContent)
 # display the luminosity value via a console broadcast message
 writeWallMessageContent = 'Luminosity: %s' % currentLuminositySensorValue
 writeWallMessages(writeWallMessageContent)
-
 
 # call our read temperature and humidity value subroutine
 currentHumidity, currentTemperature = readTemperatureHumidityValues()
@@ -487,54 +892,6 @@ writeLCDMessages(writeLCDMessageContent)
 writeWallMessageContent = 'Humidity: %s' % currentHumidity
 writeWallMessages(writeWallMessageContent)
 
-
-# evaulate if we close or open the window
-if (currentLuminositySensorValue <= minimumLuminositySensorValueActuatorRetract and
-    # if ( currentLuminositySensorValue <= 1 and
-
-    currentTemperature <= minimumTemperatureActuatorRetract and
-    currentHumidity <= minimumHumidityActuatorRetract
-    ):
-    # retract the linear actuator and close the window
-    actuatorExtensionStatus = 'Retracted'
-    currentActuatorExtensionStatus = linearActuatorExtensionRetraction(
-        actuatorExtensionStatus)
-
-elif (currentLuminositySensorValue >= minimumLuminositySensorValueActuatorExtend and
-      currentTemperature >= minimumTemperatureActuatorExtend and
-      currentHumidity >= minimumHumidityActuatorExtend
-      ):
-    # extend the linear actuator and open the window
-    actuatorExtensionStatus = 'Extended'
-    currentActuatorExtensionStatus = linearActuatorExtensionRetraction(
-        actuatorExtensionStatus)
-
-   # evaulate if we need to enable output #1 turn on the fan
-if (currentTemperature >= minimumTemperatureOutputOneOn or
-    currentHumidity >= minimumHumidityOutputOneOn
-    ):
-    outputNumber = 0
-    outputStatus = 'On'
-    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
-
-elif (currentTemperature <= minimumTemperatureOutputOneOff or
-      currentHumidity <= minimumHumidityOutputOneOff
-      ):
-    outputNumber = 0
-    outputStatus = 'Off'
-    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
-
-   # evaulate if we need to enable output #2 turn on the USB heating pad
-if (currentTemperature <= minimumTemperatureOutputTwoOn):
-    outputNumber = 1
-    outputStatus = 'On'
-    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
-
-elif (currentTemperature >= minimumTemperatureOutputTwoOff):
-    outputNumber = 1
-    outputStatus = 'Off'
-    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
-
 # call the read soil moisture sensor value subroutine
 currentSoilMoistureSensorValue = readSoilMoistureSensorValue()
 # display soil moisture sensor on the LCD
@@ -543,20 +900,6 @@ writeLCDMessages(writeLCDMessageContent)
 # display the soil moisture value via a console broadcast message
 writeWallMessageContent = 'Soil moisture: %s' % currentSoilMoistureSensorValue
 writeWallMessages(writeWallMessageContent)
-
-# evaluate if output 1 should be on or off
-if (currentSoilMoistureSensorValue >= minimumSoilMoistureSensorValueSolenoidOpen):
-
-    solenoidValveStatus = 'Open'
-    solenoidValveOperation(solenoidValveStatus)
-
-elif (currentSoilMoistureSensorValue <= minimumSoilMoistureSensorValueSolenoidClosed):
-    solenoidValveStatus = 'Closed'
-    solenoidValveOperation(solenoidValveStatus)
-
-##################################################################
-##################### End Evaluation Process #####################
-##################################################################
 
 # read the current solenoid valve status
 solenoidStatusFileHandle = open(solenoidStatusFileName, 'r')
@@ -579,7 +922,6 @@ writeLCDMessages(writeLCDMessageContent)
 # display the linear actuator status via a console broadcast message
 writeWallMessageContent = 'Linear actuator: %s' % currentActuatorExtensionStatus
 writeWallMessages(writeWallMessageContent)
-
 
 # display the outputs status values via a console broadcast messages
 outputsStatusFileHandle = open(outputsStatusFileName, 'r')
@@ -604,247 +946,102 @@ writeWallMessages(writeWallMessageContent)
 writeWallMessageContent = 'Output #3 status: %s' % currentOutputStatusList[2]
 writeWallMessages(writeWallMessageContent)
 
-
-# begin file write of static HTML file to the web server root
-staticWebPageFileHandle = open(staticWebPageFileName, "w")
-
-staticWebPageFileHandle.write("""
-<html>
-
-<head>
-  <style>
-   table, th, td{
-    border: 1px solid #333;
-   }
-  </style>
-
-<meta http-equiv="refresh" content="120">
-
-<title>Greenhouse Automation System Status Information</title></head>
-
-<body bgcolor="#CCFFFF">
-""")
-
-staticWebPageFileHandle.write('<h3 align="center">')
-staticWebPageFileHandle.write(webpageHeaderValue)
-staticWebPageFileHandle.write('<br>Status Information</h3>')
-
-staticWebPageFileHandle.write(
-    '<a href="/greenhousehigh.jpg"><center><img src="/greenhouselow.jpg" alt="Greenhouse Camera Image"><br>Click for high resolution</center></a>')
-staticWebPageFileHandle.write('<center><table>')
-staticWebPageFileHandle.write('<caption>Current Environmental Data</caption>')
-staticWebPageFileHandle.write('<tr><th>Reading Type</th><th>Value</th></tr>')
-
-currentLuminositySensorValue = str(currentLuminositySensorValue)
-staticWebPageFileHandle.write('<tr><td>')
-staticWebPageFileHandle.write('Luminosity</td><td>')
-staticWebPageFileHandle.write(currentLuminositySensorValue)
-staticWebPageFileHandle.write('VDC</td></tr>')
-
-currentTemperature = str(currentTemperature)
-staticWebPageFileHandle.write('<tr><td>Temperature</td><td>')
-staticWebPageFileHandle.write(currentTemperature)
-staticWebPageFileHandle.write('F</td></tr>')
-
-currentHumidity = str(currentHumidity)
-staticWebPageFileHandle.write('<tr><td>Humidity</td><td>')
-staticWebPageFileHandle.write(currentHumidity)
-staticWebPageFileHandle.write('%</td></tr>')
-
-currentSoilMoistureSensorValue = str(currentSoilMoistureSensorValue)
-staticWebPageFileHandle.write('<tr><td>Soil moisture</td><td>')
-staticWebPageFileHandle.write(currentSoilMoistureSensorValue)
-staticWebPageFileHandle.write('VDC</td></tr>')
-
-staticWebPageFileHandle.write('<tr><td>Solenoid value</td><td>')
-staticWebPageFileHandle.write(currentSolenoidValveStatus)
-staticWebPageFileHandle.write('</td></tr>')
-
-staticWebPageFileHandle.write('<tr><td>Linear actuator</td><td>')
-staticWebPageFileHandle.write(currentActuatorExtensionStatus)
-staticWebPageFileHandle.write('</td></tr>')
-
-staticWebPageFileHandle.write(
-    '<tr><td>Output #1 status (fan)</td><td> %s </td></tr>' % currentOutputStatusList[0])
-staticWebPageFileHandle.write('<br>')
-staticWebPageFileHandle.write(
-    '<tr><td>Output #2 status (heat pad)</td><td> %s </td></tr>' % currentOutputStatusList[1])
-staticWebPageFileHandle.write('<br>')
-staticWebPageFileHandle.write('<tr><td>Output #3 status</td><td> %s </td></tr>' %
-                              currentOutputStatusList[2])
-staticWebPageFileHandle.write('</table>')
+##################################################################
+##### End Reading Input Writing LCD Broadcasting Wall Message ####
+##################################################################
 
 
-staticWebPageFileHandle.write('<br><br><table>')
-staticWebPageFileHandle.write('<tr><td>CSV data file</td><td>')
-staticWebPageFileHandle.write('<a href="/index.csv">index.csv</a>')
+##################################################################
+#################### Begin Evaluation Process ####################
+##################################################################
+# begin the process of evaluating environmental conditions and
+# respond accordingly
 
-staticWebPageFileHandle.write('</td></tr>')
-staticWebPageFileHandle.write('<tr><td>Seconds since the epoch</td><td>')
-staticWebPageFileHandle.write('%s</td></tr></table>' % time.time())
+# evaulate if we close or open the window
+if (currentLuminositySensorValue <= minimumLuminositySensorValueActuatorRetract and
+        currentTemperature <= minimumTemperatureActuatorRetract and
+        currentHumidity <= minimumHumidityActuatorRetract
+    ):
+    # retract the linear actuator and close the window
+    actuatorExtensionStatus = 'Retracted'
+    currentActuatorExtensionStatus = linearActuatorExtensionRetraction(
+        actuatorExtensionStatus)
 
-staticWebPageFileHandle.write('<br><br><table>')
-staticWebPageFileHandle.write(
-    '<caption>Current Configuration Values</caption>')
-staticWebPageFileHandle.write('<tr><th>Value Type</th><th>Value</th></tr>')
+elif (currentLuminositySensorValue >= minimumLuminositySensorValueActuatorExtend and
+      currentTemperature >= minimumTemperatureActuatorExtend and
+      currentHumidity >= minimumHumidityActuatorExtend
+      ):
+    # extend the linear actuator and open the window
+    actuatorExtensionStatus = 'Extended'
+    currentActuatorExtensionStatus = linearActuatorExtensionRetraction(
+        actuatorExtensionStatus)
 
-linearActuatorRunTime = str(linearActuatorRunTime)
-staticWebPageFileHandle.write('<tr><td>linearActuatorRunTime</td><td>')
-staticWebPageFileHandle.write(linearActuatorRunTime)
-staticWebPageFileHandle.write(' Sec</td></tr>')
+# evaulate if we need to enable output #1 turn on the fan
+if (currentTemperature >= minimumTemperatureOutputOneOn or
+        currentHumidity >= minimumHumidityOutputOneOn
+    ):
+    # enable output one
+    outputNumber = 0
+    outputStatus = 'On'
+    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
-minimumSoilMoistureSensorValue = str(minimumSoilMoistureSensorValue)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumSoilMoistureSensorValue</td><td>')
-staticWebPageFileHandle.write(minimumSoilMoistureSensorValue)
-staticWebPageFileHandle.write('VDC</td></tr>')
+elif (currentTemperature <= minimumTemperatureOutputOneOff or
+      currentHumidity <= minimumHumidityOutputOneOff
+      ):
+    # disable output one
+    outputNumber = 0
+    outputStatus = 'Off'
+    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
-minimumLuminositySensorValue = str(minimumLuminositySensorValue)
-staticWebPageFileHandle.write('<tr><td>minimumLuminositySensorValue</td><td>')
-staticWebPageFileHandle.write(minimumLuminositySensorValue)
-staticWebPageFileHandle.write('VDC</td></tr>')
+# evaulate if we need to enable output #2 turn on the USB heating pad
+if (currentTemperature <= minimumTemperatureOutputTwoOn):
+    # enable output two
+    outputNumber = 1
+    outputStatus = 'On'
+    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
-minimumLuminositySensorValueActuatorRetract = str(
-    minimumLuminositySensorValueActuatorRetract)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumLuminositySensorValueActuatorRetract</td><td>')
-staticWebPageFileHandle.write(minimumLuminositySensorValueActuatorRetract)
-staticWebPageFileHandle.write('VDC</td></tr>')
+elif (currentTemperature >= minimumTemperatureOutputTwoOff):
+    # disable output two
+    outputNumber = 1
+    outputStatus = 'Off'
+    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
-minimumTemperatureActuatorRetract = str(minimumTemperatureActuatorRetract)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumTemperatureActuatorRetract</td><td>')
-staticWebPageFileHandle.write(minimumTemperatureActuatorRetract)
-staticWebPageFileHandle.write('F</td></tr>')
+# evaluate if the solenoid valve should be open or closed
+if (currentSoilMoistureSensorValue >= minimumSoilMoistureSensorValueSolenoidOpen):
+    # enable relay three opening the solenoid valve
+    solenoidValveStatus = 'Open'
+    solenoidValveOperation(solenoidValveStatus)
 
-minimumHumidityActuatorRetract = str(minimumHumidityActuatorRetract)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumHumidityActuatorRetract</td><td>')
-staticWebPageFileHandle.write(minimumHumidityActuatorRetract)
-staticWebPageFileHandle.write('%</td></tr>')
+elif (currentSoilMoistureSensorValue <= minimumSoilMoistureSensorValueSolenoidClosed):
+    # disable relay three closing the solenoid valve
+    solenoidValveStatus = 'Closed'
+    solenoidValveOperation(solenoidValveStatus)
 
-minimumLuminositySensorValueActuatorExtend = str(
-    minimumLuminositySensorValueActuatorExtend)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumLuminositySensorValueActuatorExtend</td><td>')
-staticWebPageFileHandle.write(minimumLuminositySensorValueActuatorExtend)
-staticWebPageFileHandle.write('VDC</td></tr>')
-
-minimumTemperatureActuatorExtend = str(minimumTemperatureActuatorExtend)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumTemperatureActuatorExtend</td><td>')
-staticWebPageFileHandle.write(minimumTemperatureActuatorExtend)
-staticWebPageFileHandle.write('F</td></tr>')
-
-minimumHumidityActuatorExtend = str(minimumHumidityActuatorExtend)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumHumidityActuatorExtend</td><td>')
-staticWebPageFileHandle.write(minimumHumidityActuatorExtend)
-staticWebPageFileHandle.write('%</td></tr>')
-
-minimumTemperatureOutputOneOn = str(minimumTemperatureOutputOneOn)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumTemperatureOutputOneOn</td><td>')
-staticWebPageFileHandle.write(minimumTemperatureOutputOneOn)
-staticWebPageFileHandle.write('F</td></tr>')
-
-minimumTemperatureOutputOneOff = str(minimumTemperatureOutputOneOff)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumTemperatureOutputOneOff</td><td>')
-staticWebPageFileHandle.write(minimumTemperatureOutputOneOff)
-staticWebPageFileHandle.write('F</td></tr>')
-
-minimumHumidityOutputOneOn = str(minimumHumidityOutputOneOn)
-staticWebPageFileHandle.write('<tr><td>minimumHumidityOutputOneOn</td><td>')
-staticWebPageFileHandle.write(minimumHumidityOutputOneOn)
-staticWebPageFileHandle.write('%</td></tr>')
-
-minimumHumidityOutputOneOff = str(minimumHumidityOutputOneOff)
-staticWebPageFileHandle.write('<tr><td>minimumHumidityOutputOneOff</td><td>')
-staticWebPageFileHandle.write(minimumHumidityOutputOneOff)
-staticWebPageFileHandle.write('%</td></tr>')
-
-minimumTemperatureOutputTwoOn = str(minimumTemperatureOutputTwoOn)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumTemperatureOutputTwoOn</td><td>')
-staticWebPageFileHandle.write(minimumTemperatureOutputTwoOn)
-staticWebPageFileHandle.write('F</td></tr>')
-
-minimumTemperatureOutputTwoOff = str(minimumTemperatureOutputTwoOff)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumTemperatureOutputTwoOff</td><td>')
-staticWebPageFileHandle.write(minimumTemperatureOutputTwoOff)
-staticWebPageFileHandle.write('F</td></tr>')
-
-minimumSoilMoistureSensorValueSolenoidOpen = str(
-    minimumSoilMoistureSensorValueSolenoidOpen)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumSoilMoistureSensorValueSolenoidOpen</td><td>')
-staticWebPageFileHandle.write(minimumSoilMoistureSensorValueSolenoidOpen)
-staticWebPageFileHandle.write('VDC</td></tr>')
-
-minimumSoilMoistureSensorValueSolenoidClosed = str(
-    minimumSoilMoistureSensorValueSolenoidClosed)
-staticWebPageFileHandle.write(
-    '<tr><td>minimumSoilMoistureSensorValueSolenoidClosed</td><td>')
-staticWebPageFileHandle.write(minimumSoilMoistureSensorValueSolenoidClosed)
-staticWebPageFileHandle.write('VDC</td></tr>')
-staticWebPageFileHandle.write('</table></center><br><br>')
-
-staticWebPageFileHandle.write(
-    '<center><a href="/wiring.png"><img src="/wiringlow.png" alt="Automation System Wiring Diagram"><a></center>')
-
-staticWebPageFileHandle.write('</body></html>')
-
-staticWebPageFileHandle.close
+##################################################################
+##################### End Evaluation Process #####################
+##################################################################
 
 
-# begin file append of CSV file to the web server root
-# "Luminosity","Temperature","Humidity","Moisture",
-# "Solenoid","Actuator","Output1","Output2","Output3","Epoch"
+##################################################################
+###### Begin HTML, Database, CSV, Graph Image Update Process #####
+##################################################################
 
-csvFileHandle = open(logDataCSVFileName, "a")
 
-csvFileHandle.write('"')
-csvFileHandle.write(currentLuminositySensorValue)
-csvFileHandle.write('",\"')
+# call the write static HTML output file subroutine
+writeStaticHTMLFile(currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue, currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList, linearActuatorRunTime, minimumSoilMoistureSensorValue, webpageHeaderValue, minimumLuminositySensorValue, minimumLuminositySensorValueActuatorRetract, minimumTemperatureActuatorRetract,
+                    minimumHumidityActuatorRetract, minimumLuminositySensorValueActuatorExtend, minimumTemperatureActuatorExtend, minimumHumidityActuatorExtend, minimumTemperatureOutputOneOn, minimumHumidityOutputOneOn, minimumTemperatureOutputOneOff, minimumHumidityOutputOneOff, minimumTemperatureOutputTwoOn, minimumTemperatureOutputTwoOff, minimumSoilMoistureSensorValueSolenoidOpen, minimumSoilMoistureSensorValueSolenoidClosed)
 
-csvFileHandle.write('')
-csvFileHandle.write(currentTemperature)
-csvFileHandle.write('","')
+# call the write database table subroutine
+writeDatabaseOutput(currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue,
+                    currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList)
 
-csvFileHandle.write('')
-csvFileHandle.write(currentHumidity)
-csvFileHandle.write('","')
+# call the write CSV output file subroutine
+writeCSVOutputFile(currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue,
+                   currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList)
 
-csvFileHandle.write('')
-csvFileHandle.write(currentSoilMoistureSensorValue)
-csvFileHandle.write('","')
+# call the read database table data output graph files subroutine
+readDatabaseOutputGraphs()
 
-csvFileHandle.write('')
-csvFileHandle.write(currentSolenoidValveStatus)
-csvFileHandle.write('","')
-
-csvFileHandle.write('')
-csvFileHandle.write(currentActuatorExtensionStatus)
-csvFileHandle.write('","')
-
-csvFileHandle.write('')
-csvFileHandle.write('%s' % currentOutputStatusList[0])
-csvFileHandle.write('","')
-
-csvFileHandle.write('')
-csvFileHandle.write('%s' % currentOutputStatusList[1])
-csvFileHandle.write('","')
-
-csvFileHandle.write('')
-csvFileHandle.write('%s' % currentOutputStatusList[2])
-csvFileHandle.write('","')
-
-# second since the epoch
-csvFileHandle.write('')
-csvFileHandle.write('%s' % time.time())
-csvFileHandle.write('"' + '\n')
-csvFileHandle.write('')
-
-staticWebPageFileHandle.close
+##################################################################
+####### End HTML, Database, CSV, Graph Image Update Process ######
+##################################################################
