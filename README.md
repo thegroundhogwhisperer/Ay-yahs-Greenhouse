@@ -45,7 +45,7 @@ heating pad
 
 (1) Light dependent resistor - ADA997
 
-(1) USB fan
+(1) 12 Volt DC fan
 
 (1) USB pet heating pad carbon fiber
 
