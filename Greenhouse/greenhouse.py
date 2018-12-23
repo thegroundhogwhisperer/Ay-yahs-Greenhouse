@@ -101,7 +101,7 @@ logDataCSVFileNameURL = "index.csv"
 
 # this actuators stroke is 406.4 mm at 10 mm per second
 # wait 40.6 seconds to open the window
-linearActuatorRunTime = 40.6
+linearActuatorRunTime = 70
 
 # set the minimum value at 0.05VDC
 minimumSoilMoistureSensorValue = 1
@@ -130,12 +130,12 @@ minimumTemperatureActuatorExtend = 50
 minimumHumidityActuatorExtend = 20
 
 # minimum temp or humidity values output #1 turn on the fan
-minimumTemperatureOutputOneOn = 80
-minimumHumidityOutputOneOn = 50
+minimumTemperatureOutputOneOn = 69
+minimumHumidityOutputOneOn = 25
 
 # minimum temp or humidity values output #1 turn off the fan
-minimumTemperatureOutputOneOff = 79
-minimumHumidityOutputOneOff = 68
+minimumTemperatureOutputOneOff = 50
+minimumHumidityOutputOneOff = 24
 
 # minimum temp value output #2 turn on the USB heating pad
 minimumTemperatureOutputTwoOn = 35
@@ -147,7 +147,7 @@ minimumTemperatureOutputTwoOff = 40
 minimumSoilMoistureSensorValueSolenoidOpen = 1.9
 
 # minimum soil moisture value relay #3 close solenoid valve
-minimumSoilMoistureSensorValueSolenoidClosed = 1.6
+minimumSoilMoistureSensorValueSolenoidClosed = 1.8
 
 ##################################################################
 #################### End Customizable Values #####################
@@ -498,6 +498,8 @@ def writeWallMessages(writeWallMessageContent):
     # the wall applications -n no banner
     # option requires root thus sudo
     wallMessageCommandLine = ['sudo', 'wall', '-n', wallMessageText]
+
+    # comment out the following line to disable console notifications
     p = subprocess.Popen(wallMessageCommandLine)
 
 
@@ -586,7 +588,8 @@ def readDatabaseOutputGraphs():
 
         # select data rows from the table
     # curs.execute("INSERT INTO greenhouse (luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime) VALUES((?), (?), (?), (?), (?), (?), (?), (?), (?), date('now'), time('now'))", (currentLuminositySensorValue, currentTemperature, currentHumidity, currentSoilMoistureSensorValue,  currentSolenoidValveStatus, currentActuatorExtensionStatus, currentOutputStatusList[0], currentOutputStatusList[1], currentOutputStatusList[2]))
-        curs.execute('SELECT luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime FROM greenhouse LIMIT 2000')
+        curs.execute('SELECT luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime FROM greenhouse ORDER BY ROWID DESC LIMIT 1000 ')
+#        curs.execute('SELECT luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime FROM greenhouse LIMIT 4000')
     #  curs.execute('SELECT temperature, currentdate FROM greenhouse LIMIT 2000')
 
         dataRowFetchedAll = curs.fetchall()
@@ -653,7 +656,7 @@ def writeStaticHTMLFile(currentLuminositySensorValue, currentTemperature, curren
        }
       </style>
 
-    <meta http-equiv="refresh" content="120">
+    <meta http-equiv="refresh" content="600"0">
 
     <title>Greenhouse Automation System Status Information</title></head>
 
@@ -665,7 +668,7 @@ def writeStaticHTMLFile(currentLuminositySensorValue, currentTemperature, curren
     staticWebPageFileHandle.write('<br>Status Information</h3>')
 
     staticWebPageFileHandle.write(
-        '<center><a href="/greenhousehigh.jpg"><img src="/greenhouselow.jpg" alt="Greenhouse Camera Image"  height="240" width="320"><br>Click for high resolution</center></a>')
+        '<center><a href="/greenhousehigh.jpg"><img src="/greenhouselow.gif" alt="Greenhouse Camera Image - Animated GIF file"  height="240" width="320"><br>Click for high resolution</center></a>')
     staticWebPageFileHandle.write('<center><table>')
     staticWebPageFileHandle.write(
         '<caption>Current Environmental Data</caption>')
@@ -675,37 +678,49 @@ def writeStaticHTMLFile(currentLuminositySensorValue, currentTemperature, curren
     currentLuminositySensorValue = str(currentLuminositySensorValue)
     staticWebPageFileHandle.write('<tr><td>')
     staticWebPageFileHandle.write('Luminosity</td><td>')
+    staticWebPageFileHandle.write('<a href="')
+    staticWebPageFileHandle.write(graphImageLuminosityURL)
+    staticWebPageFileHandle.write('">')
     staticWebPageFileHandle.write('<img src="')
     staticWebPageFileHandle.write(graphImageLuminosityURL)
     staticWebPageFileHandle.write(
-        '" alt="Greenhouse Luminosity Last 2000 Data Points" height="240" width="320"><a><br><center>')
+        '" alt="Greenhouse Luminosity Last 2000 Data Points" height="240" width="320"></a><br><center>')
     staticWebPageFileHandle.write(currentLuminositySensorValue)
     staticWebPageFileHandle.write('VDC</center></td></tr>')
 
     currentTemperature = str(currentTemperature)
     staticWebPageFileHandle.write('<tr><td>Temperature</td><td>')
+    staticWebPageFileHandle.write('<a href="')
+    staticWebPageFileHandle.write(graphImageTemperatureURL)
+    staticWebPageFileHandle.write('">')
     staticWebPageFileHandle.write('<img src="')
     staticWebPageFileHandle.write(graphImageTemperatureURL)
     staticWebPageFileHandle.write(
-        '" alt="Greenhouse Temperature Last 2000 Data Points" height="240" width="320"><a><br><center>')
+        '" alt="Greenhouse Temperature Last 2000 Data Points" height="240" width="320"></a><br><center>')
     staticWebPageFileHandle.write(currentTemperature)
     staticWebPageFileHandle.write('F</center></td></tr>')
 
     currentHumidity = str(currentHumidity)
     staticWebPageFileHandle.write('<tr><td>Humidity</td><td>')
+    staticWebPageFileHandle.write('<a href="')
+    staticWebPageFileHandle.write(graphImageHumidityURL)
+    staticWebPageFileHandle.write('">')
     staticWebPageFileHandle.write('<img src="')
     staticWebPageFileHandle.write(graphImageHumidityURL)
     staticWebPageFileHandle.write(
-        '" alt="Greenhouse Humidity Last 2000 Data Points" height="240" width="320"><a><br><center>')
+        '" alt="Greenhouse Humidity Last 2000 Data Points" height="240" width="320"></a><br><center>')
     staticWebPageFileHandle.write(currentHumidity)
     staticWebPageFileHandle.write('%</center></td></tr>')
 
     currentSoilMoistureSensorValue = str(currentSoilMoistureSensorValue)
     staticWebPageFileHandle.write('<tr><td>Soil moisture</td><td>')
+    staticWebPageFileHandle.write('<a href="')
+    staticWebPageFileHandle.write(graphImageSoilMoistureURL)
+    staticWebPageFileHandle.write('">')
     staticWebPageFileHandle.write('<img src="')
     staticWebPageFileHandle.write(graphImageSoilMoistureURL)
     staticWebPageFileHandle.write(
-        '" alt="Greenhouse Soil Moisture Last 2000 Data Points" height="240" width="320"><a><br><center>')
+        '" alt="Greenhouse Soil Moisture Last 2000 Data Points" height="240" width="320"></a><br><center>')
     staticWebPageFileHandle.write(currentSoilMoistureSensorValue)
     staticWebPageFileHandle.write('VDC</center></td></tr>')
 
@@ -852,7 +867,7 @@ def writeStaticHTMLFile(currentLuminositySensorValue, currentTemperature, curren
 
     staticWebPageFileHandle.write(
         '<center><a href="/wiring.png"><img src="/wiringlow.png" alt="Automation System Wiring Diagram"><a></center>')
-    staticWebPageFileHandle.write('</body></html>')
+    staticWebPageFileHandle.write('<br><br><br><br><center><a href="/em.php">Manual Operations</a></center><br><br><br><br></body></html>')
     staticWebPageFileHandle.close
 
 ##################################################################
@@ -960,16 +975,18 @@ writeWallMessages(writeWallMessageContent)
 # evaulate if we close or open the window
 if (currentLuminositySensorValue <= minimumLuminositySensorValueActuatorRetract and
         currentTemperature <= minimumTemperatureActuatorRetract and
-        currentHumidity <= minimumHumidityActuatorRetract
+        currentHumidity <= minimumHumidityActuatorRetract and
+        currentSolenoidValveStatus == 'Closed'
     ):
     # retract the linear actuator and close the window
     actuatorExtensionStatus = 'Retracted'
     currentActuatorExtensionStatus = linearActuatorExtensionRetraction(
         actuatorExtensionStatus)
 
-elif (currentLuminositySensorValue >= minimumLuminositySensorValueActuatorExtend and
-      currentTemperature >= minimumTemperatureActuatorExtend and
-      currentHumidity >= minimumHumidityActuatorExtend
+elif (currentLuminositySensorValue > minimumLuminositySensorValueActuatorExtend and
+      currentTemperature > minimumTemperatureActuatorExtend and
+      currentHumidity > minimumHumidityActuatorExtend and
+      currentSolenoidValveStatus == 'Closed'
       ):
     # extend the linear actuator and open the window
     actuatorExtensionStatus = 'Extended'
@@ -978,15 +995,16 @@ elif (currentLuminositySensorValue >= minimumLuminositySensorValueActuatorExtend
 
 # evaulate if we need to enable output #1 turn on the fan
 if (currentTemperature >= minimumTemperatureOutputOneOn or
-        currentHumidity >= minimumHumidityOutputOneOn
+    currentHumidity >= minimumHumidityOutputOneOn and
+    currentSolenoidValveStatus == 'Closed'
     ):
     # enable output one
     outputNumber = 0
     outputStatus = 'On'
     currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
-elif (currentTemperature <= minimumTemperatureOutputOneOff or
-      currentHumidity <= minimumHumidityOutputOneOff
+elif (currentTemperature < minimumTemperatureOutputOneOff or
+      currentHumidity < minimumHumidityOutputOneOff
       ):
     # disable output one
     outputNumber = 0
@@ -1000,7 +1018,7 @@ if (currentTemperature <= minimumTemperatureOutputTwoOn):
     outputStatus = 'On'
     currentOutputStatus = controlOutputs(outputNumber, outputStatus)
 
-elif (currentTemperature >= minimumTemperatureOutputTwoOff):
+elif (currentTemperature > minimumTemperatureOutputTwoOff):
     # disable output two
     outputNumber = 1
     outputStatus = 'Off'
@@ -1008,11 +1026,15 @@ elif (currentTemperature >= minimumTemperatureOutputTwoOff):
 
 # evaluate if the solenoid valve should be open or closed
 if (currentSoilMoistureSensorValue >= minimumSoilMoistureSensorValueSolenoidOpen):
+   # disable output one
+    outputNumber = 0
+    outputStatus = 'Off'
+    currentOutputStatus = controlOutputs(outputNumber, outputStatus)
     # enable relay three opening the solenoid valve
     solenoidValveStatus = 'Open'
     solenoidValveOperation(solenoidValveStatus)
 
-elif (currentSoilMoistureSensorValue <= minimumSoilMoistureSensorValueSolenoidClosed):
+elif (currentSoilMoistureSensorValue < minimumSoilMoistureSensorValueSolenoidClosed):
     # disable relay three closing the solenoid valve
     solenoidValveStatus = 'Closed'
     solenoidValveOperation(solenoidValveStatus)
