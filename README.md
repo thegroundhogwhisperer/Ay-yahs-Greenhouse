@@ -45,7 +45,11 @@ heating pad
 
 (1) Light dependent resistor - ADA997
 
-(1) 12 Volt DC fan
+(1) Two Channel Relay Controller - TS0619
+
+(1) Oscillating Fan 12VDC - AC845
+
+(1) Pump 12VDC 1.2GPM 35PSI - SFDP1-012-035-21
 
 (1) USB pet heating pad carbon fiber
 
