@@ -126,6 +126,14 @@ crontab -e
 
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
 
-![Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
+![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
+
+![GreenhousePi Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
+
+![Relay_Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Fan%20Relay%20Controller%20Wiring%20Diagram%20Small%20Image.png)
+
+![Sensor To Berg Connector_Wiring Example](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/DHT22%20Wiring%20Example%20Berg%204%20Pin%20Peripheral%20Connector%20To%20DHT22%20Digital%20Humidity%20Temperature%20Sensor%20Greenhouse%20Small%20Image.png)
+
+
 
 
