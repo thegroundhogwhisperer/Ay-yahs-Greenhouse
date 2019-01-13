@@ -3,7 +3,7 @@
 
 This is a for-fun project created for the purpose of automating climate control and irrigation in a small greenhouse.
 
-Climate control and irrigation control is achieved by monitoring environmental sensor measurements. The environmental sensors measurements are then used to control a linear actuator, solenoid valve, small fan, and small heating pad. The information produced is displayed on a 16x2 LCD screen.
+Climate control and irrigation control is achieved by monitoring environmental sensor measurements. The environmental sensors measurements are then used to control a linear actuator, solenoid valve, small fan, and small heating pad. The information produced is displayed on a 16x2 LCD screen, broadcast via wall messages to the console, written to an html file, csv file, and SQLite database file.
 
 # What it does
 
