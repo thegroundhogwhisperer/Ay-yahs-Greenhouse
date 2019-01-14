@@ -23,13 +23,15 @@
 
 ![Screen Shot 5](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20select%20command.png)
 
-6. Select the Add button
+6. Select the Open button
+
 ![Screen Shot 6](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20select%20command%20open%20button.png)
 
-7. Select the Close button
+7. Select the Add button
+
 ![Screen Shot 7](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20startup%20program%20add%20button.png)
 
-8. Logout and back in
+8. Select the Close button
 ![Screen Shot 8](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20close%20button.png)
 
-
+9. Logout and back in to start the greenhousealarm.py script
