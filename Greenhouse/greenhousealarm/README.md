@@ -15,11 +15,11 @@
 
 ![Screen Shot 3](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20button.png)
 
-4. Populate a Name value (e.g. Greenhouse Alarm Python Script
+4. Populate a Name value (e.g. Greenhouse Alarm Python Script) and select the Browse button.
 
 ![Screen Shot 4](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20startup%20program%20browse%20button.png)
 
-5. Select the Browse button then navigate to and select the greenhousealarm.py file
+5. Navigate to and select the greenhousealarm.py file
 
 ![Screen Shot 5](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20select%20command.png)
 
