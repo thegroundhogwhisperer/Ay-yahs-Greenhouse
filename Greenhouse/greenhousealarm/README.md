@@ -1,40 +1,41 @@
 # greenhousealarm.py 
 
-A Python script that retrieves the latest greenhouse environmental data produced by /Greenhouse/greenhouse.py in CSV format using the wget application. greenhousealarm.py evaluates the last recorded temperature value and sounds an audible notification using the Ubuntu speech-dispatcher and displays a bubble using the notify-send command when the temperature value is not between the minimum and maximum threshold.
+A Python script that retrieves the latest greenhouse environmental data produced by /Greenhouse/greenhouse.py in CSV format using the wget application. greenhousealarm.py evaluates the last recorded temperature value and sounds an audible notification using the Ubuntu speech-dispatcher when the temperature value is not between the minimum and maximum threshold.
  
-# Steps for executing greenhousealarm.py at login of an Ubuntu 16 workstation.
+Configure the greenhousealarm.py script to be executed by a crontab
 
-1. Set execute permission on the greenhousealarm.py file
+$ crontab -e
+## Edit this file to introduce tasks to be run by cron.
+## 
+## Each task to run has to be defined through a single line
+## indicating with different fields when the task will be run
+## and what command to run for the task
+## 
+## To define the time you can provide concrete values for
+## minute (m), hour (h), day of month (dom), month (mon),
+## and day of week (dow) or use '*' in these fields (for 'any').# 
+## Notice that tasks will be started based on the cron's system
+## daemon's notion of time and timezones.
+## 
+## Output of the crontab jobs (including errors) is sent through
+## email to the user the crontab file belongs to (unless redirected).
+## 
+## For example, you can run a backup of all your user accounts
+## at 5 a.m every week with:
+## 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+## 
+## For more information see the manual pages of crontab(5) and cron(8)
+## 
+## m h  dom mon dow   command
 
-![Screen Shot 1](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/greenhousealarm.py%20execute%20permissions.png)
+Add the following line to the bottom of the current cron configuration
 
-2. Select the Applications button launch Startup Applications
+# */1 * * * * python3 /home/username/greenhousealarm/greenhousealarm.py
 
-![Screen Shot 2](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications.png)
+If you are using nano as your editor:
 
-3. Select the Add button to add an aditional startup program
+Press Ctrl-O for save
+Press Enter to confirm file path and name
+Press Ctrl-X to exit nano
 
-![Screen Shot 3](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20button.png)
-
-4. Populate a Name value (e.g. Greenhouse Alarm Python Script) and select the Browse button.
-
-![Screen Shot 4](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20startup%20program%20browse%20button.png)
-
-5. Navigate to and select the greenhousealarm.py file
-
-![Screen Shot 5](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20select%20command.png)
-
-6. Select the Open button
-
-![Screen Shot 6](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20select%20command%20open%20button.png)
-
-7. Select the Add button
-
-![Screen Shot 7](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20add%20startup%20program%20add%20button.png)
-
-8. Select the Close button
-
-![Screen Shot 8](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse/greenhousealarm/screenshots/ubuntu%20startup%20applications%20close%20button.png)
-
-9. Logout and back in to start the greenhousealarm.py script
 
