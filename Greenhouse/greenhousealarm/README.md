@@ -5,11 +5,11 @@ A Python script that retrieves the latest greenhouse environmental data produced
 Configure the greenhousealarm.py script to be executed by a crontab
 
 $ crontab -e
-## Edit this file to introduce tasks to be run by cron.
-## 
-## Each task to run has to be defined through a single line
-## indicating with different fields when the task will be run
-## and what command to run for the task
+\#  Edit this file to introduce tasks to be run by cron.
+\# 
+\# Each task to run has to be defined through a single line
+\# indicating with different fields when the task will be run
+\# and what command to run for the task
 ## 
 ## To define the time you can provide concrete values for
 ## minute (m), hour (h), day of month (dom), month (mon),
@@ -37,5 +37,4 @@ If you are using nano as your editor:
 Press Ctrl-O for save
 Press Enter to confirm file path and name
 Press Ctrl-X to exit nano
-
 
