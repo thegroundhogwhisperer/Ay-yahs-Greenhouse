@@ -14,6 +14,7 @@ to execute the greenhousealarm Python script every two minutes
 If you are using nano as your editor:
 
 Press Ctrl-O for save
-Press Enter to confirm file path and name
-Press Ctrl-X to exit nano
 
+Press Enter to confirm file path and name
+
+Press Ctrl-X to exit nano
