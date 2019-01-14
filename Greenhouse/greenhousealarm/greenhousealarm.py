@@ -12,20 +12,6 @@
 # the temperature value is not between the minimum and maximum
 # threshold.
 
-# greenhousealarm.py can be executed at workstation login.
-# 
-# Steps for executing greenhousealarm.py at login of an Ubuntu
-# workstation.
-# 1. Set execute permission on the greenhousealarm.py file
-# 2. Select the Applications button launch Startup Applications
-# 3. Select the Add button to add an aditional startup program
-# 4. Populate a Name value (e.g. Greenhouse Alarm Python Script
-# 5. Select the Browse button then navigate to and select
-#    the greenhousealarm.py file
-# 6. Select the Add button
-# 7. Select the Close button
-# 8. Logout and back in
-
 import os
 import subprocess
 import time
@@ -80,8 +66,6 @@ def audio_notification_text_to_speech(text_to_speech_message_content):
     # execute the process on the os
     p = subprocess.Popen(notify_send_command_line)
 
-
-
 # evaluate temperature alarm status
 def compare_temperature_status_minimum_maximum(current_greenhouse_temperature):
 
@@ -101,7 +85,3 @@ while True:
     # and then evaluate if an audible alarm notification is needed
     fetch_csv_file_read_last_temperature()
     time.sleep(UPDATE_INTERVAL_SECONDS)
-
-
-
-
