@@ -11,9 +11,11 @@
 # the temperature value is not between the minimum and maximum
 # threshold.
 
+# note: the eval command specifies which display notify-send will use for alerts
 # install using crontab
-# crontab -e
-# */2 * * * * python3 /home/username/greenhousealarm/greenhousealarm.py
+# $ crontab -e
+# */2 * * * * eval "export $(egrep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep -u $LOGNAME gnome-session)/environ)"; python3 /home/username/greenhousealarm/greenhousealarm-notify-send.py
+
 
 import os
 import subprocess
@@ -53,12 +55,18 @@ def fetch_csv_file_read_last_temperature():
     # call the subroutine to evaluate alarm conditions
     compare_temperature_status_minimum_maximum(current_greenhouse_temperature)
 
-# call the speech-dispatcher for text-to-speech
+# call the desktop notification program and the speech-dispatcher for text-to-speech
 def audio_notification_text_to_speech(text_to_speech_message_content):
 
     audio_notification_command_line = ['spd-say', '--wait', text_to_speech_message_content]
     # execute the process on the os
     p = subprocess.Popen(audio_notification_command_line)
+
+    # display a bubble in the gui using notify-send just for fun
+    notify_send_command_line = ['notify-send', 'Attention!', text_to_speech_message_content]
+    # execute the process on the os
+    p = subprocess.Popen(notify_send_command_line)
+
 
 
 # evaluate temperature alarm status
