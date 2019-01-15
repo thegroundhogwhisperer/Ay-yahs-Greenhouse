@@ -1,6 +1,6 @@
 # Ay-yahs-Greenhouse
 
-# Python script for temperature notifictions on an Ubuntu 18.04 desktop.
+# Python scripts for temperature notifictions on an Ubuntu 18.04 desktop
 
 # greenhousealarm.py 
 
