@@ -47,10 +47,19 @@ def fetch_csv_file_read_last_temperature():
 
     except IOError:
         return 'error'
+    
+    # remove new line char
+    last_line_csv_file = last_line_csv_file.replace('\n', '')
+
+    # remove single quotes
+    last_line_csv_file = last_line_csv_file.replace("'", "")
+
+    # remove double quotes
+    last_line_csv_file = last_line_csv_file.replace('"', '')
 
     # split at commas
     csv_values = last_line_csv_file.split(",")
-    current_greenhouse_temperature = csv_values[2].replace('"', '')
+    current_greenhouse_temperature = csv_values[1]
     current_greenhouse_temperature = int(float(current_greenhouse_temperature))
     # call the subroutine to evaluate alarm conditions
     compare_temperature_status_minimum_maximum(current_greenhouse_temperature)
