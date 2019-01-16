@@ -22,10 +22,10 @@ import os
 import subprocess
 
 # local copy of the remotely fetched greenhouse.csv file
-LOCAL_FILE_NAME = "/home/crazypotato/greenhousealarm/index.csv"
+LOCAL_FILE_NAME = "/home/username/greenhousealarm/index.csv"
 
 # remote CSV file URL (e.g. http://192.168.1.118/index.csv)
-REMOTE_FILE_PATH_URL = "http://localhost/a/index.csv"
+REMOTE_FILE_PATH_URL = "http://localhost/index.csv"
 
 # execute the wget command to fetch and store the latest index.csv from the automation system
 def fetch_csv_file_read_last_environmental_record():
