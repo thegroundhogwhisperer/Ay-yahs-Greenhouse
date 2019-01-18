@@ -1,6 +1,6 @@
 # Ay-yahs-Greenhouse
 
-# Python scripts for temperature notifictions on an Ubuntu 18.04 desktop
+# Python script for VOX activated radio frequency broadcast transmissions containing audible notifications of greenhouse environmental conditions on an Ubuntu 18.04 desktop
 
 # greenhousestatusttsrf 
 
