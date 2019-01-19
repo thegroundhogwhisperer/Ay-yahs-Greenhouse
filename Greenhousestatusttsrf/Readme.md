@@ -2,6 +2,8 @@
 
 # Python script for VOX activated radio frequency broadcast transmissions containing audible notifications of greenhouse environmental conditions on an Ubuntu 18 desktop 
 
+# Warning: Laws governing the operation of a radio frequency transceiver or transmitter are clearly established and strictly enforced by federal regulations.
+
 # Variants
 
 # /without_notify-send/greenhousestatuscronttsrf.py	
