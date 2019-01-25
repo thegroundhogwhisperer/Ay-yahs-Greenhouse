@@ -6,7 +6,7 @@
 
 # Prerequisites
 
-wget
+Command line utility to retrieve content from a web server (wget)
 
 Ubuntu speech-dispatcher (spd-say)
 
