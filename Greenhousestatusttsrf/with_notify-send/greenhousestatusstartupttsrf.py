@@ -78,7 +78,7 @@ def fetch_csv_file_read_last_environmental_record():
 
     if not last_line_csv_file or len(last_line_csv_file) < 1:
         # if the file read failed to read go back to sleep and try again
-        exit()
+        main_subroutine()
 
     # remove new line char
     last_line_csv_file = last_line_csv_file.replace('\n', '')
