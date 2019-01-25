@@ -5,7 +5,15 @@
 # greenhousealarm.py 
 
 A Python script that retrieves the latest greenhouse environmental data produced by /Greenhouse/greenhouse.py in CSV format using the wget application. greenhousealarm.py evaluates the last recorded temperature value and determines if an audible notification should be sounded using the speech-dispatcher text-to-speech service when the temperature value is not between the minimum and maximum threshold.
- 
+
+# Prerequisites
+
+Command line utility to retrieve content from a web server (wget)
+
+Ubuntu speech-dispatcher (spd-say)
+
+Desktop notification application (notify-send)
+
 Configure the greenhousealarm.py script to be executed by a crontab
 
 $ crontab -e
