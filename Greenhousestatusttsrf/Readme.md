@@ -4,6 +4,14 @@
 
 # Warning: Laws governing the operation of a radio frequency transceiver or transmitter are clearly established and strictly enforced by federal regulations.
 
+# Prerequisites
+
+wget
+
+Ubuntu speech-dispatcher (spd-say)
+
+Desktop notification application (notify-send)
+
 # Variants
 
 # /without_notify-send/greenhousestatuscronttsrf.py	
