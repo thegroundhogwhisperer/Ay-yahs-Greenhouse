@@ -1,4 +1,11 @@
 # Ay-yahs-Greenhouse
+
+![Greenhouse Structure Image Distant](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Distant%20Small%20Image.png)
+
+![Greenhouse Structure Image Near](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Entrance%20Small%20Image.png)
+
+![Greenhouse Structure Interior](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
+
 # Raspberry Pi Greenhouse Automation Project
 
 This is a for-fun project created for the purpose of automating climate control and irrigation in a small greenhouse.
@@ -136,9 +143,11 @@ Due to the failure rate of the DHT22 sensor a power connector from a floppy disk
 
 ![Sensor To Berg Connector_Wiring Example](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/DHT22%20Wiring%20Example%20Berg%204%20Pin%20Peripheral%20Connector%20To%20DHT22%20Digital%20Humidity%20Temperature%20Sensor%20Greenhouse%20Small%20Image.png)
 
-Automation Enclosure Image
+Automation Enclosure Images
 
 ![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
+
+![Greenhouse Automation System Mounted Enclosure](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
 
 Two Channel Relay Enclosure image
 
