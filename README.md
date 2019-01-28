@@ -1,10 +1,10 @@
 # Ay-yahs-Greenhouse
 
-![Greenhouse Structure Image Distant](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Distant%20Small%20Image.png)
+![Greenhouse Structure Image Distant](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Distant%20Small%20Image.png)
 
-![Greenhouse Structure Image Near](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Entrance%20Small%20Image.png)
+![Greenhouse Structure Image Near](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Entrance%20Small%20Image.png)
 
-![Greenhouse Structure Interior](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
+![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
 
 # Raspberry Pi Greenhouse Automation Project
 
@@ -145,9 +145,9 @@ Due to the failure rate of the DHT22 sensor a power connector from a floppy disk
 
 Automation Enclosure Images
 
-![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
+![Greenhouse Automation System Mounted Enclosure](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
 
-![Greenhouse Automation System Mounted Enclosure](https://https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
+![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
 
 Two Channel Relay Enclosure image
 
