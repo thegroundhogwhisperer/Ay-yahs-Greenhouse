@@ -175,7 +175,7 @@ def audio_notification_text_to_speech(text_to_speech_message_content, notify_sen
         # execute the process on the os
         p = subprocess.Popen(notify_send_command_line)
 
-        audio_notification_command_line = ['spd-say', '--wait', text_to_speech_message_content]
+        audio_notification_command_line = ['/usr/bin/spd-say', '--wait', text_to_speech_message_content]
         # execute the process on the os
         p = subprocess.Popen(audio_notification_command_line)
 
