@@ -39,7 +39,7 @@ import subprocess
 import time
 
 # remote CSV file URL (e.g. http://192.168.1.118/index.csv)
-REMOTE_FILE_PATH_URL = "http://localhost/a/index.csv"
+REMOTE_FILE_PATH_URL = "http://localhost/index.csv"
 
 # local copy of the remotely fetched greenhouse.csv file
 LOCAL_CSV_FILE_NAME = "/home/username/index.csv"
