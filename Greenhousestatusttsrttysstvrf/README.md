@@ -31,15 +31,14 @@
 
  Text-to-speech audio containing greenhouse environmental data
 
- RTTY audio output containing greenhouse environmental data
+ RTTY audio data output containing greenhouse environmental data
 
- SSTV audio output containing an image from the greenhouse interior
+ SSTV audio data output containing an image from the greenhouse interior camera
 
 
 greenhousestatusttsrttysstvrf.py is a Python script that retrieves the latest greenhouse environmental data produced by /Greenhouse/greenhouse.py in CSV format and camera image data produced by /Greenhouse/camera.py and produces a desktop notification, text-to-speech audio output, RTTY data output, and SSTV data output. 
 
-The audio output produced by greenhousestatusttsrttysstvrf.py can be connected to a radio in VOX (voice-operated exchange) mode allowing for radio frequency transmission of the current greenhouse
-environmental conditions. 
+The audio output produced by greenhousestatusttsrttysstvrf.py can be connected to a radio in VOX (voice-operated exchange) mode allowing for radio frequency transmission of the current greenhouse environmental conditions. 
 
 Before transmitting on any channel or frequency the channel should be monitored for at least 30 seconds to verify that the channel is clear/available. 
 
