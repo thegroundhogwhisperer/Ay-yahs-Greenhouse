@@ -49,13 +49,13 @@ greenhousestatusttsrttysstvrf.py uses SoX to achieve verification of the current
 
 To execute greenhousestatusttsrttysstvrf.py using a cron tab use a bash shell script wrapper that exports environmental variables to the Python script. Access to environmental variables allow applications to access the desktop GUI and specific users audio output devices. (e.g. notify-send, spd-say). 
 
-# Reference:
+# Reference
 
 https://askubuntu.com/questions/978382/how-can-i-show-notify-send-messages-triggered-by-crontab
 
 https://askubuntu.com/questions/719590/help-using-crontab-to-play-a-sound
 
-# Example bash shell script gui-launcher contents
+# Example bash shell script gui-launcher wrapper contents
 
 !#!/bin/bash -e
 
