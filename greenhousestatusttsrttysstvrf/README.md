@@ -25,7 +25,7 @@
   sudo python3 -m pip install PySSTV
 
 
-# Produces:
+# Produces
 
  Desktop visual notification "bubble"
 
