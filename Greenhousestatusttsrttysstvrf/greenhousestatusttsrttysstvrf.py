@@ -20,6 +20,7 @@
 # Text-to-speech audio containing greenhouse environmental data
 # RTTY audio output containing greenhouse environmental data
 # SSTV audio output containing an image from the greenhouse interior
+# with the current environmental data overlaid on the camera image
 #
 # greenhousestatusttsrttysstvrf.py is a Python script that retrieves
 # the latest greenhouse environmental data produced by
@@ -84,7 +85,7 @@ import os
 import subprocess
 from subprocess import call
 import time
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from pysstv.color import PD90
 import pysstv.sstv
 
@@ -110,6 +111,8 @@ LOCAL_IMAGE_FILE_NAME_PNG = "/home/username/greenhousehigh.png"
 LOCAL_AUDIO_FILE_NAME_RECORDING = '/home/username/recording.wav'
 
 # the maximum amplitude value returned by sox -stats to limit broadcasting on an active channel
+# please note that on some system configurations calculating the midline amplitude value
+# may be more useful for detecting audio input than the maximum amplitude value
 MAXIMUM_AMPLITUDE_VALUE_LIMIT = .125
 
 # length of audio sample used to calculate the maximum amplitude value in seconds
@@ -197,6 +200,159 @@ def fetch_image_fetch_csv_generate_gui_tts_rtty_ouput_content():
                                           current_soil_moisture_sensor_value, current_solenoid_valve_status,
                                           current_actuator_extension_status, current_output_one_status, current_output_two_status,
                                           current_output_three_status, seconds_since_the_epoch)
+
+
+    # create the transparent image overlay containg the call sign and current greenhouse data
+    # open the image overlay file
+    image_overlay_object = Image.new('RGBA', (320, 256), (255, 0, 0, 0))
+    # define the font and size used
+    font_object = ImageFont.truetype("Courier_New_Bold.ttf", 59)
+    # define the text fill color
+    letter_fill_color = "black"
+    # define the text outline color
+    letter_outline_color = "white"
+    # define the call sign drawn on the image overlay
+    sstv_call_sign = "NOCALL"
+
+    text_value = sstv_call_sign
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, -11
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    # Set the draw location for the second call sign to the lower right
+    x, y = 110, 204
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    # reduce the font size
+    font_object = ImageFont.truetype("Courier_New_Bold.ttf", 25)
+
+    text_value = "LDR:%sV" % str(current_luminosity_sensor_value)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 40
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "TEMP:%sF" % str(current_temperature)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 60
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "HUM:%s%%" % str(current_humidity)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 80
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "SOIL:%sV" % str(current_soil_moisture_sensor_value)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 100
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "VALVE:%s" % str(current_solenoid_valve_status)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 120
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "ACT:%s" % str(current_actuator_extension_status)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 140
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "OUT1:%s" % str(current_output_one_status)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 160
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    text_value = "OUT2:%s" % str(current_output_two_status)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 180
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    # reduce the font size
+    font_object = ImageFont.truetype("Courier_New_Bold.ttf", 15)
+
+    text_value = "%s" % str(seconds_since_the_epoch)
+    # Set the draw location for the first call sign to the upper left
+    x, y = 3, 202
+    draw_image_object = ImageDraw.Draw(image_overlay_object)
+    # draw a slightly larger text object that will be the outline
+    draw_image_object.text((x-1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y-1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x-1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    draw_image_object.text((x+1, y+1), text_value, font=font_object, fill=letter_outline_color)
+    # draw the same text object over the slightly larger text object
+    draw_image_object.text((x, y), text_value, font=font_object, fill=letter_fill_color)
+
+    # save the image overlay file
+    image_overlay_object.save(LOCAL_IMAGE_FILE_NAME_OVERLAY)
 
     # call the subroutine to generate notify bubble, text-to-speech, RTTY, and SSTV audio
     generate_gui_notify_bubble_text_to_speech_audio_rtty_audio_sstv_audio(text_to_speech_message_content, notify_send_message_content, rtty_modem_message_content)
