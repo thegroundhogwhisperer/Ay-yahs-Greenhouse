@@ -42,7 +42,8 @@ The audio output produced by greenhousestatusttsrttysstvrf.py can be connected t
 
 Before transmitting on any channel or frequency the channel should be monitored for at least 30 seconds to verify that the channel is clear/available. 
 
-greenhousestatusttsrttysstvrf.py uses SoX to achieve verification of the current channels availability. SoX is used to record a 30 second sample of the current channel. SoX is then used to generate statistics from the audio recording to establish a maximum amplitude value. This maximum amplitude value is used to determine if the current broadcast should be deferred due to traffic on the channel or frequency. A maximum amplitude value > 0.025 is indicative of audio input/channel traffic. The maximum amplitude value may have to be adjusted relative other systems audio sample configurations.
+greenhousestatusttsrttysstvrf.py uses SoX to achieve verification of the current channels availability. SoX is used to record a 30 second sample of the current channel. SoX is then used to generate statistics from the audio recording to establish a maximum amplitude value. This maximum amplitude value is used to determine if the current broadcast should be deferred due to traffic on the channel or frequency. A maximum amplitude value > 0.025 is indicative of audio input/channel traffic. The maximum amplitude value may have to be adjusted relative other systems audio sample configurations. Please note that on some system configurations calculating the midline amplitude value may be more useful for detecting audio input than the maximum amplitude value.
+
 
 # Crontab script execution
 
