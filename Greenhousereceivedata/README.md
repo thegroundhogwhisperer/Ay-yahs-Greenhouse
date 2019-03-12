@@ -25,6 +25,7 @@ This script monitors the /talk/textout.txt file produced by Fldigi for RTTY tran
 
 
 
+
 # greenhousesendsstvemail.py
 
 
