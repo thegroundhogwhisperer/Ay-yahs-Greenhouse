@@ -62,7 +62,7 @@ def send_rtty_email_message():
     # Loop through reading each line of the file
     for line in fldigi_text_out_file_list.readlines():
         # Parse the line for the call sign
-        if 'DE KJ4NSL' in line:
+        if 'DE NOCALL' in line:
             last_match_found_with_call_sign = line
         # If we find a match for the call sign then search for the time stamp value
         if last_match_found_with_call_sign is not None:
