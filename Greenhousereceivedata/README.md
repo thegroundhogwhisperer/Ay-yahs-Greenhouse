@@ -77,6 +77,45 @@ Icecast
 
 DarkIce
 
+
+
+# Python script for uploading RTTY and SSTV data to a Dropbox account
+
+
+# dropboxbackuprttysstv.py
+
+
+# Produces:
+
+
+Text file and image file uploads to a Dropbox account
+
+
+dropboxbackuprttysstv.py is a script that uploads Fldigi textout.txt files to
+a Dropbox account only after the file is N number of seconds older than the last copy uploaded.
+dropboxbackuprttysstv.py also locates and uploads the most recently saved SSTV image
+file to a Dropbox account.
+
+
+# Requirements:
+
+
+Dropbox - file hosting service account - application access token
+
+QSSTV - Qt based slow scan television and fax
+
+Fldigi - digital modem program for hamradio operators
+
+Python 3
+
+Reference
+
+https://github.com/dropbox/dropbox-sdk-python/blob/master/example/back-up-and-restore/backup-and-restore-example.py
+
+https://gist.github.com/Keshava11/d14db1e22765e8de2670b8976f3c7efb
+
+
+
 # Crontab configuration
 
 
@@ -86,6 +125,7 @@ DarkIce
 
 0 */2 * * * /usr/bin/python3 /home/livestream/greenhousestatusttsrttysstvrf.py
 
+*/5 * * * * /usr/bin/python3 /home/livestream/dropboxbackuprttysstv.py
 
 
 
