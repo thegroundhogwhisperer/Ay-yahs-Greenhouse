@@ -109,7 +109,7 @@ USB Audio Capture Device
 
 Note: The external speaker output from the 2 meter transceiver is connected to the USB audio capture device through an audio isolation transformer also known as a ground loop isolator.  If a Software-defined radio (SDR) is used in place of a transceiver the isolation transformer and USB audio capture device are unnecessary.
 
-
+# 
 # Software
 
  
@@ -125,9 +125,7 @@ Icecast
 
 DarkIce
 
-
-
-
+#
 # Crontab configuration
 
 
