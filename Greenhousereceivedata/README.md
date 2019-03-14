@@ -51,6 +51,7 @@ This script monitors a folder for .png image files produced by QSSTV transmissio
 
 # Hardware
 
+
 Raspberry Pi
 
 2 meter transceiver
@@ -82,19 +83,24 @@ DarkIce
 # Python script for uploading RTTY and SSTV data to a Dropbox account
 
 
+
 # dropboxbackuprttysstv.py
+
 
 
 # Produces:
 
 
+
 Text file and image file uploads to a Dropbox account
+
 
 
 dropboxbackuprttysstv.py is a script that uploads Fldigi textout.txt files to
 a Dropbox account only after the file is N number of seconds older than the last copy uploaded.
 dropboxbackuprttysstv.py also locates and uploads the most recently saved SSTV image
 file to a Dropbox account.
+
 
 
 # Requirements:
