@@ -25,8 +25,9 @@ This script monitors the /talk/textout.txt file produced by Fldigi for RTTY tran
 
 
 
-
+# 
 # greenhousesendsstvemail.py
+
 
 
 # Requirements: 
@@ -53,7 +54,7 @@ This script monitors a folder for .png image files produced by QSSTV transmissio
 # Python script for uploading RTTY and SSTV data to a Dropbox account
 
 
-
+# 
 # dropboxbackuprttysstv.py
 
 
