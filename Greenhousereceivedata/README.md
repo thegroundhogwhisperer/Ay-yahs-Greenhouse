@@ -98,7 +98,7 @@ https://gist.github.com/Keshava11/d14db1e22765e8de2670b8976f3c7efb
 
 # Hardware
 
-# 
+ 
 Raspberry Pi
 
 2 meter transceiver
@@ -112,7 +112,7 @@ Note: The external speaker output from the 2 meter transceiver is connected to t
 
 # Software
 
-# 
+ 
 Ubuntu Mate
 
 Fldigi - digital modem program for hamradio operators
@@ -127,7 +127,7 @@ DarkIce
 
 
 
-# 
+
 # Crontab configuration
 
 
