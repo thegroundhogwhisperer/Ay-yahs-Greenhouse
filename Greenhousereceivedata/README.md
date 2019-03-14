@@ -78,9 +78,14 @@ Icecast
 DarkIce
 
 # Crontab configuration
+
+
 @reboot sleep 10 && /home/livestream/darkice.sh
+
 */5 * * * * /usr/bin/python3 /home/livestream/greenhousesendsstvemail.py
+
 0 */2 * * * /usr/bin/python3 /home/livestream/greenhousestatusttsrttysstvrf.py
+
 
 
 
