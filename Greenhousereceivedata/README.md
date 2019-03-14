@@ -15,6 +15,7 @@ Fldigi - digital modem program for hamradio operators
 Python 3
 
 
+# 
 # Produces:
 
 
@@ -37,6 +38,7 @@ QSSTV - Qt based slow scan television and fax
 Python 3
 
 
+# 
 # Produces:
 
 
@@ -55,7 +57,7 @@ This script monitors a folder for .png image files produced by QSSTV transmissio
 # dropboxbackuprttysstv.py
 
 
-
+# 
 # Produces:
 
 
@@ -70,7 +72,7 @@ dropboxbackuprttysstv.py also locates and uploads the most recently saved SSTV i
 file to a Dropbox account.
 
 
-
+# 
 # Requirements:
 
 
@@ -96,7 +98,7 @@ https://gist.github.com/Keshava11/d14db1e22765e8de2670b8976f3c7efb
 
 # Hardware
 
-
+# 
 Raspberry Pi
 
 2 meter transceiver
@@ -110,7 +112,7 @@ Note: The external speaker output from the 2 meter transceiver is connected to t
 
 # Software
 
-
+# 
 Ubuntu Mate
 
 Fldigi - digital modem program for hamradio operators
