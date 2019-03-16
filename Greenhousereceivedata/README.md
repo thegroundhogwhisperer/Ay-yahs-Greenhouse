@@ -125,17 +125,163 @@ Icecast
 
 DarkIce
 
-#
-# Crontab configuration
 
+# Ubuntu Mate on Raspberry Pi 3 software setup using ubuntu-mate-16.04.2-desktop-armhf-raspberry-pi.img
+
+# Base applications installation
+
+
+sudo apt-get install fldigi qsstv icecast2 darkice htop raspi-config chromium-browser gqrx-sdr
+
+
+# Unrelated future project
+
+
+sudo apt-get install gqrx-sdr
+
+
+# Compile QSSTV 9.2.6 from source
+
+
+sudo apt-get install g++ libfftw3-dev qt5-default libpulse-dev hamlib-dev libasound-dev  libv4l-dev libopenjp2-7 libopenjp2-7-dev
+
+wget http://users.telenet.be/on4qz/qsstv/downloads/qsstv_9.2.6.tar.gz
+
+tar -xvzf qsstv_9.2.6.tar.gz 
+
+cd qsstv_9.2.6/
+
+qmake
+
+make
+
+
+# Upgrade pip, pip3, and install dropbox
+
+
+sudo pip install --upgrade pip
+
+sudo pip3 install --upgrade pip
+
+sudo pip3 install dropbox
+
+
+# FireFox crashes on execution
+
+# Install a specific version of FireFox
+
+# Reference:  https://schwabencode.com/Blog/2018/07/15/Ubuntu-Mate-Firefox-Crash
+
+
+sudo apt-get autoremove firefox
+
+sudo apt-get install firefox=45.0.2+build1-0ubuntu1
+
+sudo chmod 777 /home/livestream/
+
+sudo chmod 777 /home/livestream/darkice.sh
+
+sudo chmod 777 /home/livestream/dropboxbackup.py
+
+sudo chmod 777 /home/livestream/greenhousesendrttyemail.py
+
+sudo chmod 777 /home/livestream/greenhousesendsstvemail.py
+
+
+# File placement
+
+
+/home/livestream/darkice.cfg
+
+/home/livestream/darkice.sh
+
+/home/livestream/dropboxbackup.py
+
+/home/livestream/greenhousesendrttyemail.py
+
+/home/livestream/greenhousesendsstvemail.py
+
+/home/livestream/lastepoch.txt
+
+/home/livestream/lastimagedropbox.txt
+
+/home/livestream/lastimg.txt
+
+/home/livestream/lasttextoutdropbox.txt
+
+/home/livestream/qsstv_9.2.6/
+
+/home/livestream/.config/ON4QZ/qsstv_9.0.conf
+
+/home/livestream/.fldigi/fldigi.prefs
+
+
+# Configure cron
+
+
+sudo crontab -e
+
+7 */4 * * * reboot
+
+
+crontab -e
 
 @reboot sleep 10 && /home/livestream/darkice.sh
 
 */5 * * * * /usr/bin/python3 /home/livestream/greenhousesendsstvemail.py
 
-0 */2 * * * /usr/bin/python3 /home/livestream/greenhousestatusttsrttysstvrf.py
+0 */2 * * * /usr/bin/python3 /home/livestream/greenhousesendrttyemail.py
 
-*/5 * * * * /usr/bin/python3 /home/livestream/dropboxbackuprttysstv.py
+*/5 * * * * /usr/bin/python3 /home/livestream/dropboxbackup.py
+
+
+# Execute Fldigi at GUI login
+
+
+/home/livestream/.config/autostart/fldigi.desktop
+
+[Desktop Entry]
+
+Type=Application
+
+Exec=/usr/bin/fldigi
+
+Hidden=false
+
+X-MATE-Autostart-enabled=true
+
+Name[en_US]=fld.txt
+
+Name=Fldigi
+
+Comment[en_US]=Execute Fldigi at GUI login
+
+Comment=Execute Fldigi at GUI login
+
+
+# Execute QSSTV at GUI login
+
+
+/home/livestream/.config/autostart/qsstv.desktop
+
+[Desktop Entry]
+
+Type=Application
+
+Exec=/home/livestream/qsstv_9.2.6/qsstv/qsstv
+
+Hidden=false
+
+X-MATE-Autostart-enabled=true
+
+Name[en_US]=QSSTV
+
+Name=QSSTV
+
+Comment[en_US]=Execute QSSTV at GUI login
+
+Comment=Execute QSSTV at GUI login
+
 
 
 
