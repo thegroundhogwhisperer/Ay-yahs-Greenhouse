@@ -188,7 +188,7 @@ sudo chmod 777 /home/livestream/greenhousesendrttyemail.py
 sudo chmod 777 /home/livestream/greenhousesendsstvemail.py
 
 
-# File placement
+# Support and configuration file name and locations
 
 
 /home/livestream/darkice.cfg
