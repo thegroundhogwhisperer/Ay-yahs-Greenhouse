@@ -155,7 +155,7 @@ Two Channel Relay Enclosure image
 
 ![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
 
-Data Flow Diagram
+# Data Flow Diagram
 
 ![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Data%20Flow%20Diagram.png)
 
