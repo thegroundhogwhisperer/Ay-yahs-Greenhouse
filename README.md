@@ -6,13 +6,16 @@
 
 ![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
 
+
+# Raspberry Pi Greenhouse Automation and Remote Environmental System Monitoring Project
+
+This is a for-fun project created for the purpose of automating and remotely monitoring climate control and irrigation in a small greenhouse. System automation is achieved using an ARM based CPU (Raspberry Pi 3) in combinational with a Pimoroni Automation HAT. Remote monitoring of environmental conditions is achieved through a layered one-way linear communication. This one-way communication is performed using a combination of technologies such as text-to-speech software, Python scripts, and radio frequency transmissions. The primary greenhouse automation script and support files are contained in the Greenhouse subfolder. The remote environmental system montioring Python scripts and support files are contained in the following subfolders:  Greenhousealarm, Greenhousereceivedata, Greenhousestatusttsrttysstvrf 
+
 # Data Flow Diagram
 
 ![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
 
 # Raspberry Pi Greenhouse Automation Project
-
-This is a for-fun project created for the purpose of automating climate control and irrigation in a small greenhouse.
 
 Climate control and irrigation control is achieved by monitoring environmental sensor measurements. The environmental sensors measurements are then used to control a linear actuator, solenoid valve, small fan, and small heating pad. The information produced is displayed on a 16x2 LCD screen, broadcast via wall messages to the console, written to an html file, csv file, and SQLite database file.
 
