@@ -6,6 +6,10 @@
 
 ![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
 
+# Data Flow Diagram
+
+![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
+
 # Raspberry Pi Greenhouse Automation Project
 
 This is a for-fun project created for the purpose of automating climate control and irrigation in a small greenhouse.
@@ -154,11 +158,5 @@ Due to the failure rate of the DHT22 sensor a power connector from a floppy disk
 Two Channel Relay Enclosure image
 
 ![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
-
-# Data Flow Diagram
-
-![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
-
-
 
 
