@@ -248,23 +248,24 @@ crontab -e
 
 @reboot sleep 10 && /home/livestream/darkice.sh
 
-## Check for a new SSTV image and send it via email/sms every five minutes (at every fifth minute)
-##*/5 * * * * /usr/bin/python3 /home/livestream/greenhousesendsstvemail.py
+\# Check for a new SSTV image and send it via email/sms every five minutes (at every fifth minute)
+\#*/5 * * * * /usr/bin/python3 /home/livestream/greenhousesendsstvemail.py
 
-## Check for a new SSTV image and send it via email/sms every twelve hours (zero past every twelfth hour)
+\# Check for a new SSTV image and send it via email/sms every twelve hours (zero past every twelfth hour)
 0 */12 * * * /usr/bin/python3 /home/livestream/greenhousesendsstvemail.py
 
-## Check for a new RTTY status and send it via email/sms every two hours (zero past every second hour)
-##0 */2 * * * /usr/bin/python3 /home/livestream/greenhousesendrttyemail.py
+\# Check for a new RTTY status and send it via email/sms every two hours (zero past every second hour)
+\#0 */2 * * * /usr/bin/python3 /home/livestream/greenhousesendrttyemail.py
 
-## Check for a new RTTY status and send it via email/sms every twelve hours (zero past every twelfth hour)
+\# Check for a new RTTY status and send it via email/sms every twelve hours (zero past every twelfth hour)
 0 */12 * * * /usr/bin/python3 /home/livestream/greenhousesendrttyemail.py
 
-## Check for a new SSTV image and send it to a DropBox account every five minutes (at every fifth minute)
+\# Check for a new SSTV image and send it to a DropBox account every five minutes (at every fifth minute)
 */5 * * * * /usr/bin/python3 /home/livestream/dropboxbackup.py
 
-## Check for a new RTTY status and if the soil moisture value is too high or the temperature is too high or too low send a message via email/sms every two hours (at minute zero past every second hour)
+\# Check for a new RTTY status and if the soil moisture value is too high or the temperature is too high or too low send a message via email/sms every two hours (at minute zero past every second hour)
 0 */2 * * * /usr/bin/python3 /home/livestream/greenhousesendrttyemailalarm.py
+
 
 # Execute Fldigi at GUI login
 
