@@ -1,7 +1,7 @@
 # Ay-yahs-Greenhouse
 
 
-# Python scripts for generating greenhouse environmental data an audio file containing text-to-speech data, RTTY data, and SSTV data content. This audio file is used as the default greeting message played via a USB modem connected to a POTS (Plain Old Telephone Service) landline.
+# Python scripts for generating greenhouse environmental data as an audio file containing text-to-speech data, RTTY data, and SSTV data content. This audio file is used as the default greeting message played via a USB modem connected to a POTS (Plain Old Telephone Service) landline.
 
 
 # greenhousestatusttsrttysstvpots.py
