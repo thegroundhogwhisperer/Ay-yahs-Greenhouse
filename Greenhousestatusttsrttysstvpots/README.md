@@ -32,6 +32,8 @@ play_audio.py by Pradeep Singh
 For more information about the play_audio.py Python code please reference this: https://github.com/pradeesi/play_audio_over_phone_line  and this:  https://iotbytes.wordpress.com/play-audio-file-on-phone-line-with-raspberry-pi/
 
 
+Included is a modified copy of play_audio.py named play_audio_dial_out.py that dials out once a day and plays the audio file produced by greenhousestatusttsrttysstvpots.py to a list of destination numbers.
+
 
 # 
 # Produces:
