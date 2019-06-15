@@ -34,6 +34,7 @@ For more information about the play_audio.py Python code please reference this: 
 
 Included is a modified copy of play_audio.py named play_audio_dial_out.py that dials out once a day and plays the audio file produced by greenhousestatusttsrttysstvpots.py to a list of destination numbers.
 
+Included is a modified copy of play_audio.py named play_audio_dial_out_remote_control.py that will play an audio file over the phone line while accepting DTMF input to control the fetch of a remote URL. This python script will also dial out once a day and play an audio file over the phone line.
 
 # 
 # Produces:
