@@ -58,11 +58,9 @@ This script monitors a folder for .png image files produced by QSSTV transmissio
 # Python script for uploading RTTY and SSTV data to a Dropbox account
 
 
-![DropBox Upload Fldigi Textout Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/RTTY%20DropBox%20Screenshot.png)
-
-
 # dropboxbackuprttysstv.py
 
+![DropBox Upload Fldigi Textout Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/RTTY%20DropBox%20Screenshot.png)
 
 # 
 # Produces:
