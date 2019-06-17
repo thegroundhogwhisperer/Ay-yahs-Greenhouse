@@ -96,6 +96,9 @@ https://github.com/dropbox/dropbox-sdk-python/blob/master/example/back-up-and-re
 https://gist.github.com/Keshava11/d14db1e22765e8de2670b8976f3c7efb
 
 
+
+# Python script for sending emergency email alarm notifications about greenhouse environmental conditions
+
 # greenhousesendrttyemailalarm.py
 
 ![Email RTTY Alarm Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/Email%20Alarm%20Screenshot.png)
