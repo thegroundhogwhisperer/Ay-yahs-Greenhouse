@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Ay-yah's Greenhouse Manual Control Interface
+Exec=/home/username/greenhousegtkcontrol.py
+Icon=/home/username/headerimage.jpg
+Terminal=true
+Type=Application
