@@ -2,6 +2,8 @@
 
 # Python scripts for temperature notifictions on an Ubuntu 18.04 desktop
 
+![Greenhouse Alarm Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousealarm/Greenhouse_Alarm_Screenshot.png)
+
 # greenhousealarm.py 
 
 A Python script that retrieves the latest greenhouse environmental data produced by /Greenhouse/greenhouse.py in CSV format using the wget application. greenhousealarm.py evaluates the last recorded temperature value and determines if an audible notification should be sounded using the speech-dispatcher text-to-speech service when the temperature value is not between the minimum and maximum threshold.
