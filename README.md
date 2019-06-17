@@ -143,7 +143,7 @@ crontab -e
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
 
 
-# Web Interface Screenshots
+# Web interface screenshots
 
 ![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
 
@@ -155,6 +155,7 @@ crontab -e
 # Example camera images
 
 ![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
+
 
 ![Greenhouse Camera Image High Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20High%20Resolution.jpg)
 
