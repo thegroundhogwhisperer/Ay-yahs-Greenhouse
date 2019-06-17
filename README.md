@@ -142,6 +142,23 @@ crontab -e
 
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
 
+
+# Web Interface Screenshots
+
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
+
+![Greenhouse Web Interface Screenshot Two](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20Two.png)
+
+![Greenhouse Web Interface Manual Operations Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20Three.png)
+
+
+# Example camera images
+
+![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
+
+![Greenhouse Camera Image High Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20High%20Resolution.jpg)
+
+
 # Wiring diagrams and enclosure images
 
 ![GreenhousePi Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
