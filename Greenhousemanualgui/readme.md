@@ -35,9 +35,15 @@ Configure the greenhouse.desktop file permissions to allow execution.  (e.g. sud
 
 # Example contents of greenhouse.desktop
 
-##[Desktop Entry]
-##Name=Ay-yah's Greenhouse Manual Control Interface
-##Exec=/home/username/greenhousegtkcontrol.py
-##Icon=/home/username/headerimage.jpg
-##Terminal=true
-##Type=Application
+\#[Desktop Entry]
+
+\#Name=Ay-yah's Greenhouse Manual Control Interface
+
+\#Exec=/home/username/greenhousegtkcontrol.py
+
+\#Icon=/home/username/headerimage.jpg
+
+\#Terminal=true
+
+\#Type=Application
+
