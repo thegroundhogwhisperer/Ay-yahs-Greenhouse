@@ -35,7 +35,15 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import urllib2
+import time
 
+
+IP_GREENHOUSE_PI = '192.168.1.118'
+
+# Timeout in seconds before urllib2 fails to fetch the remote URL
+# This value should be slightly longer than the most lengthy operation
+# runtime. (e.g. Extending the linear actuator takes 60+ seconds)
+URL_FETCH_TIMEOUT_SECONDS = 3
 
 # Button selection input number to remote control function list
 # 0/1 Turn on/off the greenhouse fan
@@ -43,37 +51,154 @@ import urllib2
 # 4/5 Turn on/off output three
 # 6/7 Open/close the water solenoid valve
 # 8/9 Open/close the window
-REMOTE_CONTROL_URLS = ['http://192.168.1.118/openoutputonemanual.php',
-			'http://192.168.1.118/closeoutputonemanual.php',
-			'http://192.168.1.118/openoutputtwomanual.php',
-			'http://192.168.1.118/closeoutputtwomanual.php',
-			'http://192.168.1.118/openoutputthreemanual.php',
-			'http://192.168.1.118/closeoutputthreemanual.php',
-			'http://192.168.1.118/openwatermanual.php',
-			'http://192.168.1.118/closewatermanual.php',
-			'http://192.168.1.118/openwindowmanual.php',
-			'http://192.168.1.118/closewindowmanual.php']
-
-# Timeout in seconds before urllib2 fails to fetch the remote URL
-URL_FETCH_TIMEOUT_SECONDS = 10
+REMOTE_CONTROL_URLS = ["http://{}/openoutputonemanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/closeoutputonemanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/openoutputtwomanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/closeoutputtwomanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/openoutputthreemanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/closeoutputthreemanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/openwatermanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/closewatermanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/openwindowmanual.php".format(IP_GREENHOUSE_PI),
+			"http://{}/closewindowmanual.php".format(IP_GREENHOUSE_PI)]
 
 
 class MyWindow(Gtk.Window):
 
     def __init__(self):
 
-        Gtk.Window.__init__(self, title="Ay-Yah's Greenhouse Manual Operations")
+	print "Downloading the low resolution animated .GIF image file."
 
-	
+	try:
+		filedata = urllib2.urlopen("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))  
+		datatowrite = filedata.read()
+		with open('greenhouselow.gif', 'wb') as f:  
+			f.write(datatowrite)
+
+	except urllib2.URLError as e:
+		print "Failed to download the low resolution animated .GIF image. An error occurred: "
+		print e.reason   
+
+	print "Downloading the environmental data record index.csv file."
+
+	try:
+		filedata = urllib2.urlopen("http://{}/index.csv".format(IP_GREENHOUSE_PI))  
+		datatowrite = filedata.read()
+		with open('index.csv', 'wb') as f:  
+			f.write(datatowrite)
+
+	except urllib2.URLError as e:
+		print "Failed to download the environmental data record index.csv file.  An error occurred: "
+		print e.reason   
+
+	# try to read the local file do not die if the file does not exist
+	try:
+		with open('index.csv', "r") as f:
+			for line in f: pass
+			# read the last line of the CSV file containing the most recently recorded environmental values
+			last_line_csv_file = line
+
+	except IOError:
+		print "Failed to download the index.csv file. An error occurred: "
+		print 'error'
+
+	if not last_line_csv_file or len(last_line_csv_file) < 1:
+	# if the file read failed to read go back to sleep and try again
+		exit()
+
+	# remove new line char
+	last_line_csv_file = last_line_csv_file.replace('\n', '')
+
+	# remove single quotes
+	last_line_csv_file = last_line_csv_file.replace("'", "")
+
+	# remove double quotes
+	last_line_csv_file = last_line_csv_file.replace('"', '')
+
+	# split at commas
+	csv_values = last_line_csv_file.split(",")
+
+	current_luminosity_sensor_value = csv_values[0]
+	current_temperature = csv_values[1]
+	current_humidity = csv_values[2]
+	current_soil_moisture_sensor_value = csv_values[3]
+	current_solenoid_valve_status = csv_values[4]
+	current_actuator_extension_status = csv_values[5]
+	current_output_one_status = csv_values[6]
+	current_output_two_status = csv_values[7]
+	current_output_three_status = csv_values[8]
+	seconds_since_the_epoch = csv_values[9]
+
+	print "Ready to perform manual operations."
+
+        Gtk.Window.__init__(self, title="Ay-yah's Greenhouse Manual Operations")
+
         self.set_size_request(400, 300)
-
         self.box = Gtk.VBox(spacing=0)
         self.add(self.box)
 
 	img = Gtk.Image() 
-	img.set_from_file("headerimage.jpg") 
+#	img.set_from_file("headerimage.jpg") 
+	img.set_from_file("greenhouselow.gif") 
 	img.show()
 	self.box.pack_start(img, True, True, 10)
+
+	label_current_luminosity_sensor_value = Gtk.Label()
+        label_current_luminosity_sensor_value.set_text('Luminosity: ' + current_luminosity_sensor_value + 'V')
+        label_current_luminosity_sensor_value.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_luminosity_sensor_value, True, True, 0)
+
+	label_current_temperature = Gtk.Label()
+        label_current_temperature.set_text('Temperature: ' + current_temperature + 'F')
+        label_current_temperature.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_temperature, True, True, 0)
+
+	label_current_humidity = Gtk.Label()
+        label_current_humidity.set_text('Humidity: ' + current_humidity + '%')
+        label_current_humidity.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_humidity, True, True, 0)
+
+	label_current_soil_moisture_sensor_value = Gtk.Label()
+        label_current_soil_moisture_sensor_value.set_text('Soil Moisture: ' + current_soil_moisture_sensor_value + 'V')
+        label_current_soil_moisture_sensor_value.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_soil_moisture_sensor_value, True, True, 0)
+
+	label_current_solenoid_valve_status = Gtk.Label()
+        label_current_solenoid_valve_status.set_text('Solenoid Valve: ' + current_solenoid_valve_status)
+        label_current_solenoid_valve_status.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_solenoid_valve_status, True, True, 0)
+
+	label_current_actuator_extension_status = Gtk.Label()
+        label_current_actuator_extension_status.set_text('Actuator: ' + current_actuator_extension_status)
+        label_current_actuator_extension_status.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_actuator_extension_status, True, True, 0)
+
+	label_current_output_one_status = Gtk.Label()
+        label_current_output_one_status.set_text('Output One: ' + current_output_one_status)
+        label_current_output_one_status.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_output_one_status, True, True, 0)
+
+	label_current_output_two_status = Gtk.Label()
+        label_current_output_two_status.set_text('Output Two: ' + current_output_two_status)
+        label_current_output_two_status.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_output_two_status, True, True, 0)
+
+	label_current_output_three_status = Gtk.Label()
+        label_current_output_three_status.set_text('Output Three: ' + current_output_three_status)
+        label_current_output_three_status.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_output_three_status, True, True, 0)
+
+#	label_current_seconds_since_the_epoch = Gtk.Label()
+#        label_current_seconds_since_the_epoch.set_text('Epoch Timestamp:\n' + seconds_since_the_epoch)
+#        label_current_seconds_since_the_epoch.set_justify(Gtk.Justification.LEFT)
+#        self.box.pack_start(label_current_seconds_since_the_epoch, True, True, 0)
+
+	converted_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(seconds_since_the_epoch)))
+
+	label_current_time_readable = Gtk.Label()
+        label_current_time_readable.set_text('Timestamp: ' + converted_time)
+        label_current_time_readable.set_justify(Gtk.Justification.LEFT)
+        self.box.pack_start(label_current_time_readable, True, True, 0)
 	
 	label = Gtk.Label("Please select a manual operation to perform")
         self.box.pack_start(label, True, True, 10)
@@ -119,15 +244,16 @@ class MyWindow(Gtk.Window):
         self.box.pack_start(self.button9, True, True, 1)
 
 	# a linkbutton pointing to the given URI
-        button_url0 = Gtk.LinkButton(uri="http://192.168.1.118")
+        button_url0 = Gtk.LinkButton(uri="http://{}".format(IP_GREENHOUSE_PI))
         # with given text
-        button_url0.set_label("Greenhouse Homepage http://192.168.1.118")
+#        button_url0.set_label("Greenhouse Homepage http://{}".format(IP_GREENHOUSE_PI))
+        button_url0.set_label("GreenhousePi Homepage")
 
         # add the button to the window
 	self.box.pack_start(button_url0, True, True, 0)
 
 	# a linkbutton pointing to the given URI
-        button_url1 = Gtk.LinkButton(uri="http://192.168.1.118/greenhousehigh.jpg")
+        button_url1 = Gtk.LinkButton(uri="http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))
         # with given text
         button_url1.set_label("High resolution camera image")
 
@@ -135,13 +261,20 @@ class MyWindow(Gtk.Window):
 	self.box.pack_start(button_url1, True, True, 0)
 
 	# a linkbutton pointing to the given URI
-        button_url2 = Gtk.LinkButton(uri="http://192.168.1.118/greenhouselow.gif")
+        button_url3 = Gtk.LinkButton(uri="http://{}/index.csv".format(IP_GREENHOUSE_PI))
         # with given text
-        button_url2.set_label("Animated .GIF camera image")
+        button_url3.set_label("Download greenhouse data .CSV")
 
         # add the button to the window
-	self.box.pack_start(button_url2, True, True, 0)
+	self.box.pack_start(button_url3, True, True, 0)
 
+	# a linkbutton pointing to the given URI
+        button_url4 = Gtk.LinkButton(uri="https://git.io/fhhsY")
+        # with given text
+        button_url4.set_label("Ay-yah's Greenhouse GitHub Repository")
+
+        # add the button to the window
+	self.box.pack_start(button_url4, True, True, 0)
 
     def on_button0_clicked(self, widget):
         print("Turning Fan On")
@@ -195,11 +328,6 @@ class MyWindow(Gtk.Window):
 
 
 
-
-
-
-
-
 def fetch_url_trigger_event(remote_command_number_option):
 
 	print "Fetching URL: ", REMOTE_CONTROL_URLS[remote_command_number_option]
@@ -215,7 +343,6 @@ def fetch_url_trigger_event(remote_command_number_option):
 	except urllib2.URLError as e:
 		print "***Operation Failed*** An error occurred: "
 		print e.reason   
-
 
 
 
