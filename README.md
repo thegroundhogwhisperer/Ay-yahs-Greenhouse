@@ -143,6 +143,10 @@ crontab -e
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
 
 
+# Manual operations desktop GUI screenshot
+
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousemanualgui/Greenhouse%20Manual%20Operations%20GUI.png)
+
 # Web interface screenshots
 
 ![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
