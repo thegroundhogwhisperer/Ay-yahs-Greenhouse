@@ -1,7 +1,7 @@
 # Ay-yahs-Greenhouse
 
 
-# Python script for a graphical greenhouse manual operations interface
+# Python script for a greenhouse  manual operations graphical user interface
 
 
 # greenhousegtkcontrol.py
