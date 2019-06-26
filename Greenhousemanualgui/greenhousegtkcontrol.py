@@ -339,9 +339,9 @@ def fetch_greenhouse_data():
 	print "Downloading the high resolution .JPG image file."
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))  
+		filedata = urllib2.urlopen("http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))  
 		datatowrite = filedata.read()
-		with open('greenhousehigh.gif', 'wb') as f:  
+		with open('greenhousehigh.jpg', 'wb') as f:  
 			f.write(datatowrite)
 
 	except urllib2.URLError as e:
