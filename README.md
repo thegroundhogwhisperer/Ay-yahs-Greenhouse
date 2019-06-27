@@ -182,3 +182,28 @@ Two Channel Relay Enclosure image
 ![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
 
 
+# Future modifications
+
+Add a configuration option setting the mode (variable 0 = heating pad or 1 = grow light) to allow switching between the evaluation of environmental conditions for the purpose of regulating a heating pad or regulating a grow light on Output 2.
+
+Write the system configuration values to files on the disk (e.g. The minimum soil moisture value  /home/greenhouse/minimumsoilmoisture.txt) with the intent of the file/value being remotely modified via the web interface.  The system configuration values are currently constants in the main greenhouse.py application code. A .php or .py script could receive form submission data from the greenhousegtkcontrol.py manual GUI interface script via urllib2 providing a method of remotely updating system configuration values stored on the GreenhousePi's disk.
+
+Create more detailed installation instructions.
+
+Fix the graphs....
+
+Port the manual GUI interface as an .apk if I can ever get p4a or tivy or buildozer setup correctly.
+
+Move all the images in this project to their own folder/directory.
+
+Write a log file for manually performed procedures (e.g. Activation of the solenoid valve.
+
+Write a lovely Flask interface.
+
+Lots of other things...
+
+
+
+
+
+
