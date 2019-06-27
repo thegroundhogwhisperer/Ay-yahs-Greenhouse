@@ -196,7 +196,7 @@ Port the manual GUI interface as an .apk if I can ever get p4a or tivy or buildo
 
 Move all the images in this repositories root folder to their own folder/directory and update the links in this document.
 
-Write a log file for manually performed procedures (e.g. Activation of the solenoid valve.
+Write a log file for manually performed procedures (e.g. Activation of the solenoid valve.)
 
 Write a lovely Flask interface.
 
