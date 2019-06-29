@@ -1,27 +1,61 @@
-Interface control improvement modification:  Allow for remote configuration of the minium and maximum control values (e.g Minimum humidity to turn on the fan (Output #1))
+Interface control improvement modification:  Allow for remote configuration of the minimum and maximum control values (e.g Minimum humidity to turn on the fan (Output #1))
 Later these values can be displayed and configured using the greenhousegtkcontrol.py application.
 
 To facilitate remote control value configuration the following constants would have to be stored in a file on disk or store in the greenhouse.db (SQlite3) database file.
 It appears that 16 values that need to be read and wrote to and from a disk file.
 
-/home/pi/Greenhouse/actuatorruntime.txt
-/home/pi/Greenhouse/minimummoisture.txt
-/home/pi/Greenhouse/minimumluminosity.txt
-/home/pi/Greenhouse/minlumactretract.txt
-/home/pi/Greenhouse/mintemactretract.txt
-/home/pi/Greenhouse/minhumactretract.txt
-/home/pi/Greenhouse/minlumactextend.txt
-/home/pi/Greenhouse/mintemactextend.txt
-/home/pi/Greenhouse/minhumactextend.txt
-/home/pi/Greenhouse/mintemoutoneon.txt
-/home/pi/Greenhouse/minhumoutoneon.txt
-/home/pi/Greenhouse/mintemoutoneoff.txt
-/home/pi/Greenhouse/minhumoutoneoff.txt
-/home/pi/Greenhouse/mintemouttwoon.txt
-/home/pi/Greenhouse/mintemouttwooff.txt
-/home/pi/Greenhouse/minsoilsoleopen.txt
-/home/pi/Greenhouse/minsoilsoleclosed.txt
 
+#### All of these variables names should/could be written as upper case constants
+actuator_runtime_value_file_name = '/var/www/html/actuatorruntime.txt'
+minimum_moisture_sensor_value_file_name = '/var/www/html/minimummoisture.txt'
+minimum_luminosity_sensor_value_file_name = '/var/www/html/minimumluminosity.txt' ### Not needed....
+minimum_luminosity_actuator_retract_value_file_name = '/var/www/html/minlumactretract.txt'
+minimum_temperature_acturator_retract_value_file_name = '/var/www/html/mintemactretract.txt'
+minimum_humidity_actuator_retract_value_file_name = '/var/www/html/minhumactretract.txt'
+minimum_luminosity_acturator_extend_value_file_name = '/var/www/html/minlumactextend.txt'
+minimum_temperature_acturator_extend_value_file_name = '/var/www/html/mintemactextend.txt'
+minimum_humidity_actuator_extend_value_file_name = '/var/www/html/minhumactextend.txt'
+minimum_temperature_output_one_on_value_file_name = '/var/www/html/mintemoutoneon.txt'
+minimum_humidity_output_one_on_value_file_name = '/var/www/html/minhumoutoneon.txt'
+minimum_temperature_output_one_off_value_file_name = '/var/www/html/mintemoutoneoff.txt'
+minimum_humidity_output_one_off_value_file_name = '/var/www/html/minhumoutoneoff.txt'
+minimum_temperature_output_two_on_value_file_name = '/var/www/html/mintemouttwoon.txt'
+minimum_temperature_output_two_off_value_file_name = '/var/www/html/mintemouttwooff.txt'
+minimum_soil_moisture_solenoid_valve_open_value_file_name = '/var/www/html/minsoilsoleopen.txt'
+minimum_soil_moisture_solenoid_valve_closed_value_file_name = '/var/www/html/minsoilsoleclosed.txt'
+
+
+
+
+
+We will add the file reads retrieving minimum constant values below this section of code:
+Need to fix the description of this section of code to read Begin reading sensor inputs and write LCD and wall messages
+##################################################################
+###### Begin Reading Input Write LCD Broadcast Wall Message ######
+##################################################################
+# begin the process reading evaluating environmental data
+# display the current information on the 16x2 LCD and in
+# the console window via wall messages
+# call the read luminosity sensor value subroutine
+
+
+	try: 
+    # read the current linear actuator runtime value from a file
+    actuator_runtime_value_file_handle = open(actuator_runtime_value_file_name, 'r')
+    LINEAR_ACTUATOR_RUN_TIME = actuator_runtime_value_file_handle.readline()
+    actuator_runtime_value_file_handle.close()
+		print "Current linear actuator runtime value read from a file: ", LINEAR_ACTUATOR_RUN_TIME
+		
+  except OSError:
+		print "An error occurred reading: ", actuator_runtime_value_file_name
+    print "Setting the linear actuator runtime to: 70 seconds"
+    LINEAR_ACTUATOR_RUN_TIME = 70
+    
+    
+Need like 15 more of these try file open read processes...
+
+
+##### All of the constants below except min/max sensor values can be commented out
 # this actuators stroke is 406.4 mm at 10 mm per second
 # wait 40.6 seconds to open the window
 # in reality variations in voltage change the runtime
@@ -31,7 +65,7 @@ LINEAR_ACTUATOR_RUN_TIME = 70
 MINIMUM_SOIL_MOISTURE_SENSOR_VALUE = 1
 
 # set the minimum luminosity sensors value at 0.01VDC
-MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01
+MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01    #####  This can be a constant in the list of minimum and maximum sensor input values
 
 # minimum light and temp and humidity values relay #2 close the window
 MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT = 1.5
