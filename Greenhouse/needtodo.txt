@@ -1,0 +1,80 @@
+Interface control improvement modification:  Allow for remote configuration of the minium and maximum control values (e.g Minimum humidity to turn on the fan (Output #1))
+Later these values can be displayed and configured using the greenhousegtkcontrol.py application.
+
+To facilitate remote control value configuration the following constants would have to be stored in a file on disk or store in the greenhouse.db (SQlite3) database file.
+It appears that 16 values that need to be read and wrote to and from a disk file.
+
+/home/pi/Greenhouse/actuatorruntime.txt
+/home/pi/Greenhouse/minimummoisture.txt
+/home/pi/Greenhouse/minimumluminosity.txt
+/home/pi/Greenhouse/minlumactretract.txt
+/home/pi/Greenhouse/mintemactretract.txt
+/home/pi/Greenhouse/minhumactretract.txt
+/home/pi/Greenhouse/minlumactextend.txt
+/home/pi/Greenhouse/mintemactextend.txt
+/home/pi/Greenhouse/minhumactextend.txt
+/home/pi/Greenhouse/mintemoutoneon.txt
+/home/pi/Greenhouse/minhumoutoneon.txt
+/home/pi/Greenhouse/mintemoutoneoff.txt
+/home/pi/Greenhouse/minhumoutoneoff.txt
+/home/pi/Greenhouse/mintemouttwoon.txt
+/home/pi/Greenhouse/mintemouttwooff.txt
+/home/pi/Greenhouse/minsoilsoleopen.txt
+/home/pi/Greenhouse/minsoilsoleclosed.txt
+
+# this actuators stroke is 406.4 mm at 10 mm per second
+# wait 40.6 seconds to open the window
+# in reality variations in voltage change the runtime
+LINEAR_ACTUATOR_RUN_TIME = 70
+
+# set the minimum value at 0.05VDC
+MINIMUM_SOIL_MOISTURE_SENSOR_VALUE = 1
+
+# set the minimum luminosity sensors value at 0.01VDC
+MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01
+
+# minimum light and temp and humidity values relay #2 close the window
+MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT = 1.5
+MINIMUM_TEMPERATURE_ACTUATOR_RETRACT = 80
+MINIMUM_HUMIDITY_ACTUATOR_RETRACT = 90
+
+# minimum light and temp and humidity values relay #1 open the window
+MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND = 1.6
+MINIMUM_TEMPERATURE_ACTUATOR_EXTEND = 50
+MINIMUM_HUMIDITY_ACTUATOR_EXTEND = 20
+
+# minimum temp or humidity values output #1 turn on the fan
+MINIMUM_TEMPERATURE_OUTPUT_ONE_ON = 69
+MINIMUM_HUMIDITY_OUTPUT_ONE_ON = 25
+
+# minimum temp or humidity values output #1 turn off the fan
+MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF = 50
+MINIMUM_HUMIDITY_OUTPUT_ONE_OFF = 24
+
+# minimum temp value output #2 turn on the USB heating pad
+MINIMUM_TEMPERATURE_OUTPUT_TWO_ON = 35
+
+# minimum temp value output #2 turn off the USB heating pad
+MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF = 40
+
+# minimum soil moisture value relay #3 open solenoid valve
+MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN = 1.9
+
+# minimum soil moisture value relay #3 close solenoid valve
+MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED = 1.8
+
+The following constants may remain hard coded into the greenhouse.py script since the limit the maximum and minimum scope of input as defined by the input sensors limitations.
+
+# define the minimum and maximum humidity/temperature sensor values
+# minimum humidity value
+MIMIMUM_HUMIDITY_VALUE = 0
+
+# maximum humidity value
+MAXIMUM_HUMIDITY_VALUE = 100
+
+# minimum temperature value
+MINIMUM_TEMPERATURE_VALUE = -72
+
+# maximum temperature value
+MAXIMUM_TEMPERATURE_VALUE = 176
+
