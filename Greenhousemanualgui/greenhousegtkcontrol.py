@@ -31,15 +31,26 @@ from gi.repository import Gtk
 from gi.repository import Pango
 import time
 import urllib2
+import sqlite3
 import sys
 
+# Name of the Sqlite3 database file
+SQLITE_DATABASE_FILE = 'greenhouse.db'
+
+# Name of the table to be queried
+DATABASE_TABLE_NAME = 'greenhouse'
+
+# Number of historic environmental data rows to display in the history window =< 1500
+LIMIT_NUMBER_ROWS_DISPLAYED = '1000'
+
+# Remote IP address of the GreenhouePi
 IP_GREENHOUSE_PI = '192.168.1.118'
 
-# Timeout in seconds before urllib2 fails to fetch the remote URL
+# Timeout in seconds before urllib2 fails to fetch the remote URL 
+# (e.g. Downloading a file or performing a manual greenhouse operation.)
 URL_FETCH_TIMEOUT_SECONDS = 3
 
-
-# Button selection input number to remote control function list
+# Action selection input number to remote control function list
 # 0/1 Turn on/off the greenhouse fan
 # 2/3 Turn on/off the greenhouse light
 # 4/5 Turn on/off output three
@@ -56,78 +67,85 @@ REMOTE_CONTROL_URLS = ["http://{}/openoutputonemanual.php".format(IP_GREENHOUSE_
 			"http://{}/openwindowmanual.php".format(IP_GREENHOUSE_PI),
 			"http://{}/closewindowmanual.php".format(IP_GREENHOUSE_PI)]
 
-
+# Create the main GUI window class
 class MyWindow(Gtk.Window):
 
     def __init__(self):
 
 	print "Ready to perform manual operations."
 
-        Gtk.Window.__init__(self, title="Ay-yah's Greenhouse Manual Operations")
-        self.set_size_request(400, 300)
-        self.box = Gtk.VBox(spacing=0)
-        self.add(self.box)
+	# Set the window title
+	Gtk.Window.__init__(self, title="Ay-yah's Greenhouse Manual Operations")
+	# Set the window size
+	self.set_size_request(400, 300)
+	# Create a a vertical container box 
+	self.box = Gtk.VBox(spacing=0)
+	self.add(self.box)
 
-	img = Gtk.Image() 
-	img.set_from_file("greenhouselow.gif") 
+	# Construct a Gtk image object
+	img = Gtk.Image()
+	# Set the image data from the contents of a file
+	img.set_from_file("greenhouselow.gif")
+	# Make the object visible
 	img.show()
+	# Add the image to the window
 	self.box.pack_start(img, True, True, 10)
 
+	# Create some labels and add the current environmental values below the image in the main window
 	label_current_luminosity_sensor_value = Gtk.Label()
-        label_current_luminosity_sensor_value.set_text('Luminosity: ' + current_luminosity_sensor_value + 'V')
+        label_current_luminosity_sensor_value.set_text('Luminosity: ' + str(current_luminosity_sensor_value) + 'V')
         label_current_luminosity_sensor_value.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_luminosity_sensor_value, True, True, 0)
 
 	label_current_temperature = Gtk.Label()
-        label_current_temperature.set_text('Temperature: ' + current_temperature + 'F')
+        label_current_temperature.set_text('Temperature: ' + str(current_temperature) + 'F')
         label_current_temperature.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_temperature, True, True, 0)
 
 	label_current_humidity = Gtk.Label()
-        label_current_humidity.set_text('Humidity: ' + current_humidity + '%')
+        label_current_humidity.set_text('Humidity: ' + str(current_humidity) + '%')
         label_current_humidity.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_humidity, True, True, 0)
 
 	label_current_soil_moisture_sensor_value = Gtk.Label()
-        label_current_soil_moisture_sensor_value.set_text('Soil Moisture: ' + current_soil_moisture_sensor_value + 'V')
+        label_current_soil_moisture_sensor_value.set_text('Soil Moisture: ' + str(current_soil_moisture_sensor_value) + 'V')
         label_current_soil_moisture_sensor_value.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_soil_moisture_sensor_value, True, True, 0)
 
 	label_current_solenoid_valve_status = Gtk.Label()
-        label_current_solenoid_valve_status.set_text('Solenoid Valve: ' + current_solenoid_valve_status)
+        label_current_solenoid_valve_status.set_text('Solenoid Valve: ' + str(current_solenoid_valve_status))
         label_current_solenoid_valve_status.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_solenoid_valve_status, True, True, 0)
 
 	label_current_actuator_extension_status = Gtk.Label()
-        label_current_actuator_extension_status.set_text('Actuator: ' + current_actuator_extension_status)
+        label_current_actuator_extension_status.set_text('Actuator: ' + str(current_actuator_extension_status))
         label_current_actuator_extension_status.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_actuator_extension_status, True, True, 0)
 
 	label_current_output_one_status = Gtk.Label()
-        label_current_output_one_status.set_text('Output One: ' + current_output_one_status)
+        label_current_output_one_status.set_text('Output One: ' + str(current_output_one_status))
         label_current_output_one_status.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_output_one_status, True, True, 0)
 
 	label_current_output_two_status = Gtk.Label()
-        label_current_output_two_status.set_text('Output Two: ' + current_output_two_status)
+        label_current_output_two_status.set_text('Output Two: ' + str(current_output_two_status))
         label_current_output_two_status.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_output_two_status, True, True, 0)
 
 	label_current_output_three_status = Gtk.Label()
-        label_current_output_three_status.set_text('Output Three: ' + current_output_three_status)
+        label_current_output_three_status.set_text('Output Three: ' + str(current_output_three_status))
         label_current_output_three_status.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_output_three_status, True, True, 0)
 
-	converted_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(seconds_since_the_epoch)))
-
 	label_current_time_readable = Gtk.Label()
-        label_current_time_readable.set_text('Timestamp: ' + converted_time)
+        label_current_time_readable.set_text('Timestamp: ' + record_time + ' ' + record_date)
         label_current_time_readable.set_justify(Gtk.Justification.LEFT)
         self.box.pack_start(label_current_time_readable, True, True, 0)
 	
 	label = Gtk.Label("Please select a manual operation to perform")
         self.box.pack_start(label, True, True, 10)
         
+	# Add the manual operations buttons
         self.button0 = Gtk.Button(label="Fan On (Output One On)")
         self.button0.connect("clicked", self.on_button0_clicked)
         self.box.pack_start(self.button0, True, True, 1)
@@ -168,32 +186,34 @@ class MyWindow(Gtk.Window):
         self.button9.connect("clicked", self.on_button9_clicked)
         self.box.pack_start(self.button9, True, True, 1)
 
-	# a linkbutton pointing to the given URI
+	# Add some link buttons to the bottom of the main window
+	# Linkbutton pointing to the given URI
         button_url0 = Gtk.LinkButton(uri="http://{}".format(IP_GREENHOUSE_PI))
         button_url0.set_label("GreenhousePi Homepage")
 
-        # add the button to the window
+        # Add the button to the window
 	self.box.pack_start(button_url0, True, True, 0)
 
-	# a linkbutton pointing to the given URI
+	# Linkbutton pointing to the given URI
         button_url1 = Gtk.LinkButton(uri="http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
         button_url1.set_label("Download historic data .DB (SQLite3)")
 
-        # add the button to the window
+        # Add the button to the window
 	self.box.pack_start(button_url1, True, True, 0)
 
-
-	# a linkbutton pointing to the given URI
+	# Linkbutton pointing to the given URI
         button_url3 = Gtk.LinkButton(uri="http://{}/index.csv".format(IP_GREENHOUSE_PI))
         button_url3.set_label("Download historic data .CSV")
 
-        # add the button to the window
+        # Add the button to the window
 	self.box.pack_start(button_url3, True, True, 0)
 
-	# a linkbutton pointing to the given URI
+	# A linkbutton pointing to the given URI
         button_url4 = Gtk.LinkButton(uri="https://git.io/fhhsY")
         button_url4.set_label("Ay-yah's Greenhouse GitHub Repository")
 
+
+    # Define the functions performed when a button is selected/clicked
     def on_button0_clicked(self, widget):
         print("Turning Fan On")
 	remote_command_number_option = 0
@@ -245,9 +265,8 @@ class MyWindow(Gtk.Window):
 	fetch_url_trigger_event(remote_command_number_option)
 
 
-
+# Define the function called after the button selection function performing the remote URL fetch (manual operation)
 def fetch_url_trigger_event(remote_command_number_option):
-
 
 	print "Fetching URL: ", REMOTE_CONTROL_URLS[remote_command_number_option]
 
@@ -264,12 +283,14 @@ def fetch_url_trigger_event(remote_command_number_option):
 		print e.reason   
 
 
-
+# Create the history data GUI window class
 class DialogWindow(Gtk.Window):
 
 	def __init__(self):
 
-		columns = ["LDR",
+		# Define the column header values
+		columns = ["Record",
+		           "LDR",
 		           "Temp.",
 		           "Humidity",
 			   "Soil",
@@ -278,50 +299,53 @@ class DialogWindow(Gtk.Window):
 			   "Output #1",
 			   "Output #2",
 			   "Output #3",
-			   "Seconds",
-			   "Date/Time"]
+			   "Date",
+			   "Time"]
 
+		# Create a window, set the title, set the window size, and set the border width
 	        Gtk.Window.__init__(self, title="Historic Environmental Record")
-	        self.set_default_size(930, 200)
+	        self.set_default_size(975, 350)
 	        self.set_border_width(10)
 
-		# the scrolledwindow
+		# Make the window scrollable
 	        scrolled_window = Gtk.ScrolledWindow()
 	        scrolled_window.set_border_width(10)
 	        scrolled_window.set_policy(
 	            Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
 
-        	listmodel = Gtk.ListStore(str, str, str,str, str, str,str, str, str, str, str)
-	        # append the values in the model
-	        for i in range(len(list_of_csv_data)):
-	            listmodel.append(list_of_csv_data[i])
+		# Define the listmodel used by the ListStore
+	       	listmodel = Gtk.ListStore(int, float, float, float, float, str, str, str, str, str, str, str)
 
-	        # a treeview to see the data stored in the model
+	        # Append the values in the model
+	        for i in range(len(list_of_greenhouse_table_rows)):
+	            listmodel.append(list(list_of_greenhouse_table_rows[i]))
+
+	        # Create a TreeView to see the data stored in the model
 	        view = Gtk.TreeView(model=listmodel)
-	        # for each column
+	        # For each column
 	        for i, column in enumerate(columns):
-	            # cellrenderer to render the text
+	            # Cellrenderer to render the text
 	            cell = Gtk.CellRendererText()
-	            # the text in all of the columns should be in boldface
+	            # The text in all of the columns should be in boldface
 	            if i is not None:
 	                cell.props.weight_set = True
 	                cell.props.weight = Pango.Weight.BOLD
-	            # the column is created
+	            # Create the column
 	            col = Gtk.TreeViewColumn(column, cell, text=i)
-	            # and it is appended to the treeview
+	            # Appended the column to the TreeView
 	            view.append_column(col)
 
-	        # a grid to attach the widgets
+	        # Create a grid to attach the widgets to
 	        grid = Gtk.Grid()
 	        grid.attach(view, 0, 0, 1, 1)
 	
-	        # add the image to the scrolledwindow
+	        # Add the image to the scrolledwindow
 	        scrolled_window.add_with_viewport(grid)
 
-	        # add the scrolledwindow to the window
+	        # Add the scrolledwindow to the window
 	        self.add(scrolled_window)
 
-
+# Define the function that downloads the image files and greenhouse.db file the queries the greenhouse.db file
 def fetch_greenhouse_data():
 
 	print "Downloading the low resolution animated .GIF image file."
@@ -349,43 +373,19 @@ def fetch_greenhouse_data():
 		print e.reason   
 
 
-	print "Downloading the historic environmental record index.csv file."
+	print "Downloading the historic environmental record greenhouse.db file."
 
 	try:
-		filedata = urllib2.urlopen("http://{}/index.csv".format(IP_GREENHOUSE_PI))  
+		filedata = urllib2.urlopen("http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))  
 		datatowrite = filedata.read()
-		with open('index.csv', 'wb') as f:  
+		with open('greenhouse.db', 'wb') as f:  
 			f.write(datatowrite)
 
 	except urllib2.URLError as e:
-		print "Failed to download the historic environmental record index.csv file.  An error occurred: "
-		print e.reason   
+		print "Failed to download the historic environmental record greenhouse.db file.  An error occurred: "
+		print e.reason
 
-	global list_of_csv_data
-	list_of_csv_data = []
-
-	# try to read the local file do not die if the file does not exist
-	try:
-		with open('index.csv', "r") as f:
-			for line in f:
-				csv_data_values = line			
-				# remove new line char
-				csv_data_values = csv_data_values.replace('\n', '')
-				# remove single quotes
-				csv_data_values = csv_data_values.replace("'", "")
-				# remove double quotes
-				csv_data_values = csv_data_values.replace('"', '')
-				# split at commas
-				csv_values = csv_data_values.split(",")
-				csv_values.append(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(csv_values[9]))))	
-				list_of_csv_data.append(csv_values)
-
-		last_line_csv_file = list_of_csv_data[-1]
-
-	except IOError:
-		print "Failed to parse the index.csv record file. An error occurred: "
-		print 'error'
-
+	# Define global variable accessible in other functions
 	global current_luminosity_sensor_value
 	global current_luminosity_sensor_value
 	global current_temperature
@@ -396,42 +396,71 @@ def fetch_greenhouse_data():
 	global current_output_one_status
 	global current_output_two_status
 	global current_output_three_status
-	global seconds_since_the_epoch
+	global record_time
+	global record_date
+	global list_of_greenhouse_table_rows
 
-	current_luminosity_sensor_value = last_line_csv_file[0]
-	current_temperature = last_line_csv_file[1]
-	current_humidity = last_line_csv_file[2]
-	current_soil_moisture_sensor_value = last_line_csv_file[3]
-	current_solenoid_valve_status = last_line_csv_file[4]
-	current_actuator_extension_status = last_line_csv_file[5]
-	current_output_one_status = last_line_csv_file[6]
-	current_output_two_status = last_line_csv_file[7]
-	current_output_three_status = last_line_csv_file[8]
-	seconds_since_the_epoch = last_line_csv_file[9]
+	# Connecting to the Sqlite3 database file
+	conn = sqlite3.connect(SQLITE_DATABASE_FILE)
+	database_cursor = conn.cursor()
+
+	# Return the last n number of rows from the greenhouse table
+	database_cursor.execute("SELECT * FROM " + DATABASE_TABLE_NAME + " ORDER BY id DESC LIMIT " + LIMIT_NUMBER_ROWS_DISPLAYED.format(tn=DATABASE_TABLE_NAME, cn=id))
+	list_of_greenhouse_table_rows = database_cursor.fetchall()
+
+	# Return the last row in the greenhouse table
+	database_cursor.execute("SELECT * FROM " + DATABASE_TABLE_NAME + " ORDER BY id DESC LIMIT 1;".format(tn=DATABASE_TABLE_NAME, cn=id))
+	last_row_exists = database_cursor.fetchone()
+
+	if last_row_exists:
+
+		# print('(Record Returned): {}'.format(last_row_exists))
+		last_row_greenhouse_table_sqlite3 = last_row_exists
+		current_database_record_id = last_row_greenhouse_table_sqlite3[0]
+		current_luminosity_sensor_value = last_row_greenhouse_table_sqlite3[1]
+		current_temperature = last_row_greenhouse_table_sqlite3[2]
+		current_humidity = last_row_greenhouse_table_sqlite3[3]
+		current_soil_moisture_sensor_value = last_row_greenhouse_table_sqlite3[4]
+		current_solenoid_valve_status = last_row_greenhouse_table_sqlite3[5]
+		current_actuator_extension_status = last_row_greenhouse_table_sqlite3[6]
+		current_output_one_status = last_row_greenhouse_table_sqlite3[7]
+		current_output_two_status = last_row_greenhouse_table_sqlite3[8]
+		current_output_three_status = last_row_greenhouse_table_sqlite3[9]
+		record_date = last_row_greenhouse_table_sqlite3[10]
+		record_time = last_row_greenhouse_table_sqlite3[11]
+
+	else:
+		print "Error: No last row returned!"
+
+	# Closing the connection to the database file
+	conn.close()
 
 
+# Create the high resolution camera image GUI window class
 class Large_Image_Window(Gtk.Window):
 
     def __init__(self):
 
+	# Create the window object, set the title, and set the size
         Gtk.Window.__init__(self, title="High Resolution Camera Image")
 	self.set_default_size(640, 480)
 
-	# the scrolledwindow
+	# Create a scrollable window
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_border_width(10)
-        # there is always the scrollbar (otherwise: AUTOMATIC - only if needed
-        # - or NEVER)
+        # There is always the scrollbar automaticaly or none if not needed
         scrolled_window.set_policy(
             Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
 
+	# Construct a Gtk image object
 	img = Gtk.Image() 
+	# Set the image data from the contents of a file
 	img.set_from_file("greenhousehigh.jpg") 
 
-        # add the image to the scrolledwindow
+        # Add the image to the scrolledwindow
         scrolled_window.add_with_viewport(img)
 
-        # add the scrolledwindow to the window
+        # Add the scrolledwindow to the window
         self.add(scrolled_window)
 
 win = Large_Image_Window()
@@ -446,3 +475,4 @@ win = MyWindow()
 win.connect("destroy", Gtk.main_quit)
 win.show_all()
 Gtk.main()
+
