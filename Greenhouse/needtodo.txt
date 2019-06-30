@@ -61,11 +61,11 @@ Need like 15 more of these try file open read processes...
 # in reality variations in voltage change the runtime
 LINEAR_ACTUATOR_RUN_TIME = 70
 
+***********
+#### I do not use or need the following variable.....
 # set the minimum value at 0.05VDC
 MINIMUM_SOIL_MOISTURE_SENSOR_VALUE = 1
-
-# set the minimum luminosity sensors value at 0.01VDC
-MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01    #####  This can be a constant in the list of minimum and maximum sensor input values
+*******
 
 # minimum light and temp and humidity values relay #2 close the window
 MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT = 1.5
@@ -112,3 +112,5 @@ MINIMUM_TEMPERATURE_VALUE = -72
 # maximum temperature value
 MAXIMUM_TEMPERATURE_VALUE = 176
 
+# Define the the minimum luminosity sensor value at 0.01VDC
+MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01   
