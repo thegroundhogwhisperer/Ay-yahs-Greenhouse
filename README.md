@@ -107,7 +107,7 @@ Choose Back
 
 Choose Finish
 
-Place all related file in /home/pi/Greenhouse/
+Place all related files in the /home/pi/Greenhouse/ folder
 
 Configure execute permissions on greenhouse.py, powerout.py, and camera.py.
 
