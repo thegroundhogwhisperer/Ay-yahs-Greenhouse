@@ -7,10 +7,10 @@ import time
 
 
 # outputs status filename
-outputsStatusFilename = '/home/pi/Greenhouse/outputs.txt'
+outputsStatusFilename = '/var/www/html/outputs.txt'
 
 # solenoid valve status filename
-solenoidStatusFilename = '/home/pi/Greenhouse/solenoid.txt'
+solenoidStatusFilename = '/var/www/html/solenoid.txt'
 
 # set all output values to Off in case of power failure
 currentOutputStatusList = ["Off\n", "Off\n", "Off\n"]
