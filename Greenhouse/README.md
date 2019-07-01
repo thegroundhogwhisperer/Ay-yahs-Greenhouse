@@ -1,19 +1,19 @@
 # Ay-yahs-Greenhouse
 
-![Greenhouse Structure Image Distant](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Distant%20Small%20Image.png)
+![Greenhouse Structure Image Distant](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Distant%20Small%20Image.png)
 
-![Greenhouse Structure Image Near](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Entrance%20Small%20Image.png)
+![Greenhouse Structure Image Near](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Entrance%20Small%20Image.png)
 
-![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
+![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Interior%20Small%20Image.png)
 
 
 # Raspberry Pi Greenhouse Automation and Remote Environmental System Monitoring Project
 
-This is a for-fun project created for the purpose of automating and remotely monitoring climate control and irrigation in a small greenhouse. System automation is achieved using an ARM based CPU (Raspberry Pi 3) in combinational with a Pimoroni Automation HAT. Remote monitoring of environmental conditions is achieved through a layered one-way linear communication. This one-way communication is performed using a combination of technologies such as text-to-speech software, Python scripts, and radio frequency transmissions. The primary greenhouse automation script and support files are contained in the Greenhouse subfolder. The remote environmental system montioring Python scripts and support files are contained in the following subfolders:  Greenhousealarm, Greenhousereceivedata, Greenhousestatusttsrttysstvrf 
+This is a for-fun project created for the purpose of automating and remotely monitoring climate control and irrigation in a small greenhouse. System automation is achieved using an ARM based CPU (Raspberry Pi 3) in combination with a Pimoroni Automation HAT. Remote monitoring of environmental conditions is achieved through a layered communication structure. This layered communication is performed using a combination of technologies such as text-to-speech software, Python scripts, and radio frequency transmissions. The primary greenhouse automation script and support files are contained in the Greenhouse subfolder. The remote environmental system montioring Python scripts and support files are contained in the following subfolders:  Greenhousealarm, Greenhousemanualgui, Greenhousereceivedata, Greenhousestatusttsrttysstvpots, Greenhousestatusttsrttysstvrf
 
 # Data Flow Diagram
 
-![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
+![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
 
 # Raspberry Pi Greenhouse Automation Project
 
@@ -143,43 +143,43 @@ crontab -e
 */2 * * * * /usr/bin/python /home/pi/Greenhouse/greenhouse.py
 
 
+# Manual operations desktop GUI screenshot
+
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Manual%20Operations%20GUI.png)
+
 # Web interface screenshots
 
-![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
 
-![Greenhouse Web Interface Screenshot Two](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20Two.png)
-
-![Greenhouse Web Interface Manual Operations Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20Three.png)
-
+![Greenhouse Web Interface Screenshot Two](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20Two.png)
 
 # Example camera images
 
-![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
+![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
 
 
-![Greenhouse Camera Image High Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20High%20Resolution.jpg)
+![Greenhouse Camera Image High Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Camera%20Image%20High%20Resolution.jpg)
 
 
 # Wiring diagrams and enclosure images
 
-![GreenhousePi Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
+![GreenhousePi Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
 
-![Relay_Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Fan%20Relay%20Controller%20Wiring%20Diagram%20Small%20Image.png)
+![Relay_Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Automation%20HAT%20Fan%20Relay%20Controller%20Wiring%20Diagram%20Small%20Image.png)
 
 Due to the failure rate of the DHT22 sensor a power connector from a floppy disk drive is used for quick sensor replacement.
 
-![Sensor To Berg Connector_Wiring Example](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/DHT22%20Wiring%20Example%20Berg%204%20Pin%20Peripheral%20Connector%20To%20DHT22%20Digital%20Humidity%20Temperature%20Sensor%20Greenhouse%20Small%20Image.png)
+![Sensor To Berg Connector_Wiring Example](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/DHT22%20Wiring%20Example%20Berg%204%20Pin%20Peripheral%20Connector%20To%20DHT22%20Digital%20Humidity%20Temperature%20Sensor%20Greenhouse%20Small%20Image.png)
 
 # Automation Enclosure Images
 
-![Greenhouse Automation System Mounted Enclosure](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
+![Greenhouse Automation System Mounted Enclosure](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
 
-![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
+![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
 
 Two Channel Relay Enclosure image
 
-![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
-
+![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
 
 
 
