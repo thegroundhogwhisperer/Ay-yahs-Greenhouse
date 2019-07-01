@@ -2,7 +2,7 @@
 
 # Python scripts for temperature notifictions on an Ubuntu 18.04 desktop
 
-![Greenhouse Alarm Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousealarm/Greenhouse_Alarm_Screenshot.png)
+![Greenhouse Alarm Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhousealarm/Greenhouse_Alarm_Screenshot.png)
 
 # greenhousealarm.py 
 
