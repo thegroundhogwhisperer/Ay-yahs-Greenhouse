@@ -7,7 +7,7 @@
 # greenhousesendrttyemail.py
 
 
-![Email SMS RTTY Message Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/Email%20SMS%20RTTY%20Screenshot.png)
+![Email SMS RTTY Message Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Email%20SMS%20RTTY%20Screenshot.png)
 
 
 # Requirements: 
@@ -32,7 +32,7 @@ This script monitors the /talk/textout.txt file produced by Fldigi for RTTY tran
 # greenhousesendsstvemail.py
 
 
-![Email SMS SSTV Image Message Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/Email%20SMS%20SSTV%20Screenshot.png)
+![Email SMS SSTV Image Message Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Email%20SMS%20SSTV%20Screenshot.png)
 
 
 # Requirements: 
@@ -60,7 +60,7 @@ This script monitors a folder for .png image files produced by QSSTV transmissio
 
 # dropboxbackuprttysstv.py
 
-![DropBox Upload Fldigi Textout Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/RTTY%20DropBox%20Screenshot.png)
+![DropBox Upload Fldigi Textout Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/RTTY%20DropBox%20Screenshot.png)
 
 # 
 # Produces:
@@ -101,7 +101,7 @@ https://gist.github.com/Keshava11/d14db1e22765e8de2670b8976f3c7efb
 
 # greenhousesendrttyemailalarm.py
 
-![Email RTTY Alarm Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousereceivedata/Email%20Alarm%20Screenshot.png)
+![Email RTTY Alarm Screenshot](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Email%20Alarm%20Screenshot.png)
 
 
 # Requirements: 
