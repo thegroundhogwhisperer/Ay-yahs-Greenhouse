@@ -145,7 +145,7 @@ crontab -e
 
 # Manual operations desktop GUI screenshot
 
-![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhousemanualgui/Greenhouse%20Manual%20Operations%20GUI.png)
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Manual%20Operations%20GUI.png)
 
 # Web interface screenshots
 
