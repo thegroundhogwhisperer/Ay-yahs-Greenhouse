@@ -1,10 +1,10 @@
 # Ay-yahs-Greenhouse
 
-![Greenhouse Structure Image Distant](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Distant%20Small%20Image.png)
+![Greenhouse Structure Image Distant](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Distant%20Small%20Image.png)
 
-![Greenhouse Structure Image Near](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Entrance%20Small%20Image.png)
+![Greenhouse Structure Image Near](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Entrance%20Small%20Image.png)
 
-![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Interior%20Small%20Image.png)
+![Greenhouse Structure Interior](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Interior%20Small%20Image.png)
 
 
 # Raspberry Pi Greenhouse Automation and Remote Environmental System Monitoring Project
@@ -13,7 +13,7 @@ This is a for-fun project created for the purpose of automating and remotely mon
 
 # Data Flow Diagram
 
-![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
+![Data Flow Diagram Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Data%20Flow%20Diagram%20Small%20Image.png)
 
 # Raspberry Pi Greenhouse Automation Project
 
@@ -145,60 +145,70 @@ crontab -e
 
 # Manual operations desktop GUI screenshot
 
-![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousemanualgui/Greenhouse%20Manual%20Operations%20GUI.png)
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhousemanualgui/Greenhouse%20Manual%20Operations%20GUI.png)
 
 # Web interface screenshots
 
-![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
+![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
 
-![Greenhouse Web Interface Screenshot Two](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Web%20Interface%20Screenshot%20Two.png)
+![Greenhouse Web Interface Screenshot Two](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20Two.png)
 
 # Example camera images
 
-![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
+![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
 
 
-![Greenhouse Camera Image High Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Camera%20Image%20High%20Resolution.jpg)
+![Greenhouse Camera Image High Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Camera%20Image%20High%20Resolution.jpg)
 
 
 # Wiring diagrams and enclosure images
 
-![GreenhousePi Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
+![GreenhousePi Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Automation%20HAT%20Wiring%20Diagram%20V2%20(Smokey).png)
 
-![Relay_Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Automation%20HAT%20Fan%20Relay%20Controller%20Wiring%20Diagram%20Small%20Image.png)
+![Relay_Wiring Diagram](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Automation%20HAT%20Fan%20Relay%20Controller%20Wiring%20Diagram%20Small%20Image.png)
 
 Due to the failure rate of the DHT22 sensor a power connector from a floppy disk drive is used for quick sensor replacement.
 
-![Sensor To Berg Connector_Wiring Example](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/DHT22%20Wiring%20Example%20Berg%204%20Pin%20Peripheral%20Connector%20To%20DHT22%20Digital%20Humidity%20Temperature%20Sensor%20Greenhouse%20Small%20Image.png)
+![Sensor To Berg Connector_Wiring Example](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/DHT22%20Wiring%20Example%20Berg%204%20Pin%20Peripheral%20Connector%20To%20DHT22%20Digital%20Humidity%20Temperature%20Sensor%20Greenhouse%20Small%20Image.png)
 
 # Automation Enclosure Images
 
-![Greenhouse Automation System Mounted Enclosure](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
+![Greenhouse Automation System Mounted Enclosure](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
 
-![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
+![Automation Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse-Automation-Enclosure-Complete-Small-Image.png)
 
 Two Channel Relay Enclosure image
 
-![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
+![Two Channel Relay Enclosure Image](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Two-Channel-Relay-Enclosure-Complete-Small-Image.png)
 
 
 # Future modifications
 
-Add a configuration option setting the mode (variable 0 = heating pad or 1 = grow light) to allow switching between the evaluation of environmental conditions for the purpose of regulating a heating pad or regulating a grow light on Output 2.
+Add a configuration option setting the mode (variable 0 = heating pad or 1 = grow light) to allow switching between the evaluation of environmental conditions for the purpose of regulating a heating pad or regulating a grow light on Output 2. Done!
 
-Write the system configuration values to files on the disk (e.g. The minimum soil moisture value  /home/greenhouse/minimumsoilmoisture.txt) with the intent of the file/value being remotely modified via the web interface.  The system configuration values are currently constants in the main greenhouse.py application code. A .php or .py script could receive form submission data from the greenhousegtkcontrol.py manual GUI interface script via urllib2 providing a method of remotely updating system configuration values stored on the GreenhousePi's disk.
+Write the system configuration values to files on the disk (e.g. The minimum soil moisture value  /home/greenhouse/minimumsoilmoisture.txt) with the intent of the file/value being remotely modified via the web interface. Done!
 
-Create more detailed installation instructions.
+The system configuration values are currently constants in the main greenhouse.py application code. Not any longer; they are values stored in text files on the disk in the /var/www/html/ folder.
+
+A .php or .py script could receive form submission data from the greenhousegtkcontrol.py manual GUI interface script via urllib2 providing a method of remotely updating system configuration values stored on the GreenhousePi's disk.
+
+Create more detailed installation instructions. Starting with a clean Debian OS.
 
 Fix the graphs....
 
 Port the manual GUI interface as an .apk if I can ever get p4a or tivy or buildozer setup correctly.
 
-Move all the images in this repositories root folder to their own folder/directory and update the links in this document.
+Move all the images in this repositories root folder to their own folder/directory and update the links in this document. Done!
 
 Write a log file for manually performed procedures (e.g. Activation of the solenoid valve.)
 
 Write a lovely Flask interface.
+
+Write remote configuration features for setting the environmental condition values (e.g. Luminosity value returned selecting when to turn off output 2)
+
+Write a send SMS/Email script to use if the greenhouse location has internet connectivity.  The existing send SMS/Email notification script reads a RTTY log from Fldigi.  This local script could fetch and query the greenhouse.db file.
+
+All notification scripts (e.g. greenhousealarm.py, etc.) that fetch and parse the index.csv file via wget should be recoded to fetch and query the greenhouse.db file via urllib2.  It is more efficient to query the last row of the .db file than to prase the entire index.csv file for the last line.  Using urllib2 will also eliminate the requirement of the exteral application wget.
 
 Lots of other things...
 
