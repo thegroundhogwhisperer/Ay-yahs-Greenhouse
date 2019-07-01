@@ -6,7 +6,7 @@
 
 # greenhousegtkcontrol.py
 
-![Greenhouse Manual Control GTK GUI](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Greenhousemanualgui/Greenhouse%20Manual%20Operations%20GUI.png)
+![Greenhouse Manual Control GTK GUI](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Manual%20Operations%20GUI.png)
 
 
 
