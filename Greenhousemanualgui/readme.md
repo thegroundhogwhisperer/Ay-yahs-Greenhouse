@@ -12,9 +12,13 @@
 
 # Requirements: 
 
+Python
+
 python-gi
 
-Python
+sqlite3
+
+urllib2
 
 
 # 
