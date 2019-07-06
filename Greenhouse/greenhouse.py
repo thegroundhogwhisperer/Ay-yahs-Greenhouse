@@ -200,6 +200,13 @@ GRAPH_IMAGE_SOIL_MOISTURE_FILE_NAME = "/var/www/html/ghousesoil.png"
 # read control constant values from files on disk
 def read_control_values_from_files():
 
+
+	print "Reading control values from disk..."
+#	global LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME
+#	LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt'
+
+
+
 	try: 
 		# read the current solenoid valve status
 		solenoid_status_file_handle = open(SOLENOID_STATUS_FILE_NAME, 'r')
@@ -240,7 +247,7 @@ def read_control_values_from_files():
 	try: 
 		# read the current linear actuator runtime value from a file
 		actuator_runtime_value_file_handle = open(LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME, 'r')
-		LINEAR_ACTUATOR_RUN_TIME = actuator_runtime_value_file_handle.readline()
+		LINEAR_ACTUATOR_RUN_TIME_VALUE = actuator_runtime_value_file_handle.readline()
 		actuator_runtime_value_file_handle.close()
 		print ("Current linear actuator runtime value read from a file: ", LINEAR_ACTUATOR_RUN_TIME_VALUE)
 	
@@ -278,7 +285,7 @@ def read_control_values_from_files():
 		minimum_humidity_actuator_retract_value_file_handle = open(MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, 'r')
 		MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT = minimum_humidity_actuator_retract_value_file_handle.readline()
 		minimum_humidity_actuator_retract_value_file_handle.close()
-		print ("Current minimum temperature linear actuator retract value read from a file: ", MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT)
+		print ("Current minimum humidity linear actuator retract value read from a file: ", MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT)
 		
 	except OSError:
 
@@ -348,7 +355,7 @@ def read_control_values_from_files():
 	try: 
 		# read the minimum temperature sensor output one off value from a file
 		minimum_temperature_sensor_output_one_off_value_file_handle = open(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME, 'r')
-		MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF = minimum_temperature_sensor_output_one_on_value_file_handle.readline()
+		MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF = minimum_temperature_sensor_output_one_off_value_file_handle.readline()
 		minimum_temperature_sensor_output_one_off_value_file_handle.close()
 		print ("Current minimum temperature output one off value read from a file: ", MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF)
 		
@@ -432,7 +439,7 @@ def read_control_values_from_files():
 	try: 
 		# read the soil moisture sensor solenoid close value from a file
 		minimum_soil_moisture_sensor_solenoid_close_value_file_handle = open(MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME, 'r')
-		MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN = minimum_soil_moisture_sensor_solenoid_close_value_file_handle.readline()
+		MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED = minimum_soil_moisture_sensor_solenoid_close_value_file_handle.readline()
 		minimum_soil_moisture_sensor_solenoid_close_value_file_handle.close()
 		print ("Current minimum soil moisture sensor solenoid close value read from a file: ", MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED)
 		
