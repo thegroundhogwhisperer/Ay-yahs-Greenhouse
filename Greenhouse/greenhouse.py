@@ -28,8 +28,8 @@
 # measurements. The environmental sensors measurements are then used to
 # control a linear actuator, solenoid valve, small fan, and small heating
 # pad. The information produced is displayed on a 16x2 LCD screen,
-# broadcast via a wall message to the console, written to an HTML file,
-# CSV file, and SQLite database file.
+# broadcast via a wall message to the console, CSV file, and
+# a SQLite database file.
 
 # sqlite3 /var/www/html/greenhouse.db table creation command
 # CREATE TABLE greenhouse(id INTEGER PRIMARY KEY AUTOINCREMENT, luminosity
@@ -56,7 +56,7 @@ plt.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib import style
-style.use('fivethirtyeight')  # select the style of graph
+#style.use('fivethirtyeight')  # select the style of graph
 from dateutil import parser
 
 
@@ -72,9 +72,6 @@ DISPLAY_LCD_MESSAGE_LENGTH_SECONDS = .9
 
 # messages broadcast via the wall command are suffixed with this string
 WALL_TERMINAL_MESSAGE_SUFFIX_STRING = "Ay-yahs.Greenhouse.Garden.Area.One"
-
-# string dispalyed in the header of the html output
-WEBPAGE_HEADER_VALUE = "Ay-yah's Greenhouse Automation System"
 
 # Switch to enable or disable LCD screen messages True/False
 DISPLAY_LCD_SCREEN_MESSAGES_ACTIVE_SWTICH = True
@@ -108,9 +105,6 @@ MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01
 
 # sqlite database file name
 SQLITE_DATABASE_FILE_NAME = '/var/www/html/greenhouse.db'
-
-# static webpage file name
-STATIC_WEBPAGE_FILE_NAME = "/var/www/html/index.html"
 
 # comma separated value output local file name
 INDEX_LOG_DATA_CSV_FILE_NAME = "/var/www/html/index.csv"
@@ -193,17 +187,6 @@ GRAPH_IMAGE_HUMIDITY_FILE_NAME = "/var/www/html/ghousehumi.png"
 # soil moisture graph image local output file name
 GRAPH_IMAGE_SOIL_MOISTURE_FILE_NAME = "/var/www/html/ghousesoil.png"
 
-# luminosity graph image web/url file name
-GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME = "/ghouselumi.png"
-
-# temperature graph image web/url file name
-GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME = "/ghousetemp.png"
-
-# humidity graph image web/url file name
-GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "/ghousehumi.png"
-
-# soil moisture graph image web/url file name
-GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME = "/ghousesoil.png"
 
 ##################################################################
 #################### End Customizable Values #####################
@@ -905,7 +888,7 @@ def read_database_output_graphs():
 		curs = connection_sqlite_database.cursor()
 
 		# select data rows from the table
-		curs.execute('SELECT luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime FROM greenhouse ORDER BY ROWID DESC LIMIT 1000 ')
+		curs.execute('SELECT luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime FROM greenhouse ORDER BY ROWID DESC LIMIT 720 ')
 
 		data_row_fetched_all = curs.fetchall()
 		date_values = []
@@ -923,26 +906,34 @@ def read_database_output_graphs():
 			date_values.append(parser.parse(row[9]))
 			tempString = row[9].split("-", 1)
 			date_values_no_year.append(tempString[1])
-
+		
 		plt.figure(0)
-		plt.plot(date_values_no_year, values_luminosity, '-')
-
-		plt.show(block=True)
+		plt.plot(values_luminosity)
+		plt.ylabel('Luminosity [0.01-5.00 Volts]')
+		plt.xlabel('720 x two minute read intervals = Last 24 Hours')
+		#plt.show(block=True)
 		plt.savefig(GRAPH_IMAGE_LUMINOSITY_FILE_NAME)
 
 		plt.figure(1)
-		plt.plot(date_values_no_year, values_temperature, '-')
-		plt.show(block=True)
+		plt.plot(values_temperature)
+		plt.ylabel('Temperature [Degrees Fahrenheit] ')
+		plt.xlabel('720 x two minute read intervals = Last 24 Hours')
+		#plt.show(block=True)
 		plt.savefig(GRAPH_IMAGE_TEMPERATURE_FILE_NAME)
 
 		plt.figure(2)
-		plt.plot(date_values_no_year, values_humidity, '-')
-		plt.show(block=True)
+		plt.plot(values_humidity)
+
+		plt.ylabel('Humidity [0%-100%] ')
+		plt.xlabel('720 x two minute read intervals = Last 24 Hours')
+		#plt.show(block=True)
 		plt.savefig(GRAPH_IMAGE_HUMIDITY_FILE_NAME)
 
 		plt.figure(3)
-		plt.plot(date_values_no_year, values_soil_moisture, '-')
-		plt.show(block=True)
+		plt.plot(values_soil_moisture)
+		plt.ylabel('Soil Moisture [0.01-5.00 Volts] ')
+		plt.xlabel('720 x two minute read intervals = Last 24 Hours')
+		#plt.show(block=True)
 		plt.savefig(GRAPH_IMAGE_SOIL_MOISTURE_FILE_NAME)
 
 		# commit the changes
@@ -954,246 +945,6 @@ def read_database_output_graphs():
 		print('Sqlite Error: ', e.args[0])  # error output
 
 
-# write static HTML file subroutine
-def write_static_html_file(current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value, CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST, LINEAR_ACTUATOR_RUN_TIME, MINIMUM_SOIL_MOISTURE_SENSOR_VALUE, WEBPAGE_HEADER_VALUE, MINIMUM_LUMINOSITY_SENSOR_VALUE, MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT, MINIMUM_TEMPERATURE_ACTUATOR_RETRACT, MINIMUM_HUMIDITY_ACTUATOR_RETRACT, MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND, MINIMUM_TEMPERATURE_ACTUATOR_EXTEND, MINIMUM_HUMIDITY_ACTUATOR_EXTEND, MINIMUM_TEMPERATURE_OUTPUT_ONE_ON, MINIMUM_HUMIDITY_OUTPUT_ONE_ON, MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF, MINIMUM_HUMIDITY_OUTPUT_ONE_OFF, MINIMUM_TEMPERATURE_OUTPUT_TWO_ON, MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF, MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN, MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED):
-	# begin file write of static HTML file to the web server root
-	static_html_file_handle = open(STATIC_WEBPAGE_FILE_NAME, "w")
-
-	static_html_file_handle.write("""
-	<html>
-
-	<head>
-	  <style>
-	   table, th, td{
-		border: 1px solid #333;
-	   }
-	  </style>
-
-	<meta http-equiv="refresh" content="600">
-
-	<title>Greenhouse Automation System Status Information</title></head>
-
-	<body bgcolor="#CCFFFF">
-	""")
-
-	static_html_file_handle.write('<h3 align="center">')
-	static_html_file_handle.write(WEBPAGE_HEADER_VALUE)
-	static_html_file_handle.write('<br>Status Information</h3>')
-
-	static_html_file_handle.write(
-		'<center><a href="/greenhousehigh.jpg"><img src="/greenhouselow.gif" alt="Greenhouse Camera Image - Animated GIF file"  height="240" width="320"><br>Click for high resolution</center></a>')
-	static_html_file_handle.write('<center><table>')
-	static_html_file_handle.write(
-		'<caption>Current Environmental Data</caption>')
-	static_html_file_handle.write(
-		'<tr><th>Reading Type</th><th>Value</th></tr>')
-
-	current_luminosity_sensor_value = str(current_luminosity_sensor_value)
-	static_html_file_handle.write('<tr><td>')
-	static_html_file_handle.write('Luminosity</td><td>')
-	static_html_file_handle.write('<a href="')
-	static_html_file_handle.write(GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME)
-	static_html_file_handle.write('">')
-	static_html_file_handle.write('<img src="')
-	static_html_file_handle.write(GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME)
-	static_html_file_handle.write(
-		'" alt="Greenhouse Luminosity Last 1000 Data Points" height="240" width="320"></a><br><center>')
-	static_html_file_handle.write(current_luminosity_sensor_value)
-	static_html_file_handle.write('VDC</center></td></tr>')
-
-	current_temperature_sensor_value = str(current_temperature_sensor_value)
-	static_html_file_handle.write('<tr><td>Temperature</td><td>')
-	static_html_file_handle.write('<a href="')
-	static_html_file_handle.write(GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME)
-	static_html_file_handle.write('">')
-	static_html_file_handle.write('<img src="')
-	static_html_file_handle.write(GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME)
-	static_html_file_handle.write(
-		'" alt="Greenhouse Temperature Last 1000 Data Points" height="240" width="320"></a><br><center>')
-	static_html_file_handle.write(current_temperature_sensor_value)
-	static_html_file_handle.write('F</center></td></tr>')
-
-	current_humidity_sensor_value = str(current_humidity_sensor_value)
-	static_html_file_handle.write('<tr><td>Humidity</td><td>')
-	static_html_file_handle.write('<a href="')
-	static_html_file_handle.write(GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME)
-	static_html_file_handle.write('">')
-	static_html_file_handle.write('<img src="')
-	static_html_file_handle.write(GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME)
-	static_html_file_handle.write(
-		'" alt="Greenhouse Humidity Last 1000 Data Points" height="240" width="320"></a><br><center>')
-	static_html_file_handle.write(current_humidity_sensor_value)
-	static_html_file_handle.write('%</center></td></tr>')
-
-	current_soil_moisture_sensor_value = str(current_soil_moisture_sensor_value)
-	static_html_file_handle.write('<tr><td>Soil moisture</td><td>')
-	static_html_file_handle.write('<a href="')
-	static_html_file_handle.write(GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME)
-	static_html_file_handle.write('">')
-	static_html_file_handle.write('<img src="')
-	static_html_file_handle.write(GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME)
-	static_html_file_handle.write(
-		'" alt="Greenhouse Soil Moisture Last 1000 Data Points" height="240" width="320"></a><br><center>')
-	static_html_file_handle.write(current_soil_moisture_sensor_value)
-	static_html_file_handle.write('VDC</center></td></tr>')
-
-	static_html_file_handle.write('<tr><td>Solenoid value</td><td>')
-	static_html_file_handle.write(CURRENT_SOLENOID_VALVE_STATUS)
-	static_html_file_handle.write('</td></tr>')
-
-	static_html_file_handle.write('<tr><td>Linear actuator</td><td>')
-	static_html_file_handle.write(CURRENT_ACTUATOR_EXTENSION_STATUS)
-	static_html_file_handle.write('</td></tr>')
-
-	static_html_file_handle.write(
-		'<tr><td>Output #1 status (fan)</td><td> %s </td></tr>' % CURRENT_OUTPUT_STATUS_LIST[0])
-	static_html_file_handle.write('<br>')
-	static_html_file_handle.write(
-		'<tr><td>Output #2 status (heat pad|grow light)</td><td> %s </td></tr>' % CURRENT_OUTPUT_STATUS_LIST[1])
-	static_html_file_handle.write('<br>')
-	static_html_file_handle.write('<tr><td>Output #3 status</td><td> %s </td></tr>' %
-								  CURRENT_OUTPUT_STATUS_LIST[2])
-	static_html_file_handle.write('</table>')
-
-	static_html_file_handle.write('<br><br><table>')
-	static_html_file_handle.write('<tr><td>CSV data file</td><td>')
-	static_html_file_handle.write('<a href="/')
-	static_html_file_handle.write(INDEX_LOG_DATA_CSV_URL_FILE_NAME)
-	static_html_file_handle.write('">')
-	static_html_file_handle.write(INDEX_LOG_DATA_CSV_URL_FILE_NAME)
-	static_html_file_handle.write('</a>')
-
-	static_html_file_handle.write('</td></tr>')
-	static_html_file_handle.write('<tr><td>Seconds since the epoch</td><td>')
-	static_html_file_handle.write('%s</td></tr></table>' % time.time())
-
-	static_html_file_handle.write('<br><br><table>')
-	static_html_file_handle.write(
-		'<caption>Current Configuration Values</caption>')
-	static_html_file_handle.write('<tr><th>Value Type</th><th>Value</th></tr>')
-
-	LINEAR_ACTUATOR_RUN_TIME = str(LINEAR_ACTUATOR_RUN_TIME)
-	static_html_file_handle.write('<tr><td>LINEAR_ACTUATOR_RUN_TIME</td><td>')
-	static_html_file_handle.write(LINEAR_ACTUATOR_RUN_TIME)
-	static_html_file_handle.write(' Sec</td></tr>')
-
-	MINIMUM_LUMINOSITY_SENSOR_VALUE = str(MINIMUM_LUMINOSITY_SENSOR_VALUE)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_LUMINOSITY_SENSOR_VALUE</td><td>')
-	static_html_file_handle.write(MINIMUM_LUMINOSITY_SENSOR_VALUE)
-	static_html_file_handle.write('VDC</td></tr>')
-
-	MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT = str(
-		MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT</td><td>')
-	static_html_file_handle.write(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT)
-	static_html_file_handle.write('VDC</td></tr>')
-
-	MINIMUM_TEMPERATURE_ACTUATOR_RETRACT = str(MINIMUM_TEMPERATURE_ACTUATOR_RETRACT)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_TEMPERATURE_ACTUATOR_RETRACT</td><td>')
-	static_html_file_handle.write(MINIMUM_TEMPERATURE_ACTUATOR_RETRACT)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_HUMIDITY_ACTUATOR_RETRACT = str(MINIMUM_HUMIDITY_ACTUATOR_RETRACT)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_HUMIDITY_ACTUATOR_RETRACT</td><td>')
-	static_html_file_handle.write(MINIMUM_HUMIDITY_ACTUATOR_RETRACT)
-	static_html_file_handle.write('%</td></tr>')
-
-	MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND = str(
-		MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND</td><td>')
-	static_html_file_handle.write(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND)
-	static_html_file_handle.write('VDC</td></tr>')
-
-	MINIMUM_TEMPERATURE_ACTUATOR_EXTEND = str(MINIMUM_TEMPERATURE_ACTUATOR_EXTEND)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_TEMPERATURE_ACTUATOR_EXTEND</td><td>')
-	static_html_file_handle.write(MINIMUM_TEMPERATURE_ACTUATOR_EXTEND)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_HUMIDITY_ACTUATOR_EXTEND = str(MINIMUM_HUMIDITY_ACTUATOR_EXTEND)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_HUMIDITY_ACTUATOR_EXTEND</td><td>')
-	static_html_file_handle.write(MINIMUM_HUMIDITY_ACTUATOR_EXTEND)
-	static_html_file_handle.write('%</td></tr>')
-
-	MINIMUM_TEMPERATURE_OUTPUT_ONE_ON = str(MINIMUM_TEMPERATURE_OUTPUT_ONE_ON)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_TEMPERATURE_OUTPUT_ONE_ON</td><td>')
-	static_html_file_handle.write(MINIMUM_TEMPERATURE_OUTPUT_ONE_ON)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF = str(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF</td><td>')
-	static_html_file_handle.write(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_HUMIDITY_OUTPUT_ONE_ON = str(MINIMUM_HUMIDITY_OUTPUT_ONE_ON)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_HUMIDITY_OUTPUT_ONE_ON</td><td>')
-	static_html_file_handle.write(MINIMUM_HUMIDITY_OUTPUT_ONE_ON)
-	static_html_file_handle.write('%</td></tr>')
-
-	MINIMUM_HUMIDITY_OUTPUT_ONE_OFF = str(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_HUMIDITY_OUTPUT_ONE_OFF</td><td>')
-	static_html_file_handle.write(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
-	static_html_file_handle.write('%</td></tr>')
-
-	OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY = str(OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY) # Already a string
-	static_html_file_handle.write(
-		'<tr><td>OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY</td><td>')
-	static_html_file_handle.write(OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_TEMPERATURE_OUTPUT_TWO_ON = str(MINIMUM_TEMPERATURE_OUTPUT_TWO_ON)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_TEMPERATURE_OUTPUT_TWO_ON</td><td>')
-	static_html_file_handle.write(MINIMUM_TEMPERATURE_OUTPUT_TWO_ON)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF = str(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF</td><td>')
-	static_html_file_handle.write(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_LUMINOSITY_OUTPUT_TWO_ON = str(MINIMUM_LUMINOSITY_OUTPUT_TWO_ON)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_LUMINOSITY_OUTPUT_TWO_ON</td><td>')
-	static_html_file_handle.write(MINIMUM_LUMINOSITY_OUTPUT_TWO_ON)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF = str(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF</td><td>')
-	static_html_file_handle.write(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)
-	static_html_file_handle.write('F</td></tr>')
-
-	MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN = str(
-		MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN</td><td>')
-	static_html_file_handle.write(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)
-	static_html_file_handle.write('VDC</td></tr>')
-
-	MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED = str(
-		MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED)
-	static_html_file_handle.write(
-		'<tr><td>MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED</td><td>')
-	static_html_file_handle.write(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED)
-	static_html_file_handle.write('VDC</td></tr>')
-	static_html_file_handle.write('</table></center><br><br>')
-
-	static_html_file_handle.write(
-		'<center><a href="/wiring.png"><img src="/wiringlow.png" alt="Automation System Wiring Diagram"><a></center>')
-	static_html_file_handle.write('<br><br><br><br><center><a href="/em.php">Manual Operations</a></center><br><br><br><br></body></html>')
-	static_html_file_handle.close
 
 # display the current environmental information on the 16x2 LCD screen
 def display_lcd_screen_messages():
@@ -1390,12 +1141,8 @@ def evaluate_environmetnal_conditions_perform_automated_responses():
 
 
 
-# begin HTML, Sqlite database, CSV file, and graph image updates
-def perform_write_html_database_csv_graph_image_update_process():
-
-	# call the write static HTML output file subroutine
-	write_static_html_file(current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value, CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST, LINEAR_ACTUATOR_RUN_TIME, MINIMUM_SOIL_MOISTURE_SENSOR_VALUE, WEBPAGE_HEADER_VALUE, MINIMUM_LUMINOSITY_SENSOR_VALUE, MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT, MINIMUM_TEMPERATURE_ACTUATOR_RETRACT,
-						MINIMUM_HUMIDITY_ACTUATOR_RETRACT, MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND, MINIMUM_TEMPERATURE_ACTUATOR_EXTEND, MINIMUM_HUMIDITY_ACTUATOR_EXTEND, MINIMUM_TEMPERATURE_OUTPUT_ONE_ON, MINIMUM_HUMIDITY_OUTPUT_ONE_ON, MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF, MINIMUM_HUMIDITY_OUTPUT_ONE_OFF, MINIMUM_TEMPERATURE_OUTPUT_TWO_ON, MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF, MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN, MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED)
+# begin Sqlite database, CSV file, and graph image updates
+def perform_write_database_csv_graph_image_update_process():
 
 	# call the write database table subroutine
 	write_database_output(current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value,
@@ -1425,9 +1172,9 @@ read_values_display_messages()
 # automation responses and configured
 evaluate_environmetnal_conditions_perform_automated_responses()
 
-# begin HTML index file, Sqlite database file, CSV file, and graph
+# begin Sqlite database file, CSV file, and graph
 # image file updates
-perform_write_html_database_csv_graph_image_update_process()
+perform_write_database_csv_graph_image_update_process()
 
 ##################################################################
 ### End value read, notification, evaluation, update process ###
