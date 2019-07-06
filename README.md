@@ -194,23 +194,23 @@ The system configuration values are currently constants in the main greenhouse.p
 
 A .php or .py script could receive form submission data from the greenhousegtkcontrol.py manual GUI interface script via urllib2 providing a method of remotely updating system configuration values stored on the GreenhousePi's disk.
 
-A .php script now reads form submission data allowing for remote configuration of system values.
+A .php script now reads form submission data allowing for remote configuration of system values. Done!
 
 This same index.php script can be used to parse POST submissions from a Python based GTK GUI application submitting from data using urllib2.
 
-Create more detailed installation instructions. Starting with a clean Debian OS.
+Create more detailed installation instructions. Starting with a clean Debian OS.  I need to start a wiki for this and produce some viable documentation.
 
-Fix the graphs.... 
+Fix the graphs.... Done!
 
 Port the manual GUI interface as an .apk if I can ever get p4a or tivy or buildozer setup correctly.
 
 Move all the images in this repositories root folder to their own folder/directory and update the links in this document. Done!
 
-Write a log file for manually performed procedures (e.g. Activation of the solenoid valve.)
+Write a log file for manually performed procedures (e.g. Activation of the solenoid valve.) I dunno... maybe not...
 
-Write a lovely Flask interface.
+Write a lovely Flask interface.  Wrote a lovely .php interface that will suffice for now.  Done!
 
-Write remote configuration features for setting the environmental condition values (e.g. Luminosity value returned selecting when to turn off output 2)
+Write remote configuration features for setting the environmental condition values (e.g. Luminosity value returned selecting when to turn off output 2).  Done!
 
 Write a send SMS/Email script to use if the greenhouse location has internet connectivity.  The existing send SMS/Email notification script reads a RTTY log from Fldigi.  This local script could fetch and query the greenhouse.db file.
 
