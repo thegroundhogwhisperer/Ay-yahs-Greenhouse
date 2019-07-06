@@ -161,6 +161,9 @@ crontab -e
 
 ![Greenhouse Web Interface Screenshot Five](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20Five.png)
 
+![Greenhouse Web Interface Screenshot Five](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20Six.png)
+
+
 # Example camera images
 
 ![Greenhouse Camera Image Animated .GIF Low Resolution](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Camera%20Image%20Animated%20Low%20Resolution.gif)
