@@ -1058,7 +1058,7 @@ def read_values_display_messages():
 
 # begin the process of evaluating environmental conditions and
 # respond accordingly
-def evaluate_environmetnal_conditions_perform_automated_responses():
+def evaluate_environmental_conditions_perform_automated_responses():
 
 	# evaulate if we close or open the window
 	if (current_luminosity_sensor_value <= MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT and
@@ -1177,7 +1177,7 @@ read_values_display_messages()
 
 # begin evaluating environmental conditions and performing
 # automation responses and configured
-evaluate_environmetnal_conditions_perform_automated_responses()
+evaluate_environmental_conditions_perform_automated_responses()
 
 # begin Sqlite database file, CSV file, and graph
 # image file updates
