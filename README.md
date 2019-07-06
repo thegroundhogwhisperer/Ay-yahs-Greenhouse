@@ -85,6 +85,8 @@ Python 3:
 
 sudo pip3 install Adafruit_DHT
 
+sudo apt-get install php-sqlite3
+
 This script requires pigpiod.
 
 Install pigpio from the Raspbian package manager:
