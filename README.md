@@ -190,13 +190,17 @@ Add a configuration option setting the mode (variable 0 = heating pad or 1 = gro
 
 Write the system configuration values to files on the disk (e.g. The minimum soil moisture value  /home/greenhouse/minimumsoilmoisture.txt) with the intent of the file/value being remotely modified via the web interface. Done!
 
-The system configuration values are currently constants in the main greenhouse.py application code. Not any longer; they are values stored in text files on the disk in the /var/www/html/ folder.
+The system configuration values are currently constants in the main greenhouse.py application code. Not any longer; they are values stored in text files on the disk in the /var/www/html/ folder. Done!
 
 A .php or .py script could receive form submission data from the greenhousegtkcontrol.py manual GUI interface script via urllib2 providing a method of remotely updating system configuration values stored on the GreenhousePi's disk.
 
+A .php script now reads form submission data allowing for remote configuration of system values.
+
+This same index.php script can be used to parse POST submissions from a Python based GTK GUI application submitting from data using urllib2.
+
 Create more detailed installation instructions. Starting with a clean Debian OS.
 
-Fix the graphs....
+Fix the graphs.... 
 
 Port the manual GUI interface as an .apk if I can ever get p4a or tivy or buildozer setup correctly.
 
