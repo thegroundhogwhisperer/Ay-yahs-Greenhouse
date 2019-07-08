@@ -1,5 +1,5 @@
 <html>
-<head><title>Ay-yah's Greenhouse Automation System</title>
+<head><title>Ay-yah's Greenhouse Automation System Version 1.02</title>
 <style>
 table, th, td {
   border: 1px solid black;
@@ -238,6 +238,7 @@ print "</table>\n";
 
 <br><br>
 <h2 align="center"><p><span class="error">Manual Operations</span></p></h2>
+<h3 align="center">Note: Manually performing operations are not reflected anywhere in this system.</h3>
 <table style="width:30%" align="center">
   <tr>
     <th>Action Description</th>
@@ -317,22 +318,12 @@ print "</table>\n";
 
 # define the variables using during form submission
 $LINEAR_ACTUATOR_RUNTIME_VALUE = "";
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE = "";
 $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE = "";
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE = "";
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE = "";
-$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE = "";
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE = "";
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE = "";
-$MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE = "";
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE = "";
 $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE = "";
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE = "";
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE = "";
-$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE = "";
 $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE = "";
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE = "";
-$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE = "";
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE = "";
 
 # define the variables used to detect incomplete/unallowed form submission values
@@ -340,39 +331,21 @@ $LINEAR_ACTUATOR_RUNTIME_VALUE_Err = "";
 $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "";
 $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "";
 $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "";
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "";
-$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "";
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "";
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_Err = "";
-$MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_Err = "";
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err = "";
 $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err = "";
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_Err = "";
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "";
-$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_Err = "";
 $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "";
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err = "";
-$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_Err = "";
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err = "";
 
 # define the file names of control values stored on disk
 $LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt';
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME = '/var/www/html/minlumactretract.txt';
 $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME = '/var/www/html/mintemactretract.txt';
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME = '/var/www/html/minhumactretract.txt';
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME = '/var/www/html/minlumactextend.txt';
-$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME = '/var/www/html/mintemactextend.txt';
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME = '/var/www/html/minhumactextend.txt';
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME = '/var/www/html/mintemoutoneon.txt';
-$MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME = '/var/www/html/minhumoutoneon.txt';
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME = '/var/www/html/mintemoutoneoff.txt';
 $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME = '/var/www/html/minhumoutoneoff.txt';
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME = '/var/www/html/mintemouttwoon.txt';
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME = '/var/www/html/mintemouttwooff.txt';
-$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME = '/var/www/html/minlumouttwoon.txt';
 $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME = '/var/www/html/minlumouttwooff.txt';
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME = '/var/www/html/minsoilsoleopen.txt';
-$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME = '/var/www/html/minsoilsoleclosed.txt';
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME = '/var/www/html/outtwotemlum.txt';
 
 # read linear actuator runtime value file name (seconds)
@@ -380,45 +353,10 @@ $linear_actuator_runtime_file_pointer = fopen($LINEAR_ACTUATOR_RUNTIME_VALUE_FIL
 $LINEAR_ACTUATOR_RUNTIME_VALUE = fgets($linear_actuator_runtime_file_pointer);
 fclose($linear_actuator_runtime_file_pointer);
 
-# read minimum luminosity sensor acutator retraction value file name (volts)
-$minimum_luminosity_sensor_actuator_retract_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE = fgets($minimum_luminosity_sensor_actuator_retract_file_pointer);
-fclose($minimum_luminosity_sensor_actuator_retract_file_pointer);
-
 # read minimum temperature sensor actuator retraction value file name (degrees)
 $minimum_temperature_actuator_retract_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, "r") or die("Unable to open file!");
 $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE = fgets($minimum_temperature_actuator_retract_file_pointer);
 fclose($minimum_temperature_actuator_retract_file_pointer);
-
-# read minimum humidity sensor acturator retraction value file name (percent)
-$minimum_humidity_actuator_retract_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE = fgets($minimum_humidity_actuator_retract_file_pointer);
-fclose($minimum_humidity_actuator_retract_file_pointer);
-
-# read minimum luminosity sensor acutator extension value file name (volts)
-$minimum_luminosity_actuator_extend_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE = fgets($minimum_luminosity_actuator_extend_file_pointer);
-fclose($minimum_luminosity_actuator_extend_file_pointer);
-
-# read minimum temperature sensor acturator extension value file name (percent)
-$minimum_temperature_actuator_extend_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE = fgets($minimum_temperature_actuator_extend_file_pointer);
-fclose($minimum_temperature_actuator_extend_file_pointer);
-
-# read minimum humidity sensor acturator extension value file name (percent)
-$minimum_humidity_actuator_extend_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE = fgets($minimum_humidity_actuator_extend_file_pointer);
-fclose($minimum_humidity_actuator_extend_file_pointer);
-
-# read minimum temperature sensor output one on value file name (degrees)
-$minimum_temperature_output_one_on_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE = fgets($minimum_temperature_output_one_on_file_pointer);
-fclose($minimum_temperature_output_one_on_file_pointer);
-
-# read minimum humidity sensor output one on value file name (percrent)
-$minimum_humidity_output_one_on_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE = fgets($minimum_humidity_output_one_on_file_pointer);
-fclose($minimum_humidity_output_one_on_file_pointer);
 
 # read minimum temperature sensor output one off value file name (degrees)
 $minimum_temperature_output_one_off_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME, "r") or die("Unable to open file!");
@@ -430,20 +368,10 @@ $minimum_humidity_output_one_off_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_O
 $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE = fgets($minimum_humidity_output_one_off_file_pointer);
 fclose($minimum_humidity_output_one_off_file_pointer);
 
-# read minimum temperature sensor output two on value file name (degrees)
-$minimum_temperature_output_two_on_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE = fgets($minimum_temperature_output_two_on_file_pointer);
-fclose($minimum_temperature_output_two_on_file_pointer);
-
 # read minimum temperature sensor output two off value file name (degrees)
 $minimum_temperature_output_two_off_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, "r") or die("Unable to open file!");
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE = fgets($minimum_temperature_output_two_off_file_pointer);
 fclose($minimum_temperature_output_two_off_file_pointer);
-
-# read minimum luminosity sensor output two on value file name (volts)
-$minimum_luminosity_output_two_on_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE = fgets($minimum_luminosity_output_two_on_file_pointer);
-fclose($minimum_luminosity_output_two_on_file_pointer);
 
 # read minimum luminosity sensor output two off value file name (volts)
 $minimum_luminosity_output_two_off_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, "r") or die("Unable to open file!");
@@ -454,11 +382,6 @@ fclose($minimum_luminosity_output_two_off_file_pointer);
 $minimum_soil_moisture_solenoid_valve_open_file_pointer = fopen($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME, "r") or die("Unable to open file!");
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE = fgets($minimum_soil_moisture_solenoid_valve_open_file_pointer);
 fclose($minimum_soil_moisture_solenoid_valve_open_file_pointer);
-
-# read minimum soil moisture sensor close solenoid valve value file name (volts)
-$minimum_soil_moisture_solenoid_valve_closed_file_pointer = fopen($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME, "r") or die("Unable to open file!");
-$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE = fgets($minimum_soil_moisture_solenoid_valve_closed_file_pointer);
-fclose($minimum_soil_moisture_solenoid_valve_closed_file_pointer);
 
 # read output two configuration between using temperature or luminosity value file name (Temperature | Luminosity)
 $output_two_configure_temperature_or_luminosity_file_pointer = fopen($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME, "r") or die("Unable to open file!");
@@ -479,15 +402,6 @@ if (empty($_POST["LINEAR_ACTUATOR_RUNTIME_VALUE"])) {
     $LINEAR_ACTUATOR_RUNTIME_VALUE_Err = "Only numbers allowed";
 }
 }
-  
-if (empty($_POST["MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE"])) {
-  $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE is required";
-} else {
-  $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE = test_input($_POST["MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE"]);  // check if TEMPLATE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE)) {
-    $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "Only numbers allowed";
-}
-}
 
 if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE"])) {
   $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE is required";
@@ -496,66 +410,6 @@ if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE"])) {
   // check if MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE only contains letters and whitespace
   if (!preg_match("/^[0-9\.]*$/",$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE)) {
     $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE"])) {
-  $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE is required";
-} else {
-  $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE = test_input($_POST["MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE"]);
-  // check if MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE)) {
-    $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE"])) {
-  $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE is required";
-} else {
-  $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE = test_input($_POST["MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE"]);
-  // check if MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE)) {
-    $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE"])) {
-  $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE is required";
-} else {
-  $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE = test_input($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE"]);
-  // check if MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE)) {
-    $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE"])) {
-  $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE is required";
-} else {
-  $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE = test_input($_POST["MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE"]);
-  // check if TEMPLATE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE)) {
-    $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE"])) {
-  $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE is required";
-} else {
-  $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE = test_input($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE"]);
-  // check if MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE)) {
-    $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE"])) {
-  $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_Err = "MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE is required";
-} else {
-  $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE = test_input($_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE"]);
-  // check if MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE)) {
-    $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_Err = "Only numbers allowed";
 }
 }
 
@@ -579,16 +433,6 @@ if (empty($_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE"])) {
 }
 }
 
-if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE"])) {
-  $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE is required";
-} else {
-  $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE = test_input($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE"]);
-  // check if MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE)) {
-    $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_Err = "Only numbers allowed";
-}
-}
-
 if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
   $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE is required";
 } else {
@@ -599,23 +443,13 @@ if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
 }
 }
 
-if (empty($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE"])) {
-  $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_Err = "TEMPLATE is required";
-} else {
-  $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE = test_input($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE"]);
-  // check if MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE)) {
-    $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_Err = "Only letters and white space allowed";
-}
-}
-
 if (empty($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
-  $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE is required";
+  $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "TEMPLATE is required";
 } else {
   $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE = test_input($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE"]);
   // check if MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE only contains letters and whitespace
   if (!preg_match("/^[0-9\.]*$/",$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE)) {
-    $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "Only numbers allowed";
+    $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "Only letters and white space allowed";
 }
 }
 
@@ -626,16 +460,6 @@ if (empty($_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE"])) {
   // check if MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE only contains letters and whitespace
   if (!preg_match("/^[0-9\.]*$/",$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE)) {
     $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err = "Only numbers allowed";
-}
-}
-
-if (empty($_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE"])) {
-  $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_Err = "MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE is required";
-} else {
-  $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE = test_input($_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE"]);
-  // check if MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE only contains letters and whitespace
-  if (!preg_match("/^[0-9\.]*$/",$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE)) {
-    $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_Err = "Only numbers allowed";
 }
 }
 
@@ -651,22 +475,12 @@ if (empty($_POST["OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VAL
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" &&
     empty($LINEAR_ACTUATOR_RUNTIME_VALUE_Err) &&
-    empty($MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err) &&
     empty($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err) &&
-    empty($MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err) &&
-    empty($MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err) &&
-    empty($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_Err) &&
-    empty($MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err) &&
-    empty($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_Err) &&
-    empty($MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_Err) &&
     empty($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err) &&
     empty($MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err) &&
-    empty($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_Err) &&
     empty($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err) &&
-    empty($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_Err) &&
     empty($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err) &&
     empty($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err) &&
-    empty($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_Err) &&
     empty($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err))
 
 {
@@ -681,45 +495,10 @@ $linear_actuator_runtime_file_pointer = fopen($LINEAR_ACTUATOR_RUNTIME_VALUE_FIL
 fwrite($linear_actuator_runtime_file_pointer, $LINEAR_ACTUATOR_RUNTIME_VALUE);
 fclose($linear_actuator_runtime_file_pointer);
 
-# write minimum luminosity sensor acutator retraction value file name (volts)
-$minimum_luminosity_sensor_actuator_retract_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_luminosity_sensor_actuator_retract_file_pointer, $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE);
-fclose($minimum_luminosity_sensor_actuator_retract_file_pointer);
-
 # write minimum temperature sensor actuator retraction value file name (degrees)
 $minimum_temperature_actuator_retract_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, "w") or die("Unable to open file!");
 fwrite($minimum_temperature_actuator_retract_file_pointer, $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE);
 fclose($minimum_temperature_actuator_retract_file_pointer);
-
-# write minimum humidity sensor acturator retraction value file name (percent)
-$minimum_humidity_actuator_retract_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_humidity_actuator_retract_file_pointer, $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE);
-fclose($minimum_humidity_actuator_retract_file_pointer);
-
-# write minimum luminosity sensor acutator extension value file name (volts)
-$minimum_luminosity_actuator_extend_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_luminosity_actuator_extend_file_pointer, $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE);
-fclose($minimum_luminosity_actuator_extend_file_pointer);
-
-# write minimum temperature sensor acturator extension value file name (percent)
-$minimum_temperature_actuator_extend_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_temperature_actuator_extend_file_pointer, $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE);
-fclose($minimum_temperature_actuator_extend_file_pointer);
-
-# write minimum humidity sensor acturator extension value file name (percent)
-$minimum_humidity_actuator_extend_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_humidity_actuator_extend_file_pointer, $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE);
-fclose($minimum_humidity_actuator_extend_file_pointer);
-
-# write minimum temperature sensor output one on value file name (degrees)
-$minimum_temperature_output_one_on_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_temperature_output_one_on_file_pointer, $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE);
-fclose($minimum_temperature_output_one_on_file_pointer);
-
-# write minimum humidity sensor output one on value file name (percrent)
-$minimum_humidity_output_one_on_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_humidity_output_one_on_file_pointer, $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE);
-fclose($minimum_humidity_output_one_on_file_pointer);
 
 # write minimum temperature sensor output one off value file name (degrees)
 $minimum_temperature_output_one_off_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME, "w") or die("Unable to open file!");
@@ -731,20 +510,10 @@ $minimum_humidity_output_one_off_file_pointer = fopen($MINIMUM_HUMIDITY_SENSOR_O
 fwrite($minimum_humidity_output_one_off_file_pointer, $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE);
 fclose($minimum_humidity_output_one_off_file_pointer);
 
-# write minimum temperature sensor output two on value file name (degrees)
-$minimum_temperature_output_two_on_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_temperature_output_two_on_file_pointer, $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE);
-fclose($minimum_temperature_output_two_on_file_pointer);
-
 # write minimum temperature sensor output two off value file name (degrees)
 $minimum_temperature_output_two_off_file_pointer = fopen($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, "w") or die("Unable to open file!");
 fwrite($minimum_temperature_output_two_off_file_pointer, $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE);
 fclose($minimum_temperature_output_two_off_file_pointer);
-
-# write minimum luminosity sensor output two on value file name (volts)
-$minimum_luminosity_output_two_on_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_luminosity_output_two_on_file_pointer, $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE);
-fclose($minimum_luminosity_output_two_on_file_pointer);
 
 # write minimum luminosity sensor output two off value file name (volts)
 $minimum_luminosity_output_two_off_file_pointer = fopen($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, "w") or die("Unable to open file!");
@@ -755,11 +524,6 @@ fclose($minimum_luminosity_output_two_off_file_pointer);
 $minimum_soil_moisture_solenoid_valve_open_file_pointer = fopen($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME, "w") or die("Unable to open file!");
 fwrite($minimum_soil_moisture_solenoid_valve_open_file_pointer, $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE);
 fclose($minimum_soil_moisture_solenoid_valve_open_file_pointer);
-
-# write minimum soil moisture sensor close solenoid valve value file name (volts)
-$minimum_soil_moisture_solenoid_valve_closed_file_pointer = fopen($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME, "w") or die("Unable to open file!");
-fwrite($minimum_soil_moisture_solenoid_valve_closed_file_pointer, $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE);
-fclose($minimum_soil_moisture_solenoid_valve_closed_file_pointer);
 
 # write output two configuration between using temperature or luminosity value file name (Temperature | Luminosity)
 $output_two_configure_temperature_or_luminosity_file_pointer = fopen($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME, "w") or die("Unable to open file!");
@@ -776,134 +540,67 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
  <table style="width:50%" align="center">
   <tr>
-    <th>Value Description</th>
-    <th>Value</th> 
+    <th style="width:80%;">Value Description</th>
+    <th style="width:20%;">Value</th> 
   </tr>
   <tr>
-    <td align="right">LINEAR_ACTUATOR_RUNTIME_VALUE:</td>
+    <td align="right">LINEAR_ACTUATOR_RUNTIME_VALUE: =</td>
     <td align="left"><br><input type="text" name="LINEAR_ACTUATOR_RUNTIME_VALUE" size="5" value="<?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE;?>">
   <span class="error">* <?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE_Err;?></span>
   <br><br>
     </td>
   </tr>
   <tr>
-    <td align="right">MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span>
-  <br><br>
+    <td align="right">MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE: <=<br><br>
+		      Logic: When the temperature reaches the minimum specified value retract the actuator (Close Window)
+    </td>
+    <td align="left"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE;?>"
+  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span><br><br><br>
+   <br>
     </td>
   </tr>
   <tr>
-    <td align="right">MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span>
-  <br><br>
+    <td align="right">MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE: <=<br>
+		      AND MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE: <=<br><br>
+		      Logic: When the temperature reaches the minimum specified value AND when the humidity reaches the minimum specified value turn off output #1 (Fan).
     </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
+    <td align="left"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
   <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE" size="5" value="<?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err;?></span>
-  <br><br>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE:</td>
-    <td align="left"><br><input type="text" name="MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE" size="5" value="<?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_Err;?></span>
-  <br><br>
+   <br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
+  <span class="error">* <?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span><br><br><br><br>
     </td>
   </tr>
   <tr>
     <td align="right">OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE:</td>
     <td align="left"><br>
-  <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Temperature") echo "checked";?> value="Temperature">Temperature<br>
+  <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Temperature") echo "checked";?> value="Temperature">Temperature*<br>
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Luminosity") echo "checked";?> value="Luminosity">Luminosity
   <span class="error">* <?php echo $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err;?></span>
+  <br><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE: <=<br><br>
+		      Logic: When the temperature reaches the minimum specified value turn off output two.
+    </td>
+    <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
+  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br><br>
+  <br><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE: <=<br><br>
+		      Logic: When the luminosity reaches the minimum specified value turn off output two.
+    </td>
+    <td align="left"><br><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
+  <span class="error">* <?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br><br>
+  <br><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE: >=</td>
+    <td align="left"><br><input type="text" name="MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE" size="5" value="<?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE;?>">
+  <span class="error">* <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err;?></span>
   <br><br>
     </td>
   </tr>
