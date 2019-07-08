@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-# greenhouse.py Version 1.01
+# greenhouse.py Version 1.02
 # Copyright (C) 2019 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,7 +42,13 @@
 # Set this value to True if you would like to execute this
 # script without any sensors (e.g. DHT22, LDR, soil moisture)
 # and without a Pimoroni Automation hat.
-ENABLE_FAKE_SENSOR_VALUES = True
+ENABLE_FAKE_SENSOR_VALUES = False
+
+# define the fake sensor values
+FAKE_SOIL_MOISTURE_SENSOR_VALUE = 1.9
+FAKE_LUMINOSITY_SENSOR_VALUE = 4.2
+FAKE_HUMIDITY_SENSOR_VALUE = 50.01
+FAKE_TEMPERATURE_SENSOR_VALUE = 72.28
 
 # do not attempt to import the Adafruit_DHT module if fake sensor input mode is enabled
 if ENABLE_FAKE_SENSOR_VALUES == False: import Adafruit_DHT
@@ -84,7 +90,7 @@ SERIAL_LCD_DEVICE_NAME = '/dev/ttyACM0'
 DISPLAY_LCD_MESSAGE_LENGTH_SECONDS = .9
 
 # messages broadcast via the wall command are suffixed with this string
-WALL_TERMINAL_MESSAGE_SUFFIX_STRING = "Ay-yahs.Greenhouse.Garden.Area.One.Version.1.01"
+WALL_TERMINAL_MESSAGE_SUFFIX_STRING = "Ay-yahs.Greenhouse.Garden.Area.One.Version.1.02"
 
 # Switch to enable or disable LCD screen messages True/False
 DISPLAY_LCD_SCREEN_MESSAGES_ACTIVE_SWTICH = False
@@ -125,8 +131,6 @@ MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01
 # Define the the soil moisture sensor value at 0.01VDC
 MINIMUM_SOIL_MOISTURE_SENSOR_VALUE = 0.01
 
-######### Not needed here
-global current_luminosity_sensor_value
 
 # sqlite database file name
 SQLITE_DATABASE_FILE_NAME = '/var/www/html/greenhouse.db'
@@ -149,29 +153,8 @@ OUTPUTS_STATUS_FILE_NAME = '/home/pi/Greenhouse/outputs.txt'
 # linear actuator runtime value file name (seconds)
 LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt'
 
-# minimum luminosity sensor acutator retraction value file name (volts)
-MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME = '/var/www/html/minlumactretract.txt'
-
 # minimum temperature sensor actuator retraction value file name (degrees)
 MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME = '/var/www/html/mintemactretract.txt'
-
-# minimum humidity sensor acturator retraction value file name (percent)
-MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME = '/var/www/html/minhumactretract.txt'
-
-# minimum luminosity sensor acutator extension value file name (volts)
-MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME = '/var/www/html/minlumactextend.txt'
-
-# minimum temperature sensor acturator extension value file name (percent)
-MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME = '/var/www/html/mintemactextend.txt'
-
-# minimum humidity sensor acturator extension value file name (percent)
-MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME = '/var/www/html/minhumactextend.txt'
-
-# minimum temperature sensor output one on value file name (degrees)
-MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME = '/var/www/html/mintemoutoneon.txt'
-
-# minimum humidity sensor output one on value file name (percrent)
-MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME = '/var/www/html/minhumoutoneon.txt'
 
 # minimum temperature sensor output one off value file name (degrees)
 MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME = '/var/www/html/mintemoutoneoff.txt'
@@ -179,23 +162,14 @@ MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME = '/var/www/html/minte
 # minimum humidity sensor output one off value file name (percrent)
 MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME = '/var/www/html/minhumoutoneoff.txt'
 
-# minimum temperature sensor output two on value file name (degrees)
-MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME = '/var/www/html/mintemouttwoon.txt'
-
 # minimum temperature sensor output two off value file name (degrees)
 MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME = '/var/www/html/mintemouttwooff.txt'
-
-# minimum luminosity sensor output two on value file name (volts)
-MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME = '/var/www/html/minlumouttwoon.txt'
 
 # minimum luminosity sensor output two off value file name (volts)
 MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME = '/var/www/html/minlumouttwooff.txt'
 
 # minimum soil moisture sensor open solenoid valve value file name (volts)
 MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME = '/var/www/html/minsoilsoleopen.txt'
-
-# minimum soil moisture sensor close solenoid valve value file name (volts)
-MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME = '/var/www/html/minsoilsoleclosed.txt'
 
 # output two configuration between using temperature or luminosity value file name (Temperature | Luminosity)
 OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME = '/var/www/html/outtwotemlum.txt'
@@ -212,8 +186,6 @@ GRAPH_IMAGE_HUMIDITY_FILE_NAME = "/var/www/html/ghousehumi.png"
 # soil moisture graph image local output file name
 GRAPH_IMAGE_SOIL_MOISTURE_FILE_NAME = "/var/www/html/ghousesoil.png"
 
-#### Not need here
-global CURRENT_ACTUATOR_EXTENSION_STATUS
 
 
 ##################################################################
@@ -231,11 +203,6 @@ def read_control_values_from_files():
 
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Reading control values from files on disk.")
 	     
-#	global LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME
-#	LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt'
-
-
-
 	try: 
 		global CURRENT_SOLENOID_VALVE_STATUS
 		# read the current solenoid valve status
@@ -293,19 +260,6 @@ def read_control_values_from_files():
 		quit()
 
 	try: 
-		global MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT
-		# read the minimum luminosity linear actuator retract value from a file
-		minimum_luminosity_actuator_retract_value_file_handle = open(MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, 'r')
-		MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT = minimum_luminosity_actuator_retract_value_file_handle.readline()
-		minimum_luminosity_actuator_retract_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT from file", MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME)
-		quit()
-
-	try: 
 
 		global MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT
 		# read the minimum temperature linear actuator retract value from a file
@@ -319,83 +273,6 @@ def read_control_values_from_files():
 		print ("An error occurred reading file name: ", MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME)
 		quit()
 
-	try: 
-		global MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT
-		# read the minimum humidity linear actuator retract value from a file
-		minimum_humidity_actuator_retract_value_file_handle = open(MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME, 'r')
-		MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT = minimum_humidity_actuator_retract_value_file_handle.readline()
-		minimum_humidity_actuator_retract_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT from file", MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND
-		# read the minimum luminosity linear actuator retract value from a file
-		minimum_luminosity_actuator_retract_value_file_handle = open(MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, 'r')
-		MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND = minimum_luminosity_actuator_retract_value_file_handle.readline()
-		minimum_luminosity_actuator_retract_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND from file", MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND
-		# read the minimum temperature linear actuator extend value from a file
-		minimum_temperature_actuator_extend_value_file_handle = open(MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, 'r')
-		MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND = minimum_temperature_actuator_extend_value_file_handle.readline()
-		minimum_temperature_actuator_extend_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND from file", MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND
-		# read the minimum humidity linear actuator extend value from a file
-		minimum_humidity_actuator_extend_value_file_handle = open(MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME, 'r')
-		MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND = minimum_humidity_actuator_extend_value_file_handle.readline()
-		minimum_humidity_actuator_extend_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND from file", MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND)
-	
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_HUMIDITY_SENSOR_ACTUATOR_EXTEND_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_TEMPERATURE_OUTPUT_ONE_ON
-		# read the minimum temperature sensor output one on value from a file
-		minimum_temperature_sensor_output_one_on_value_file_handle = open(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME, 'r')
-		MINIMUM_TEMPERATURE_OUTPUT_ONE_ON = minimum_temperature_sensor_output_one_on_value_file_handle.readline()
-		minimum_temperature_sensor_output_one_on_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_TEMPERATURE_OUTPUT_ONE_ON from file", MINIMUM_TEMPERATURE_OUTPUT_ONE_ON)
-	
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_HUMIDITY_OUTPUT_ONE_ON
-		# read the minimum humidity sensor output one on value from a file
-		minimum_humidity_sensor_output_one_on_value_file_handle = open(MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME, 'r')
-		MINIMUM_HUMIDITY_OUTPUT_ONE_ON = minimum_humidity_sensor_output_one_on_value_file_handle.readline()
-		minimum_humidity_sensor_output_one_on_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_HUMIDITY_OUTPUT_ONE_ON from file", MINIMUM_HUMIDITY_OUTPUT_ONE_ON)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_ON_VALUE_FILE_NAME)
-		quit()
 
 	try: 
 		global MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF
@@ -404,7 +281,7 @@ def read_control_values_from_files():
 		MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF = minimum_temperature_sensor_output_one_off_value_file_handle.readline()
 		minimum_temperature_sensor_output_one_off_value_file_handle.close()
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF from file", MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF)
-		
+	
 	except OSError:
 
 		print ("An error occurred reading file name: ", MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_FILE_NAME)
@@ -424,21 +301,8 @@ def read_control_values_from_files():
 		quit()
 
 	try: 
-		global MINIMUM_TEMPERATURE_OUTPUT_TWO_ON 
+		global MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF 
 		# read the minimum temperature sensor output two on value from a file
-		minimum_temperature_sensor_output_two_on_value_file_handle = open(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME, 'r')
-		MINIMUM_TEMPERATURE_OUTPUT_TWO_ON = minimum_temperature_sensor_output_two_on_value_file_handle.readline()
-		minimum_temperature_sensor_output_two_on_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_TEMPERATURE_OUTPUT_TWO_ON from file", MINIMUM_TEMPERATURE_OUTPUT_TWO_ON)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF
-		# read the minimum temperature sensor output two off value from a file
 		minimum_temperature_sensor_output_two_off_value_file_handle = open(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, 'r')
 		MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF = minimum_temperature_sensor_output_two_off_value_file_handle.readline()
 		minimum_temperature_sensor_output_two_off_value_file_handle.close()
@@ -450,21 +314,8 @@ def read_control_values_from_files():
 		quit()
 
 	try: 
-		global MINIMUM_LUMINOSITY_OUTPUT_TWO_ON
-		# read the minimum luminosity sensor output two on value from a file
-		minimum_luminosity_sensor_output_two_on_value_file_handle = open(MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME, 'r')
-		MINIMUM_LUMINOSITY_OUTPUT_TWO_ON = minimum_luminosity_sensor_output_two_on_value_file_handle.readline()
-		minimum_luminosity_sensor_output_two_on_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_LUMINOSITY_OUTPUT_TWO_ON from file", MINIMUM_LUMINOSITY_OUTPUT_TWO_ON)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_ON_VALUE_FILE_NAME)
-		quit()
-
-	try: 
 		global MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF
-		# read the minimum luminosity sensor output two off value from a file
+		# read the minimum luminosity sensor output two on value from a file
 		minimum_luminosity_sensor_output_two_off_value_file_handle = open(MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, 'r')
 		MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF = minimum_luminosity_sensor_output_two_off_value_file_handle.readline()
 		minimum_luminosity_sensor_output_two_off_value_file_handle.close()
@@ -486,19 +337,6 @@ def read_control_values_from_files():
 	except OSError:
 
 		print ("An error occurred reading file name: ", MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME)
-		quit()
-
-	try: 
-		global MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED
-		# read the soil moisture sensor solenoid close value from a file
-		minimum_soil_moisture_sensor_solenoid_close_value_file_handle = open(MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME, 'r')
-		MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED = minimum_soil_moisture_sensor_solenoid_close_value_file_handle.readline()
-		minimum_soil_moisture_sensor_solenoid_close_value_file_handle.close()
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Read MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED from file", MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED)
-		
-	except OSError:
-
-		print ("An error occurred reading file name: ", MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_CLOSED_VALUE_FILE_NAME)
 		quit()
 
 	try: 
@@ -531,8 +369,8 @@ def read_temperature_humidity_values():
 			global current_temperature_sensor_value
 			global current_humidity_sensor_value
 
-			if ENABLE_FAKE_SENSOR_VALUES == True: current_humidity_sensor_value = 50.01
-			if ENABLE_FAKE_SENSOR_VALUES == True: current_temperature_sensor_value = 72.2
+			if ENABLE_FAKE_SENSOR_VALUES == True: current_humidity_sensor_value = FAKE_HUMIDITY_SENSOR_VALUE
+			if ENABLE_FAKE_SENSOR_VALUES == True: current_temperature_sensor_value = FAKE_TEMPERATURE_SENSOR_VALUE
 			if ENABLE_FAKE_SENSOR_VALUES == True: print ("Fake sensor values enabled. Returning current_humidity_sensor_value, current_temperature_sensor_value:", current_humidity_sensor_value, current_temperature_sensor_value)
 			if ENABLE_FAKE_SENSOR_VALUES == True: return(current_humidity_sensor_value, current_temperature_sensor_value)
 
@@ -703,11 +541,11 @@ def linear_actuator_extension_retraction(actuator_extension_status):
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Extending the linear actuator now")
 
 			# toggle relay #2 on to extend the linear actuator
-			automationhat.relay.one.toggle()
+			if ENABLE_FAKE_SENSOR_VALUES == False: automationhat.relay.one.toggle()
 			time.sleep(float(LINEAR_ACTUATOR_RUN_TIME_VALUE))
 
 			# toggle relay #2 off
-			automationhat.relay.one.toggle()
+			if ENABLE_FAKE_SENSOR_VALUES == False: automationhat.relay.one.toggle()
 			CURRENT_ACTUATOR_EXTENSION_STATUS = 'Extended'
 
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Writing the linear actuator status to ACTUATOR_STATUS_FILE_NAME", ACTUATOR_STATUS_FILE_NAME)
@@ -726,13 +564,15 @@ def linear_actuator_extension_retraction(actuator_extension_status):
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Retracting the linear actuator now")
 
 			# toggle relay #1 on to retract the linear actuator
-			automationhat.relay.two.toggle()
+			# only call the automationhat module if fake sensor input is disabled = False
+			if ENABLE_FAKE_SENSOR_VALUES == False: automationhat.relay.two.toggle()
 			time.sleep(float(LINEAR_ACTUATOR_RUN_TIME_VALUE))
 
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Writing the linear actuator status to ACTUATOR_STATUS_FILE_NAME", ACTUATOR_STATUS_FILE_NAME)
 
 			# toggle relay #1 off
-			automationhat.relay.two.toggle()
+			# only call the automationhat module if fake sensor input is disabled = False
+			if ENABLE_FAKE_SENSOR_VALUES == False: automationhat.relay.two.toggle()
 			CURRENT_ACTUATOR_EXTENSION_STATUS = 'Retracted'
 			# write the modified status to a text file
 			actuator_status_file_handle = open(ACTUATOR_STATUS_FILE_NAME, 'w')
@@ -801,7 +641,7 @@ def read_soil_moisture_sensor_value():
 
 	global current_soil_moisture_sensor_value
 
-	if ENABLE_FAKE_SENSOR_VALUES == True: current_soil_moisture_sensor_value = 1.9
+	if ENABLE_FAKE_SENSOR_VALUES == True: current_soil_moisture_sensor_value = FAKE_SOIL_MOISTURE_SENSOR_VALUE
 	if ENABLE_FAKE_SENSOR_VALUES == True: print ("Fake sensor values enabled. Returning current_soil_moisture_sensor_value:", current_soil_moisture_sensor_value)
 	if ENABLE_FAKE_SENSOR_VALUES == True: return(current_soil_moisture_sensor_value)
 
@@ -877,7 +717,7 @@ def read_luminosity_sensor_value():
 
     global current_luminosity_sensor_value
 
-    if ENABLE_FAKE_SENSOR_VALUES == True: current_luminosity_sensor_value = 4.03
+    if ENABLE_FAKE_SENSOR_VALUES == True: current_luminosity_sensor_value = FAKE_LUMINOSITY_SENSOR_VALUE
     if ENABLE_FAKE_SENSOR_VALUES == True: print ("Fake sensor values enabled. Returning current_luminosity_sensor_value:", current_luminosity_sensor_value)
     if ENABLE_FAKE_SENSOR_VALUES == True: return(current_luminosity_sensor_value)
 		
@@ -1057,7 +897,7 @@ def write_database_output(current_luminosity_sensor_value, current_temperature_s
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Performing row INSERT INTO table: ", current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value,  CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST[0], CURRENT_OUTPUT_STATUS_LIST[1], CURRENT_OUTPUT_STATUS_LIST[2])
 		# insert data rows into the table
-		curs.execute("INSERT INTO greenhouse (luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime) VALUES((?), (?), (?), (?), (?), (?), (?), (?), (?), date('now'), time('now'))",
+		curs.execute("INSERT INTO greenhouse (luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime) VALUES((?), (?), (?), (?), (?), (?), (?), (?), (?), date('now','localtime'), time('now','localtime'))",
 					 (current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value,  CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST[0], CURRENT_OUTPUT_STATUS_LIST[1], CURRENT_OUTPUT_STATUS_LIST[2]))
 		# commit the changes
 		connection_sqlite_database.commit()
@@ -1262,20 +1102,12 @@ def evaluate_environmental_conditions_perform_automated_responses():
 
 	# evaulate if we close or open the window
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Performing evaluate_environmental_conditions_perform_automated_responses() comparison process now")
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT) and current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and current_humidity_sensor_value <= int(MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT), current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND) and current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND) and current_humidity_sensor_value > int(MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND), current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND), CURRENT_SOLENOID_VALVE_STATUS) 
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
 
-	if (current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_RETRACT) and
-		current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
-		current_humidity_sensor_value <= int(MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT) and
+	if (current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
 		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
-		 ):
-
-##	if (current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) 
-#		current_humidity_sensor_value <= MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_RETRACT and
-#		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
-#
-#		 ):
+		):
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Closing the window now")
 
@@ -1284,9 +1116,7 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
 	
 
-	elif (current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_SENSOR_VALUE_ACTUATOR_EXTEND) and
-		  current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_EXTEND) and
-		  current_humidity_sensor_value > int(MINIMUM_HUMIDITY_SENSOR_VALUE_ACTUATOR_EXTEND) and
+	elif (current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
 		  CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
 		  ):
 
@@ -1296,12 +1126,12 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
 
 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value >= int(MINIMUM_TEMPERATURE_OUTPUT_ONE_ON) or current_humidity_sensor_value >= int(MINIMUM_HUMIDITY_OUTPUT_ONE_ON) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_ONE_ON), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_OUTPUT_ONE_ON), CURRENT_SOLENOID_VALVE_STATUS) 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF):", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)) 
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value >= int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value >= int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
 
 	# evaulate if we need to enable output #1 turn on the fan
-	if (current_temperature_sensor_value >= int(MINIMUM_TEMPERATURE_OUTPUT_ONE_ON) or
-		current_humidity_sensor_value >= int(MINIMUM_HUMIDITY_OUTPUT_ONE_ON) and
+	if (current_temperature_sensor_value >= int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
+		current_humidity_sensor_value >= int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and
 		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
 		 ):
 
@@ -1311,7 +1141,7 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		output_status = 'On'
 		current_output_status = control_outputs(output_number, output_status)
 
-	elif (current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or
+	elif (current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
 		  current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
 		  ):
 
@@ -1335,12 +1165,12 @@ def evaluate_environmental_conditions_perform_automated_responses():
         #if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature'):
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turned on by temperature")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_ON:", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_TWO_ON))
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by temperature")
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
 
 		# evaulate if we need to enable output #2 turn on the USB heating pad
-		if (int(current_temperature_sensor_value) <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_ON)):
+		if (int(current_temperature_sensor_value) <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
 
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Enabling Output #2 by temperature")
 
@@ -1365,12 +1195,12 @@ def evaluate_environmental_conditions_perform_automated_responses():
 	if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Luminosity'):
 		
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn on by luminosity")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_ON:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_ON))
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF))
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by luminosity")
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF))
 
 		# evaulate if we need to enable output #2 turn on the grow light
-		if (current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_ON)):
+		if (current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)):
 
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Enable Output #2 by luminosity")
 
@@ -1392,7 +1222,7 @@ def evaluate_environmental_conditions_perform_automated_responses():
 
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if the solenoid valve should be open or closed")
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value >= float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN))
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED))
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN))
 
 	# evaluate if the solenoid valve should be open or closed
 	if (current_soil_moisture_sensor_value >= float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
@@ -1411,7 +1241,7 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		solenoid_valve_operation(solenoid_valve_status)
 
 
-	elif (current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_CLOSED)):
+	elif (current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Closing the solenoid valve now")
 
