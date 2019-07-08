@@ -24,6 +24,13 @@ display: block;
 
 $SQLITE_DATABASE_FILE_NAME = "/var/www/html/greenhouse.db";
 
+# linear actuator status file name (Retracted | Extended)
+$ACTUATOR_STATUS_FILE_NAME = '/home/pi/Greenhouse/actuator.txt';
+# solenoid valve status file name (Open | Closed)
+$SOLENOID_STATUS_FILE_NAME = '/home/pi/Greenhouse/solenoid.txt';
+# outputs status file name (On | Off)
+$OUTPUTS_STATUS_FILE_NAME = '/home/pi/Greenhouse/outputs.txt';
+
 # luminosity graph image web/url file name
 $GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME = "ghouselumi.png";
 # temperature graph image web/url file name
@@ -39,12 +46,30 @@ $current_luminosity_value = "";
 $current_temperature_value = "";
 $current_humidity_value = "";
 $current_soilmoisture_value = "";
+$current_solenoidstatus_value = "";
 $current_actuatorstatus_value = "";
 $current_outputonestatus_value = "";
 $current_outputtwostatus_value = "";
 $current_outputthreestatus_value = "";
 $current_record_date_value = "";
 $current_record_time_value = "";
+
+
+# read the current linear actuator status from a text file on disk instead of from the SQLite database file
+$linear_actuator_status_file_pointer = fopen($ACTUATOR_STATUS_FILE_NAME, "r") or die("Unable to open file!");
+$current_actuatorstatus_value_from_file_not_database = fgets($linear_actuator_status_file_pointer);
+fclose($linear_actuator_status_file_pointer);
+
+# read the solenoid valve status from a text file on disk instead of from the SQLite database file
+$solenoid_status_file_pointer = fopen($SOLENOID_STATUS_FILE_NAME, "r") or die("Unable to open file!");
+$current_solenoidstatus_value_from_file_not_database = fgets($solenoid_status_file_pointer);
+fclose($solenoid_status_file_pointer);
+
+# read the outputs status from a text file on disk instead of from the SQLite database file
+$current_outputs_status_values_from_file_not_database = file($OUTPUTS_STATUS_FILE_NAME) or die("Unable to open file!");
+$current_outputonestatus_value_from_file_not_database = $current_outputs_status_values_from_file_not_database[0];
+$current_outputtwostatus_value_from_file_not_database = $current_outputs_status_values_from_file_not_database[1];
+$current_outputthreestatus_value_from_file_not_database = $current_outputs_status_values_from_file_not_database[2];
 
 # Open the database and execute a query returning the last row in the table
 $db = new SQLite3($SQLITE_DATABASE_FILE_NAME) or print('<h1>Unable to open database!!!</h1>');
@@ -95,23 +120,28 @@ while ($row_returned = $query_results->fetchArray())
    print "    </tr>\n";
    print "    <tr>\n";
    print "      <td align=\"center\"><img src=\"/solenoid_icon.png\" alt=\"Solenoid Valve Icon\"  height=\"100\" width=\"100\"><br>Solenoid Valve</td>\n";
-   print "      <td align=\"center\">$current_solenoidstatus_value</td>";
+   #print "      <td align=\"center\">$current_solenoidstatus_value</td>";
+   print "      <td align=\"center\">$current_solenoidstatus_value_from_file_not_database</td>";
    print "    </tr>\n";
    print "    <tr>";
    print "      <td align=\"center\"><img src=\"/actuator_icon.png\" alt=\"Linear Actuator Icon\"  height=\"100\" width=\"100\"><br>Linear Actuator</td>\n";
-   print "      <td align=\"center\">$current_actuatorstatus_value</td>";
+   #print "      <td align=\"center\">$current_actuatorstatus_value</td>";
+   print "      <td align=\"center\">$current_actuatorstatus_value_from_file_not_database</td>";
    print "    </tr>\n";
    print "    <tr>\n";
    print "      <td align=\"center\"><img src=\"/output1_icon.png\" alt=\"Output One Icon\"  height=\"100\" width=\"100\"><br>Output One</td>\n";
-   print "      <td align=\"center\">$current_outputonestatus_value</td>";
+   #print "      <td align=\"center\">$current_outputonestatus_value</td>";
+   print "      <td align=\"center\">$current_outputonestatus_value_from_file_not_database</td>";
    print "    </tr>\n";
    print "    <tr>\n";
    print "      <td align=\"center\"><img src=\"/output2_icon.png\" alt=\"Output Two Icon\"  height=\"100\" width=\"100\"><br>Output Two</td>\n";
-   print "      <td align=\"center\">$current_outputtwostatus_value</td>";
+   #print "      <td align=\"center\">$current_outputtwostatus_value</td>";
+   print "      <td align=\"center\">$current_outputtwostatus_value_from_file_not_database</td>";
    print "    </tr>\n";
    print "    <tr>\n";
    print "      <td align=\"center\"><img src=\"/output3_icon.png\" alt=\"Output Three Icon\"  height=\"100\" width=\"100\"><br>Output Three</td>\n";
-   print "      <td align=\"center\">$current_outputthreestatus_value</td>";
+   #print "      <td align=\"center\">$current_outputthreestatus_value</td>";
+   print "      <td align=\"center\">$current_outputthreestatus_value_from_file_not_database</td>";
    print "    </tr>\n";
    print "    <tr>\n";
    print "      <td align=\"center\"><img src=\"/date_icon.png\" alt=\"Record Date Icon\"  height=\"100\" width=\"100\"><br>Record Date</td>\n";
