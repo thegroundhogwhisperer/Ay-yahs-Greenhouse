@@ -16,7 +16,7 @@ display: block;
 </style>
 </head>
 <body>
-<br>
+<p align="right"><a href="<?php $_SERVER['PHP_SELF']; ?>"><img src="/refresh_icon.png" alt="Refresh Page" height="50" width="50"></a></p>
 <h1 align="center">Ay-yah's Greenhouse Automation System</h1>
 <h2 align="center">Status Information<br><?php echo $timestamp = date('Y/m/d H:i:s A');?></h2>
 
@@ -34,11 +34,11 @@ $OUTPUTS_STATUS_FILE_NAME = '/home/pi/Greenhouse/outputs.txt';
 # luminosity graph image web/url file name
 $GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME = "ghouselumi.png";
 # temperature graph image web/url file name
-$GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME = "/ghousetemp.png";
+$GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME = "ghousetemp.png";
 # humidity graph image web/url file name
 $GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "/ghousehumi.png";
 # soil moisture graph image web/url file name
-$GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME = "/ghousesoil.png";
+$GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME = "ghousesoil.png";
 
 # define table field names to be retrieved from the SQLite database
 $current_database_record_identifier = "";
