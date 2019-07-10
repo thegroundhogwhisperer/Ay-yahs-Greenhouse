@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 # This is a for-fun project created for the purpose of automating climate
-# control and irrigation in a small greenhouse.  
+# control and irrigation in a small greenhouse.
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -293,7 +293,7 @@ def fetch_url_trigger_event(remote_command_number_option):
 
 	except urllib2.URLError as e:
 		print ("***Operation Failed*** An error occurred: ")
-		print (e.reason)  
+		print (e.reason)
 
 
 
@@ -324,30 +324,29 @@ class DialogWindow(Gtk.Window):
 		# Make the window scrollable
 		scrolled_window = Gtk.ScrolledWindow()
 		scrolled_window.set_border_width(10)
-		scrolled_window.set_policy(
-		    Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
+		scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
 
 		# Define the listmodel used by the ListStore
-	       	listmodel = Gtk.ListStore(int, float, float, float, float, str, str, str, str, str, str, str)
+		listmodel = Gtk.ListStore(int, float, float, float, float, str, str, str, str, str, str, str)
 
 		# Append the values in the model
 		for i in range(len(list_of_greenhouse_table_rows)):
-		    listmodel.append(list(list_of_greenhouse_table_rows[i]))
+			listmodel.append(list(list_of_greenhouse_table_rows[i]))
 
 		# Create a TreeView to see the data stored in the model
 		view = Gtk.TreeView(model=listmodel)
 		# For each column
 		for i, column in enumerate(columns):
-		    # Cellrenderer to render the text
-		    cell = Gtk.CellRendererText()
-		    # The text in all of the columns should be in boldface
-		    if i is not None:
-			cell.props.weight_set = True
-			cell.props.weight = Pango.Weight.BOLD
-		    # Create the column
-		    col = Gtk.TreeViewColumn(column, cell, text=i)
-		    # Appended the column to the TreeView
-		    view.append_column(col)
+			# Cellrenderer to render the text
+			cell = Gtk.CellRendererText()
+			# The text in all of the columns should be in boldface
+			if i is not None:
+				cell.props.weight_set = True
+				cell.props.weight = Pango.Weight.BOLD
+				# Create the column
+				col = Gtk.TreeViewColumn(column, cell, text=i)
+				# Appended the column to the TreeView
+				view.append_column(col)
 
 		# Create a grid to attach the widgets to
 		grid = Gtk.Grid()
@@ -365,9 +364,9 @@ def fetch_greenhouse_data():
 	print ("Downloading the low resolution animated .GIF image file.")
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))  
+		filedata = urllib2.urlopen("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))
 		datatowrite = filedata.read()
-		with open('greenhouselow.gif', 'wb') as f:  
+		with open('greenhouselow.gif', 'wb') as f:
 			f.write(datatowrite)
 
 	except urllib2.URLError as e:
@@ -377,26 +376,26 @@ def fetch_greenhouse_data():
 	print ("Downloading the high resolution .JPG image file.")
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))  
+		filedata = urllib2.urlopen("http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))
 		datatowrite = filedata.read()
-		with open('greenhousehigh.jpg', 'wb') as f:  
+		with open('greenhousehigh.jpg', 'wb') as f:
 			f.write(datatowrite)
 
 	except urllib2.URLError as e:
 		print ("Failed to download the high resolution .JPG image. An error occurred: ")
-		print (e.reason)   
+		print (e.reason)
 
 
 	print ("Downloading the historic environmental record greenhouse.db file.")
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))  
+		filedata = urllib2.urlopen("http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
 		datatowrite = filedata.read()
-		with open('greenhouse.db', 'wb') as f:  
+		with open('greenhouse.db', 'wb') as f:
 			f.write(datatowrite)
 
 	except urllib2.URLError as e:
-		print ("Failed to download the historic environmental record greenhouse.db file.  An error occurred: ")
+		print ("Failed to download the historic environmental record greenhouse.db file. An error occurred: ")
 		print (e.reason)
 
 	# Define global variable accessible in other functions
@@ -494,7 +493,7 @@ class System_Configuration_Window(Gtk.Window):
 		remote_control_values_list = []
 		temporary_counter_variable = 0
 
-		while (temporary_counter_variable < 8):     
+		while (temporary_counter_variable < 8):
 			print ("Fetching automation system control values")
 			print ("Fetching URL: ", REMOTE_VARIABLE_URLS[temporary_counter_variable])
 			remote_control_command_request_url = urllib2.Request(REMOTE_VARIABLE_URLS[temporary_counter_variable])
@@ -508,7 +507,7 @@ class System_Configuration_Window(Gtk.Window):
 
 			except urllib2.URLError as e:
 				print ("***Operation Failed*** An error occurred: ")
-				print (e.reason)   
+				print (e.reason)
 
 			temporary_counter_variable = temporary_counter_variable + 1	
 
