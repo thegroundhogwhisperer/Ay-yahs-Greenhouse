@@ -78,9 +78,6 @@ REMOTE_VARIABLE_URLS = ["http://{}/actuatorruntime.txt".format(IP_GREENHOUSE_PI)
 			"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI)]
 
 
-
-
-
 # Create the main GUI window class
 class MyWindow(Gtk.Window):
 
@@ -227,34 +224,6 @@ class MyWindow(Gtk.Window):
 	# A linkbutton pointing to the given URI
         button_url4 = Gtk.LinkButton(uri="https://git.io/fhhsY")
         button_url4.set_label("Ay-yah's Greenhouse GitHub Repository")
-
-
-
-
-### Need a entry for each field to detect input value change.
-#    # reads and sets the input field value once repopulated to a variable
-
-
-
-#    def on_button_toggled(self, button, name):
-
-#	# define the variable
-#	global OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE
-
-#	if button.get_active():
-
-#		state = "on"
-#	else:
-#		state = "off"
-
-#	#print("Button", name, "was turned", state)
-#	if (name == '1') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Temperature'
-#	if (name == '2') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Luminosity'
-
-#	print ("OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE is set to:", OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE)
-
-
-
 
 
     # Define the functions performed when a button is selected/clicked
@@ -509,20 +478,10 @@ class Large_Image_Window(Gtk.Window):
         self.add(scrolled_window)
 
 
-
-
-
-
-
-
-
 # Create the high resolution camera image GUI window class
 class System_Configuration_Window(Gtk.Window):
 
     def __init__(self):
-
-
-
 
 	global LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
 	global MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE
@@ -537,9 +496,8 @@ class System_Configuration_Window(Gtk.Window):
 	temporary_counter_variable = 0
 
 	while (temporary_counter_variable < 8):     
-
+		print "Fetching automation system control values"
 		print "Fetching URL: ", REMOTE_VARIABLE_URLS[temporary_counter_variable]
-
 		remote_control_command_request_url = urllib2.Request(REMOTE_VARIABLE_URLS[temporary_counter_variable])
 
 		try: 
@@ -555,7 +513,6 @@ class System_Configuration_Window(Gtk.Window):
 
 		temporary_counter_variable = temporary_counter_variable + 1	
 
-
 	LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE = remote_control_values_list[0]
 	MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE = remote_control_values_list[1]
 	MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE = remote_control_values_list[2]
@@ -564,11 +521,6 @@ class System_Configuration_Window(Gtk.Window):
 	MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = remote_control_values_list[5]
 	MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = remote_control_values_list[6]
 	OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = remote_control_values_list[7]
-	
-
-
-
-
 
 	# Create the window object, set the title, and set the size
         Gtk.Window.__init__(self, title="Automation System Configuration")
@@ -585,172 +537,99 @@ class System_Configuration_Window(Gtk.Window):
         # There is always the scrollbar automaticaly or none if not needed
 	scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
 
-		
-
-
-
-
-
-
-
 	label_entry_actuator_runtime = Gtk.Label(xalign=1)
         label_entry_actuator_runtime.set_text('Linear Actuator Runtime: ')
         label_entry_actuator_runtime.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_actuator_runtime, True, True, 0)
-	#label_entry_actuator_runtime.set_justify(Gtk.Justification.RIGHT)
-	#label_entry_actuator_runtime.set_alignment(0, 0.5)
-
-
-
 
 	self.entry_actuator_runtime = Gtk.Entry()
         self.entry_actuator_runtime.set_text(LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE)
 	self.entry_actuator_runtime.set_activates_default(True)
 	self.entry_actuator_runtime.set_width_chars(5)
-        #self.box.pack_start(self.entry_actuator_runtime, True, True, 0)
-
-
 
 	label_entry_actuator_runtime_description_unit = Gtk.Label(xalign=0)
         label_entry_actuator_runtime_description_unit.set_text('Seconds')
         label_entry_actuator_runtime_description_unit.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_actuator_runtime, True, True, 0)
-	#label_entry_actuator_runtime.set_justify(Gtk.Justification.RIGHT)
-	#label_entry_actuator_runtime.set_alignment(0, 0.5)
-
-
 
 	label_entry_minimum_temperature_sensor_actuator_retract_value_remote = Gtk.Label(xalign=1)
         label_entry_minimum_temperature_sensor_actuator_retract_value_remote.set_text('Minimum Temperature Actuator Retract:')
         label_entry_minimum_temperature_sensor_actuator_retract_value_remote.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_minimum_temperature_sensor_actuator_retract_value_remote, True, True, 0)
 
 	self.entry_minimum_temperature_sensor_actuator_retract_value_remote = Gtk.Entry()
         self.entry_minimum_temperature_sensor_actuator_retract_value_remote.set_text(MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE)
 	self.entry_minimum_temperature_sensor_actuator_retract_value_remote.set_activates_default(True)
-        #self.box.pack_start(self.entry_minimum_temperature_sensor_actuator_retract_value_remote, True, True, 0)
-
 
 	label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit = Gtk.Label(xalign=0)
         label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit.set_text('Degrees F')
         label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
 
-
-
-
-
-
 	label_entry_minimum_temperature_sensor_output_one_off_value_remote = Gtk.Label(xalign=1)
         label_entry_minimum_temperature_sensor_output_one_off_value_remote.set_text('Minimum Temperature Output #1 Off:')
         label_entry_minimum_temperature_sensor_output_one_off_value_remote.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_minimum_temperature_sensor_output_one_off_value_remote, True, True, 0)
 
 	self.entry_minimum_temperature_sensor_output_one_off_value_remote = Gtk.Entry()
         self.entry_minimum_temperature_sensor_output_one_off_value_remote.set_text(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE)
 	self.entry_minimum_temperature_sensor_output_one_off_value_remote.set_activates_default(True)
-        #self.box.pack_start(self.entry_minimum_temperature_sensor_output_one_off_value_remote, True, True, 0)
-
-
 
 	label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit = Gtk.Label(xalign=0)
         label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit.set_text('Degrees F')
         label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
 
-
-
-
 	label_entry_minimum_humidity_sensor_output_one_off_value_remote = Gtk.Label(xalign=1)
         label_entry_minimum_humidity_sensor_output_one_off_value_remote.set_text('AND Minimum Humidity Output #1 Off:')
         label_entry_minimum_humidity_sensor_output_one_off_value_remote.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_minimum_humidity_sensor_output_one_off_value_remote, True, True, 0)
 
 	self.entry_minimum_humidity_sensor_output_one_off_value_remote = Gtk.Entry()
         self.entry_minimum_humidity_sensor_output_one_off_value_remote.set_text(MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE)
 	self.entry_minimum_humidity_sensor_output_one_off_value_remote.set_activates_default(True)
-        #self.box.pack_start(self.entry_minimum_humidity_sensor_output_one_off_value_remote, True, True, 0)
-
 
 	label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit = Gtk.Label(xalign=0)
         label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit.set_text('% 0-100')
         label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_minimum_humidity_sensor_output_one_off_value_remote, True, True, 0)
-
-
-
-
 
 	label_entry_minimum_temperature_sensor_output_two_off_value_remote = Gtk.Label(xalign=1)
         label_entry_minimum_temperature_sensor_output_two_off_value_remote.set_text('Minimum Temperature Output #2 Off:')
         label_entry_minimum_temperature_sensor_output_two_off_value_remote.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_minimum_temperature_sensor_output_two_off_value_remote, True, True, 0)
 
 	self.entry_minimum_temperature_sensor_output_two_off_value_remote = Gtk.Entry()
         self.entry_minimum_temperature_sensor_output_two_off_value_remote.set_text(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE)
 	self.entry_minimum_temperature_sensor_output_two_off_value_remote.set_activates_default(True)
-        #self.box.pack_start(self.entry_minimum_temperature_sensor_output_two_off_value_remote, True, True, 0)
-
-
 
 	label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit = Gtk.Label(xalign=0)
         label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit.set_text('Degrees F')
         label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
 
-
-
-
 	label_entry_minimum_luminosity_sensor_output_two_off_value_remote = Gtk.Label(xalign=1)
         label_entry_minimum_luminosity_sensor_output_two_off_value_remote.set_text('Minimum Luminosity Outout #2 Off:')
         label_entry_minimum_luminosity_sensor_output_two_off_value_remote.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_entry_minimum_luminosity_sensor_output_two_off_value_remote, True, True, 0)
 
 	self.entry_minimum_luminosity_sensor_output_two_off_value_remote = Gtk.Entry()
         self.entry_minimum_luminosity_sensor_output_two_off_value_remote.set_text(MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE)
 	self.entry_minimum_luminosity_sensor_output_two_off_value_remote.set_activates_default(True)
-        #self.box.pack_start(self.entry_minimum_luminosity_sensor_output_two_off_value_remote, True, True, 0)
-
-
 
 	label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit = Gtk.Label(xalign=0)
         label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit.set_text('Volts 0-5')
         label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
-   
-
-
 
 	label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote = Gtk.Label(xalign=1)
         label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_text('Minimum Soil Moisture Open Solenoid Valve:')
         label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_justify(Gtk.Justification.LEFT)
 
-        #self.box.pack_start(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, True, True, 0)
-
 	self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote = Gtk.Entry()
         self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_text(MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE)
 	self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_activates_default(True)
-
-        #self.box.pack_start(self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, True, True, 0)
-
 
 	label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit = Gtk.Label(xalign=0)
         label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit.set_text('Volts 0-5')
         label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
 
-
-
-
-
-
 	label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote = Gtk.Label(xalign=1)
         label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote.set_text('Output #2 Mode Temperature OR Luminosity:')
         label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote.set_justify(Gtk.Justification.LEFT)
-        #self.box.pack_start(label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote, True, True, 0)
-
 
         temperature_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Temperature")
         temperature_radio_button.connect("toggled", self.on_button_toggled, "1")
 
 	if OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE == 'Temperature': temperature_radio_button.set_active(True)
-
-        #self.box.pack_start(temperature_radio_button, False, False, 0)
 
         luminosity_radio_button = Gtk.RadioButton.new_from_widget(temperature_radio_button)
         luminosity_radio_button.set_label("Luminosity")
@@ -758,82 +637,38 @@ class System_Configuration_Window(Gtk.Window):
 	if OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE == 'Luminosity': luminosity_radio_button.set_active(True)
 
         luminosity_radio_button.connect("toggled", self.on_button_toggled, "2")
-        #self.box.pack_start(luminosity_radio_button, False, False, 0)
-
 
 	button_post_form_values = Gtk.Button.new_with_label("Save Settings")
         button_post_form_values.connect("clicked", self.on_button_post_form_values_clicked)
-        #self.box.pack_start(button_post_form_values, True, True, 0)
-
-
 
 	layout_table = Gtk.Table(10, 3, False)
 	self.box.add(layout_table)
 	layout_table.set_border_width(10)
-	
-	#button1 = Gtk.Button(label="Button 1")
-	#button2 = Gtk.Button(label="Button 2")
-	#button3 = Gtk.Button(label="Button 3")
-	#button4 = Gtk.Button(label="Button 4")
-	#button5 = Gtk.Button(label="Button 5")
-	#button6 = Gtk.Button(label="Button 6")
-
 	layout_table.attach(label_entry_actuator_runtime, 0, 1, 0, 1)
 	layout_table.attach(self.entry_actuator_runtime, 1, 2, 0, 1)
 	layout_table.attach(label_entry_actuator_runtime_description_unit, 2, 3, 0, 1)
 	layout_table.attach(label_entry_minimum_temperature_sensor_actuator_retract_value_remote, 0, 1, 1, 2)
 	layout_table.attach(self.entry_minimum_temperature_sensor_actuator_retract_value_remote, 1, 2, 1, 2)
 	layout_table.attach(label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit, 2, 3, 1, 2)
-
 	layout_table.attach(label_entry_minimum_temperature_sensor_output_one_off_value_remote, 0, 1, 2, 3)
 	layout_table.attach(self.entry_minimum_temperature_sensor_output_one_off_value_remote, 1, 2, 2, 3)
-
 	layout_table.attach(label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit, 2, 3, 2, 3)
-
-
 	layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote, 0, 1, 3, 4)
 	layout_table.attach(self.entry_minimum_humidity_sensor_output_one_off_value_remote, 1, 2, 3, 4)
-
 	layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit, 2, 3, 3, 4)
-
 	layout_table.attach(label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote, 0, 1, 4, 5)
-
-
 	layout_table.attach(temperature_radio_button, 1, 2, 4, 5)
 	layout_table.attach(luminosity_radio_button, 2, 3, 4, 5)
 	layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote, 0, 1, 5, 6)
 	layout_table.attach(self.entry_minimum_temperature_sensor_output_two_off_value_remote, 1, 2, 5, 6)
 	layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit, 2, 3, 5, 6)
-
 	layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote, 0, 1, 6, 7)
 	layout_table.attach(self.entry_minimum_luminosity_sensor_output_two_off_value_remote, 1, 2, 6, 7)
 	layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit, 2, 3, 6, 7)
-
 	layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 0, 1, 7, 8)
 	layout_table.attach(self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 1, 2, 7, 8)
 	layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit, 2, 3, 7, 8)
-
-
-
 	layout_table.attach(button_post_form_values, 0, 3, 8, 9)
-
-
-
-
-
-
-	## Construct a Gtk image object
-	#img = Gtk.Image() 
-	## Set the image data from the contents of a file
-	#img.set_from_file("greenhousehigh.jpg") 
-
-       # # Add the image to the scrolledwindow
-        #scrolled_window.add_with_viewport(img)
-
-        # Add the scrolledwindow to the window
-        #self.add(scrolled_window)
-
-
 
 
     def on_button_toggled(self, button, name):
@@ -847,13 +682,10 @@ class System_Configuration_Window(Gtk.Window):
 	else:
 		state = "off"
 
-	#print("Button", name, "was turned", state)
 	if (name == '1') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Temperature'
 	if (name == '2') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Luminosity'
 
 	print ("OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE is set to:", OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE)
-
-
 
 
     # Define the functions performed when a button is selected/clicked
@@ -867,39 +699,7 @@ class System_Configuration_Window(Gtk.Window):
 	MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = self.entry_minimum_luminosity_sensor_output_two_off_value_remote.get_text()
 	MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.get_text()
 
-	
-	
-	
-	
-	
-
-
-
-
-	#print ("LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE: %s" % LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE)
-
-
-	#print ("OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE", OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE)
-
-
-
-
-
-
-
         print("Saving Settings...")
-
-### Set some test values...
-        #LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE = NEW_LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
-	#MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE = 74
-	#MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE = 65
-	#MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE = 40
-	#MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = 73
-	#MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = 1.3
-	#MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = 2.1
-	#OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Temperature'
-
-
 
 	remote_post_form_url = "http://{}/index.php".format(IP_GREENHOUSE_PI)
 
@@ -912,33 +712,14 @@ class System_Configuration_Window(Gtk.Window):
 			'MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE' : MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE,
 			'OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE' : OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE }
 
-
-
-
-
-
-	print "Submitting:"
+	print "Submitting configuration values:"
 	print post_form_values
 	form_data_encoded = urllib.urlencode(post_form_values)
 	request_post_form_data_url = urllib2.Request(remote_post_form_url, form_data_encoded)
 	request_post_form_data_response = urllib2.urlopen(request_post_form_data_url) 
 	object_containing_the_output_response_page = request_post_form_data_response.read()
-	print "We got: "
 	#print object_containing_the_output_response_page
 
-### Will need a button to trigger the POST action
-
-### Will need a function to perform the POST action...
-
-### Shit should work....
-
-
-
-
-
-
-
-#global LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
 
 win = System_Configuration_Window()
 win.show_all()
