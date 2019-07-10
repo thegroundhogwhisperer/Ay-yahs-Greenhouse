@@ -33,16 +33,16 @@
 
 # sqlite3 /var/www/html/greenhouse.db table creation command
 # CREATE TABLE greenhouse(id INTEGER PRIMARY KEY AUTOINCREMENT, luminosity
-#  NUMERIC, temperature NUMERIC, humidity NUMERIC, soilmoisture NUMERIC,
-#  solenoidstatus TEXT, actuatorstatus TEXT, outputonestatus TEXT,
-#  outputtwostatus TEXT, outputthreestatus TEXT, currentdate DATE,
-#  currenttime TIME);
+# NUMERIC, temperature NUMERIC, humidity NUMERIC, soilmoisture NUMERIC,
+# solenoidstatus TEXT, actuatorstatus TEXT, outputonestatus TEXT,
+# outputtwostatus TEXT, outputthreestatus TEXT, currentdate DATE,
+# currenttime TIME);
 
 # Enable fake sensor input mode during execution
 # Set this value to True if you would like to execute this
 # script without any sensors (e.g. DHT22, LDR, soil moisture)
 # and without a Pimoroni Automation hat.
-ENABLE_FAKE_SENSOR_VALUES = False
+ENABLE_FAKE_SENSOR_VALUES = True
 
 # define the fake sensor values
 FAKE_SOIL_MOISTURE_SENSOR_VALUE = 1.9
@@ -62,7 +62,7 @@ import time
 if ENABLE_FAKE_SENSOR_VALUES == False: import automationhat
 
 #import automationhat
-time.sleep(0.1)  # short pause after ads1015 class creation recommended
+time.sleep(0.1) # short pause after ads1015 class creation recommended
 import serial
 import statistics
 import subprocess
@@ -71,11 +71,11 @@ import numpy as np
 import matplotlib as plt
 # plt initilized because it needs a different backend for the display
 # to not crash when executed from the console
-plt.use('Agg')  
+plt.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib import style
-#style.use('fivethirtyeight')  # select the style of graph
+#style.use('fivethirtyeight') # select the style of graph
 from dateutil import parser
 
 
@@ -126,11 +126,10 @@ MINIMUM_TEMPERATURE_VALUE = -72
 MAXIMUM_TEMPERATURE_VALUE = 176
 
 # Define the the minimum luminosity sensor value at 0.01VDC
-MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01   
+MINIMUM_LUMINOSITY_SENSOR_VALUE = 0.01 
 
 # Define the the soil moisture sensor value at 0.01VDC
 MINIMUM_SOIL_MOISTURE_SENSOR_VALUE = 0.01
-
 
 # sqlite database file name
 SQLITE_DATABASE_FILE_NAME = '/var/www/html/greenhouse.db'
@@ -202,7 +201,7 @@ def read_control_values_from_files():
 
 
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Reading control values from files on disk.")
-	     
+
 	try: 
 		global CURRENT_SOLENOID_VALVE_STATUS
 		# read the current solenoid valve status
@@ -404,7 +403,7 @@ def read_temperature_humidity_values():
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_humidity_sensor_value > MAXIMUM_HUMIDITY_VALUE:", current_humidity_sensor_value, MAXIMUM_HUMIDITY_VALUE)
 
 			if (current_humidity_sensor_value > MAXIMUM_HUMIDITY_VALUE):
-				print('DHT sensor error humidity value greater than  = %.2f Attempting reread' % current_humidity_sensor_value)
+				print('DHT sensor error humidity value greater than = %.2f Attempting reread' % current_humidity_sensor_value)
 
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < MINIMUM_TEMPERATURE_VALUE:", current_temperature_sensor_value, MINIMUM_TEMPERATURE_VALUE)
 
@@ -715,79 +714,77 @@ def read_soil_moisture_sensor_value():
 # analog to digital converter #2 read light dependent resistor value subroutine
 def read_luminosity_sensor_value():
 
-    global current_luminosity_sensor_value
+	global current_luminosity_sensor_value
 
-    if ENABLE_FAKE_SENSOR_VALUES == True: current_luminosity_sensor_value = FAKE_LUMINOSITY_SENSOR_VALUE
-    if ENABLE_FAKE_SENSOR_VALUES == True: print ("Fake sensor values enabled. Returning current_luminosity_sensor_value:", current_luminosity_sensor_value)
-    if ENABLE_FAKE_SENSOR_VALUES == True: return(current_luminosity_sensor_value)
+	if ENABLE_FAKE_SENSOR_VALUES == True: current_luminosity_sensor_value = FAKE_LUMINOSITY_SENSOR_VALUE
+	if ENABLE_FAKE_SENSOR_VALUES == True: print ("Fake sensor values enabled. Returning current_luminosity_sensor_value:", current_luminosity_sensor_value)
+	if ENABLE_FAKE_SENSOR_VALUES == True: return(current_luminosity_sensor_value)
 		
-    # the ADC may produce an erroneous luminisoty reading less than 0.00VDC
-    # a for loop retrys the read process until a value > 0.00VDC is returned
-    for i in range(0, 25):
-        try:
+	# the ADC may produce an erroneous luminisoty reading less than 0.00VDC
+	# a for loop retrys the read process until a value > 0.00VDC is returned
+	for i in range(0, 25):
+		try:
 
-	    if DISPLAY_PROCESS_MESSAGES == True: print ("Attempting to read the luminosity sensor")
-            # initilized the counter variable
-            read_counter = 0
-            temporary_value = float()
-            temporary_values_list = list()
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Attempting to read the luminosity sensor")
+			# initilized the counter variable
+			read_counter = 0
+			temporary_value = float()
+			temporary_values_list = list()
 
-            current_luminosity_sensor_value = float()
-            standard_deviation_of_sensor_values = 0
+			current_luminosity_sensor_value = float()
+			standard_deviation_of_sensor_values = 0
 
-            # loop through multiple data reads
-            while read_counter < 2:
-                # read the light value from analog to digital converter #2
-                temporary_value = automationhat.analog[1].read()
-                # keep one of the values in case the read is
-                # consistent
-                good_temporary_value = temporary_value
-                time.sleep(.9)
+			# loop through multiple data reads
+			while read_counter < 2:
+				# read the light value from analog to digital converter #2
+				temporary_value = automationhat.analog[1].read()
+				# keep one of the values in case the read is
+				# consistent
+				good_temporary_value = temporary_value
+				time.sleep(.9)
 
-                # populate a list of values
-                temporary_values_list.append(temporary_value)
-                read_counter = read_counter + 1
+				# populate a list of values
+				temporary_values_list.append(temporary_value)
+			read_counter = read_counter + 1
 
-            # If the standard deviation of the series of
-            # readings is zero then the sensor produced
-            # multiple consistent values and we should
-            # consider the data reliable and take actions
-            # return the standard deviation of the list of values
-            standard_deviation_of_sensor_values = math.sqrt(
-                statistics.pvariance(temporary_values_list))
+			# If the standard deviation of the series of
+			# readings is zero then the sensor produced
+			# multiple consistent values and we should
+			# consider the data reliable and take actions
+			# return the standard deviation of the list of values
+			standard_deviation_of_sensor_values = math.sqrt(statistics.pvariance(temporary_values_list))
 
-            # if there is no difference in the values
-            # use the good_temporary_value they are all
-            # the same
-            if (standard_deviation_of_sensor_values == 0):
-                current_luminosity_sensor_value = good_temporary_value
+			# if there is no difference in the values
+			# use the good_temporary_value they are all
+			# the same
+			if (standard_deviation_of_sensor_values == 0):
+				current_luminosity_sensor_value = good_temporary_value
 
-            elif (standard_deviation_of_sensor_values != 0):
-                # if there is a difference set the value
-                # to zero and try again for a consistent
-                # data read
-                current_luminosity_sensor_value = 0
+			elif (standard_deviation_of_sensor_values != 0):
+				# if there is a difference set the value
+				# to zero and try again for a consistent
+				# data read
+				current_luminosity_sensor_value = 0
 
-	    if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value < MINIMUM_LUMINOSITY_SENSOR_VALUE", current_luminosity_sensor_value, MINIMUM_LUMINOSITY_SENSOR_VALUE)
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value < MINIMUM_LUMINOSITY_SENSOR_VALUE", current_luminosity_sensor_value, MINIMUM_LUMINOSITY_SENSOR_VALUE)
 
-            if (current_luminosity_sensor_value < MINIMUM_LUMINOSITY_SENSOR_VALUE):
-                print('ADC error read LDR value less than 0.01VDC = %.3f Attempting reread' %
-                      current_luminosity_sensor_value)
+			if (current_luminosity_sensor_value < MINIMUM_LUMINOSITY_SENSOR_VALUE):
+				print('ADC error read LDR value less than 0.01VDC = %.3f Attempting reread' %
+				current_luminosity_sensor_value)
+	
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value > MINIMUM_LUMINOSITY_SENSOR_VALUE", current_luminosity_sensor_value, MINIMUM_LUMINOSITY_SENSOR_VALUE)
 
-	    if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value > MINIMUM_LUMINOSITY_SENSOR_VALUE", current_luminosity_sensor_value, MINIMUM_LUMINOSITY_SENSOR_VALUE)
 
+			if (current_luminosity_sensor_value > MINIMUM_LUMINOSITY_SENSOR_VALUE):
+	
+				if DISPLAY_PROCESS_MESSAGES == True: print ("Have a good value for current_luminosity_sensor_value returning: ", current_luminosity_sensor_value)
 
-            if (current_luminosity_sensor_value > MINIMUM_LUMINOSITY_SENSOR_VALUE):
+				return(current_luminosity_sensor_value)
+				break
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Have a good value for current_luminosity_sensor_value returning: ", current_luminosity_sensor_value)
-
-                return(current_luminosity_sensor_value)
-                break
-
-        except RuntimeError as e:
-            # print an error if the sensor read fails
-            print("ADC sensor read failed: ", e.args)
-
+		except RuntimeError as e:
+			# print an error if the sensor read fails
+			print("ADC sensor read failed: ", e.args)
 
 
 # write text data to the 16x2 LCD subroutine as a serial device subroutine
@@ -895,10 +892,10 @@ def write_database_output(current_luminosity_sensor_value, current_temperature_s
 		connection_sqlite_database = sqlite3.connect(SQLITE_DATABASE_FILE_NAME)
 		curs = connection_sqlite_database.cursor()
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Performing row INSERT INTO table: ", current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value,  CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST[0], CURRENT_OUTPUT_STATUS_LIST[1], CURRENT_OUTPUT_STATUS_LIST[2])
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Performing row INSERT INTO table: ", current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value, CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST[0], CURRENT_OUTPUT_STATUS_LIST[1], CURRENT_OUTPUT_STATUS_LIST[2])
 		# insert data rows into the table
 		curs.execute("INSERT INTO greenhouse (luminosity, temperature, humidity, soilmoisture, solenoidstatus, actuatorstatus, outputonestatus, outputtwostatus, outputthreestatus, currentdate, currenttime) VALUES((?), (?), (?), (?), (?), (?), (?), (?), (?), date('now','localtime'), time('now','localtime'))",
-					 (current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value,  CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST[0], CURRENT_OUTPUT_STATUS_LIST[1], CURRENT_OUTPUT_STATUS_LIST[2]))
+					 (current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value, CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST[0], CURRENT_OUTPUT_STATUS_LIST[1], CURRENT_OUTPUT_STATUS_LIST[2]))
 		# commit the changes
 		connection_sqlite_database.commit()
 		curs.close
@@ -906,7 +903,7 @@ def write_database_output(current_luminosity_sensor_value, current_temperature_s
 		connection_sqlite_database.close()
 
 	except sqlite3.IntegrityError as e:
-		print('Sqlite Error: ', e.args[0])  # error output
+		print('Sqlite Error: ', e.args[0]) # error output
 
 
 # read sqlite database generate graphs subroutine
@@ -981,7 +978,7 @@ def read_database_output_graphs():
 		connection_sqlite_database.close()
 
 	except sqlite3.IntegrityError as e:
-		print('Sqlite Error: ', e.args[0])  # error output
+		print('Sqlite Error: ', e.args[0]) # error output
 
 
 
@@ -1117,8 +1114,8 @@ def evaluate_environmental_conditions_perform_automated_responses():
 	
 
 	elif (current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
-		  CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
-		  ):
+		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
+		):
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Opening the window now")
 		# extend the linear actuator and open the window
@@ -1142,8 +1139,8 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		current_output_status = control_outputs(output_number, output_status)
 
 	elif (current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
-		  current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
-		  ):
+		current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
+		):
 
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Disabling Output #1")
@@ -1154,15 +1151,11 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		current_output_status = control_outputs(output_number, output_status)
 
 	# evaluate if temperature controls output two
-
-	#print ("Output two currently controlled via")
-	#print (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
-
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if temperature or luminosity controls output #2")
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature':", OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
 
-        if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Temperature'):
-        #if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature'):
+	if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Temperature'):
+	#if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature'):
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turned on by temperature")
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
@@ -1263,7 +1256,7 @@ def perform_write_database_csv_graph_image_update_process():
 
 	# call the write CSV output file subroutine
 	write_csv_output_file(current_luminosity_sensor_value, current_temperature_sensor_value, current_humidity_sensor_value, current_soil_moisture_sensor_value,
-					   CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST)
+					CURRENT_SOLENOID_VALVE_STATUS, CURRENT_ACTUATOR_EXTENSION_STATUS, CURRENT_OUTPUT_STATUS_LIST)
 
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Calling read_database_output_graphs()")
 
