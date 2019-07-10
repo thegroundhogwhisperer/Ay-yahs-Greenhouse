@@ -17,7 +17,7 @@ This is a for-fun project created for the purpose of automating and remotely mon
 https://github.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/wiki
 
 
-# Example manual operations desktop GUI screenshot
+# Example desktop interface GUI screenshot
 
 ![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Manual%20Operations%20GUI.png)
 
