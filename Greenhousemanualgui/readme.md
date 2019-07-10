@@ -1,7 +1,7 @@
 # Ay-yahs-Greenhouse
 
 
-# Python script for a greenhouse  manual operations graphical user interface
+# Python script for a greenhouse desktop graphical user interface
 
 
 # greenhousegtkcontrol.py
@@ -25,7 +25,7 @@ urllib2
 # Produces:
 
 
-A graphical user inferface that allows a user perform manual greenhouse operations. (e.g. Open the greenhouse window, turn off the fan, turn on the light, etc.)
+A graphical user inferface that allows a user perform monitoring, configuration, and manual greenhouse operations. (e.g. Check the temperature, set a system value, open the greenhouse window, turn off the fan, turn on the light, etc.)
 
 # Application icon setup on Ubuntu
 
