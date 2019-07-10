@@ -86,7 +86,7 @@ class MyWindow(Gtk.Window):
 		print ("Ready to perform manual operations.")
 
 		# Set the window title
-		Gtk.Window.__init__(self, title="Ay-yah's Greenhouse Manual Operations")
+		Gtk.Window.__init__(self, title="Ay-yah's Greenhouse Desktop Interface")
 
 		# Set the window size
 		self.set_size_request(400, 300)
