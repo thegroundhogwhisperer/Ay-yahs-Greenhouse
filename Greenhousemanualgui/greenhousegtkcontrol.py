@@ -106,124 +106,124 @@ class MyWindow(Gtk.Window):
 
 		# Create some labels and add the current environmental values below the image in the main window
 		label_current_luminosity_sensor_value = Gtk.Label()
-        	label_current_luminosity_sensor_value.set_text('Luminosity: ' + str(current_luminosity_sensor_value) + 'V')
-        	label_current_luminosity_sensor_value.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_luminosity_sensor_value, True, True, 0)
+		label_current_luminosity_sensor_value.set_text('Luminosity: ' + str(current_luminosity_sensor_value) + 'V')
+		label_current_luminosity_sensor_value.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_luminosity_sensor_value, True, True, 0)
 
 		label_current_temperature = Gtk.Label()
-        	label_current_temperature.set_text('Temperature: ' + str(current_temperature) + 'F')
-        	label_current_temperature.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_temperature, True, True, 0)
+		label_current_temperature.set_text('Temperature: ' + str(current_temperature) + 'F')
+		label_current_temperature.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_temperature, True, True, 0)
 
 		label_current_humidity = Gtk.Label()
-        	label_current_humidity.set_text('Humidity: ' + str(current_humidity) + '%')
-        	label_current_humidity.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_humidity, True, True, 0)
+		label_current_humidity.set_text('Humidity: ' + str(current_humidity) + '%')
+		label_current_humidity.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_humidity, True, True, 0)
 
 		label_current_soil_moisture_sensor_value = Gtk.Label()
-        	label_current_soil_moisture_sensor_value.set_text('Soil Moisture: ' + str(current_soil_moisture_sensor_value) + 'V')
-        	label_current_soil_moisture_sensor_value.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_soil_moisture_sensor_value, True, True, 0)
+		label_current_soil_moisture_sensor_value.set_text('Soil Moisture: ' + str(current_soil_moisture_sensor_value) + 'V')
+		label_current_soil_moisture_sensor_value.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_soil_moisture_sensor_value, True, True, 0)
 
 		label_current_solenoid_valve_status = Gtk.Label()
-        	label_current_solenoid_valve_status.set_text('Solenoid Valve: ' + str(current_solenoid_valve_status))
-        	label_current_solenoid_valve_status.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_solenoid_valve_status, True, True, 0)
+		label_current_solenoid_valve_status.set_text('Solenoid Valve: ' + str(current_solenoid_valve_status))
+		label_current_solenoid_valve_status.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_solenoid_valve_status, True, True, 0)
 
 		label_current_actuator_extension_status = Gtk.Label()
-        	label_current_actuator_extension_status.set_text('Actuator: ' + str(current_actuator_extension_status))
-        	label_current_actuator_extension_status.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_actuator_extension_status, True, True, 0)
+		label_current_actuator_extension_status.set_text('Actuator: ' + str(current_actuator_extension_status))
+		label_current_actuator_extension_status.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_actuator_extension_status, True, True, 0)
 
 		label_current_output_one_status = Gtk.Label()
-        	label_current_output_one_status.set_text('Output One: ' + str(current_output_one_status))
-        	label_current_output_one_status.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_output_one_status, True, True, 0)
+		label_current_output_one_status.set_text('Output One: ' + str(current_output_one_status))
+		label_current_output_one_status.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_output_one_status, True, True, 0)
 
 		label_current_output_two_status = Gtk.Label()
-        	label_current_output_two_status.set_text('Output Two: ' + str(current_output_two_status))
-        	label_current_output_two_status.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_output_two_status, True, True, 0)
+		label_current_output_two_status.set_text('Output Two: ' + str(current_output_two_status))
+		label_current_output_two_status.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_output_two_status, True, True, 0)
 
 		label_current_output_three_status = Gtk.Label()
-        	label_current_output_three_status.set_text('Output Three: ' + str(current_output_three_status))
-        	label_current_output_three_status.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_output_three_status, True, True, 0)
+		label_current_output_three_status.set_text('Output Three: ' + str(current_output_three_status))
+		label_current_output_three_status.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_output_three_status, True, True, 0)
 
 		label_current_time_readable = Gtk.Label()
-        	label_current_time_readable.set_text('Timestamp: ' + record_time + ' ' + record_date)
-        	label_current_time_readable.set_justify(Gtk.Justification.LEFT)
-        	self.box.pack_start(label_current_time_readable, True, True, 0)
+		label_current_time_readable.set_text('Timestamp: ' + record_time + ' ' + record_date)
+		label_current_time_readable.set_justify(Gtk.Justification.LEFT)
+		self.box.pack_start(label_current_time_readable, True, True, 0)
 	
 		label = Gtk.Label("Please select a manual operation to perform")
-        	self.box.pack_start(label, True, True, 10)
-        
+		self.box.pack_start(label, True, True, 10)
+	
 		# Add the manual operations buttons
-        	self.button0 = Gtk.Button(label="Fan On (Output One On)")
-        	self.button0.connect("clicked", self.on_button0_clicked)
-        	self.box.pack_start(self.button0, True, True, 1)
+		self.button0 = Gtk.Button(label="Fan On (Output One On)")
+		self.button0.connect("clicked", self.on_button0_clicked)
+		self.box.pack_start(self.button0, True, True, 1)
 
-        	self.button1 = Gtk.Button(label="Fan Off (Output One Off)")
-        	self.button1.connect("clicked", self.on_button1_clicked)
-        	self.box.pack_start(self.button1, True, True, 1)
+		self.button1 = Gtk.Button(label="Fan Off (Output One Off)")
+		self.button1.connect("clicked", self.on_button1_clicked)
+		self.box.pack_start(self.button1, True, True, 1)
 
-        	self.button2 = Gtk.Button(label="Light On (Output Two On)")
-        	self.button2.connect("clicked", self.on_button2_clicked)
-        	self.box.pack_start(self.button2, True, True, 1)
+		self.button2 = Gtk.Button(label="Light On (Output Two On)")
+		self.button2.connect("clicked", self.on_button2_clicked)
+		self.box.pack_start(self.button2, True, True, 1)
 
-        	self.button3 = Gtk.Button(label="Light Off (Output Two Off)")
-        	self.button3.connect("clicked", self.on_button3_clicked)
-        	self.box.pack_start(self.button3, True, True, 1)
+		self.button3 = Gtk.Button(label="Light Off (Output Two Off)")
+		self.button3.connect("clicked", self.on_button3_clicked)
+		self.box.pack_start(self.button3, True, True, 1)
 
-        	self.button4 = Gtk.Button(label="Unused (Output Three On)")
-        	self.button4.connect("clicked", self.on_button4_clicked)
-        	self.box.pack_start(self.button4, True, True, 1)
+		self.button4 = Gtk.Button(label="Unused (Output Three On)")
+		self.button4.connect("clicked", self.on_button4_clicked)
+		self.box.pack_start(self.button4, True, True, 1)
 
-        	self.button5 = Gtk.Button(label="Unused (Output Three Off)")
-        	self.button5.connect("clicked", self.on_button5_clicked)
-        	self.box.pack_start(self.button5, True, True, 1)
+		self.button5 = Gtk.Button(label="Unused (Output Three Off)")
+		self.button5.connect("clicked", self.on_button5_clicked)
+		self.box.pack_start(self.button5, True, True, 1)
 
-        	self.button6 = Gtk.Button(label="Open Solenoid Valve")
-        	self.button6.connect("clicked", self.on_button6_clicked)
-        	self.box.pack_start(self.button6, True, True, 1)
+		self.button6 = Gtk.Button(label="Open Solenoid Valve")
+		self.button6.connect("clicked", self.on_button6_clicked)
+		self.box.pack_start(self.button6, True, True, 1)
 
-        	self.button7 = Gtk.Button(label="Close Solenoid Valve")
-        	self.button7.connect("clicked", self.on_button7_clicked)
-        	self.box.pack_start(self.button7, True, True, 1)
+		self.button7 = Gtk.Button(label="Close Solenoid Valve")
+		self.button7.connect("clicked", self.on_button7_clicked)
+		self.box.pack_start(self.button7, True, True, 1)
 
-        	self.button8 = Gtk.Button(label="Open Window (Extend Actuator)")
-        	self.button8.connect("clicked", self.on_button8_clicked)
-        	self.box.pack_start(self.button8, True, True, 1)
+		self.button8 = Gtk.Button(label="Open Window (Extend Actuator)")
+		self.button8.connect("clicked", self.on_button8_clicked)
+		self.box.pack_start(self.button8, True, True, 1)
 
-        	self.button9 = Gtk.Button(label="Close Window (Retract Actuator)")
-        	self.button9.connect("clicked", self.on_button9_clicked)
-        	self.box.pack_start(self.button9, True, True, 1)
+		self.button9 = Gtk.Button(label="Close Window (Retract Actuator)")
+		self.button9.connect("clicked", self.on_button9_clicked)
+		self.box.pack_start(self.button9, True, True, 1)
 
 		# Add some link buttons to the bottom of the main window
 		# Linkbutton pointing to the given URI
-        	button_url0 = Gtk.LinkButton(uri="http://{}".format(IP_GREENHOUSE_PI))
-        	button_url0.set_label("GreenhousePi Homepage")
+		button_url0 = Gtk.LinkButton(uri="http://{}".format(IP_GREENHOUSE_PI))
+		button_url0.set_label("GreenhousePi Homepage")
 
-        	# Add the button to the window
+		# Add the button to the window
 		self.box.pack_start(button_url0, True, True, 0)
 
 		# Linkbutton pointing to the given URI
-        	button_url1 = Gtk.LinkButton(uri="http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
-        	button_url1.set_label("Download historic data .DB (SQLite3)")
+		button_url1 = Gtk.LinkButton(uri="http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
+		button_url1.set_label("Download historic data .DB (SQLite3)")
 
-        	# Add the button to the window
+		# Add the button to the window
 		self.box.pack_start(button_url1, True, True, 0)
 
 		# Linkbutton pointing to the given URI
-        	button_url3 = Gtk.LinkButton(uri="http://{}/index.csv".format(IP_GREENHOUSE_PI))
-        	button_url3.set_label("Download historic data .CSV")
+		button_url3 = Gtk.LinkButton(uri="http://{}/index.csv".format(IP_GREENHOUSE_PI))
+		button_url3.set_label("Download historic data .CSV")
 
-        	# Add the button to the window
+		# Add the button to the window
 		self.box.pack_start(button_url3, True, True, 0)
 
 		# A linkbutton pointing to the given URI
-        	button_url4 = Gtk.LinkButton(uri="https://git.io/fhhsY")
-        	button_url4.set_label("Ay-yah's Greenhouse GitHub Repository")
+		button_url4 = Gtk.LinkButton(uri="https://git.io/fhhsY")
+		button_url4.set_label("Ay-yah's Greenhouse GitHub Repository")
 
 
 	# Define the functions performed when a button is selected/clicked
@@ -304,9 +304,9 @@ class DialogWindow(Gtk.Window):
 
 		# Define the column header values
 		columns = ["Record",
-		           "LDR",
-		           "Temp.",
-		           "Humidity",
+			   "LDR",
+			   "Temp.",
+			   "Humidity",
 			   "Soil",
 			   "Solenoid",
 			   "Actuator",
@@ -317,47 +317,47 @@ class DialogWindow(Gtk.Window):
 			   "Time"]
 
 		# Create a window, set the title, set the window size, and set the border width
-	        Gtk.Window.__init__(self, title="Historic Environmental Record")
-	        self.set_default_size(975, 350)
-	        self.set_border_width(10)
+		Gtk.Window.__init__(self, title="Historic Environmental Record")
+		self.set_default_size(975, 350)
+		self.set_border_width(10)
 
 		# Make the window scrollable
-	        scrolled_window = Gtk.ScrolledWindow()
-	        scrolled_window.set_border_width(10)
-	        scrolled_window.set_policy(
-	            Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
+		scrolled_window = Gtk.ScrolledWindow()
+		scrolled_window.set_border_width(10)
+		scrolled_window.set_policy(
+		    Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
 
 		# Define the listmodel used by the ListStore
 	       	listmodel = Gtk.ListStore(int, float, float, float, float, str, str, str, str, str, str, str)
 
-	        # Append the values in the model
-	        for i in range(len(list_of_greenhouse_table_rows)):
-	            listmodel.append(list(list_of_greenhouse_table_rows[i]))
+		# Append the values in the model
+		for i in range(len(list_of_greenhouse_table_rows)):
+		    listmodel.append(list(list_of_greenhouse_table_rows[i]))
 
-	        # Create a TreeView to see the data stored in the model
-	        view = Gtk.TreeView(model=listmodel)
-	        # For each column
-	        for i, column in enumerate(columns):
-	            # Cellrenderer to render the text
-	            cell = Gtk.CellRendererText()
-	            # The text in all of the columns should be in boldface
-	            if i is not None:
-	                cell.props.weight_set = True
-	                cell.props.weight = Pango.Weight.BOLD
-	            # Create the column
-	            col = Gtk.TreeViewColumn(column, cell, text=i)
-	            # Appended the column to the TreeView
-	            view.append_column(col)
+		# Create a TreeView to see the data stored in the model
+		view = Gtk.TreeView(model=listmodel)
+		# For each column
+		for i, column in enumerate(columns):
+		    # Cellrenderer to render the text
+		    cell = Gtk.CellRendererText()
+		    # The text in all of the columns should be in boldface
+		    if i is not None:
+			cell.props.weight_set = True
+			cell.props.weight = Pango.Weight.BOLD
+		    # Create the column
+		    col = Gtk.TreeViewColumn(column, cell, text=i)
+		    # Appended the column to the TreeView
+		    view.append_column(col)
 
-	        # Create a grid to attach the widgets to
-	        grid = Gtk.Grid()
-	        grid.attach(view, 0, 0, 1, 1)
+		# Create a grid to attach the widgets to
+		grid = Gtk.Grid()
+		grid.attach(view, 0, 0, 1, 1)
 	
-	        # Add the image to the scrolledwindow
-	        scrolled_window.add_with_viewport(grid)
+		# Add the image to the scrolledwindow
+		scrolled_window.add_with_viewport(grid)
 
-	        # Add the scrolledwindow to the window
-	        self.add(scrolled_window)
+		# Add the scrolledwindow to the window
+		self.add(scrolled_window)
 
 # Define the function that downloads the image files and greenhouse.db file the queries the greenhouse.db file
 def fetch_greenhouse_data():
@@ -536,8 +536,8 @@ class System_Configuration_Window(Gtk.Window):
 		scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
 
 		label_entry_actuator_runtime = Gtk.Label(xalign=1)
-        	label_entry_actuator_runtime.set_text('Linear Actuator Runtime: ')
-	        label_entry_actuator_runtime.set_justify(Gtk.Justification.LEFT)
+		label_entry_actuator_runtime.set_text('Linear Actuator Runtime: ')
+		label_entry_actuator_runtime.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_actuator_runtime = Gtk.Entry()
 		self.entry_actuator_runtime.set_text(LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE)
