@@ -293,7 +293,7 @@ def fetch_url_trigger_event(remote_command_number_option):
 
 	except urllib2.URLError as e:
 		print ("***Operation Failed*** An error occurred: ")
-		print e.reason   
+		print (e.reason)  
 
 
 
@@ -303,18 +303,18 @@ class DialogWindow(Gtk.Window):
 	def __init__(self):
 
 		# Define the column header values
-		columns = ["Record",
-			   "LDR",
-			   "Temp.",
-			   "Humidity",
-			   "Soil",
-			   "Solenoid",
-			   "Actuator",
-			   "Output #1",
-			   "Output #2",
-			   "Output #3",
-			   "Date",
-			   "Time"]
+		columns = [	"Record",
+				"LDR",
+				"Temp.",
+				"Humidity",
+				"Soil",
+				"Solenoid",
+				"Actuator",
+				"Output #1",
+				"Output #2",
+				"Output #3",
+				"Date",
+				"Time"]
 
 		# Create a window, set the title, set the window size, and set the border width
 		Gtk.Window.__init__(self, title="Historic Environmental Record")
@@ -372,7 +372,7 @@ def fetch_greenhouse_data():
 
 	except urllib2.URLError as e:
 		print ("Failed to download the low resolution animated .GIF image. An error occurred: ")
-		print e.reason   
+		print (e.reason)
 
 	print ("Downloading the high resolution .JPG image file.")
 
@@ -384,7 +384,7 @@ def fetch_greenhouse_data():
 
 	except urllib2.URLError as e:
 		print ("Failed to download the high resolution .JPG image. An error occurred: ")
-		print e.reason   
+		print (e.reason)   
 
 
 	print ("Downloading the historic environmental record greenhouse.db file.")
@@ -397,7 +397,7 @@ def fetch_greenhouse_data():
 
 	except urllib2.URLError as e:
 		print ("Failed to download the historic environmental record greenhouse.db file.  An error occurred: ")
-		print e.reason
+		print (e.reason)
 
 	# Define global variable accessible in other functions
 	global current_luminosity_sensor_value
@@ -508,7 +508,7 @@ class System_Configuration_Window(Gtk.Window):
 
 			except urllib2.URLError as e:
 				print ("***Operation Failed*** An error occurred: ")
-				print e.reason   
+				print (e.reason)   
 
 			temporary_counter_variable = temporary_counter_variable + 1	
 
