@@ -1099,10 +1099,10 @@ def evaluate_environmental_conditions_perform_automated_responses():
 
 	# evaulate if we close or open the window
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Performing evaluate_environmental_conditions_perform_automated_responses() comparison process now")
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
 
-	if (current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
+	if (current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
 		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
 		):
 
@@ -1113,7 +1113,7 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
 	
 
-	elif (current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
+	elif (current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
 		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
 		):
 
@@ -1123,12 +1123,12 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
 
 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value >= int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value >= int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value >= float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value >= float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value < float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
 
 	# evaulate if we need to enable output #1 turn on the fan
-	if (current_temperature_sensor_value >= int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
-		current_humidity_sensor_value >= int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and
+	if (current_temperature_sensor_value >= float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
+		current_humidity_sensor_value >= float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and
 		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
 		 ):
 
@@ -1138,8 +1138,8 @@ def evaluate_environmental_conditions_perform_automated_responses():
 		output_status = 'On'
 		current_output_status = control_outputs(output_number, output_status)
 
-	elif (current_temperature_sensor_value < int(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
-		current_humidity_sensor_value < int(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
+	elif (current_temperature_sensor_value < float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
+		current_humidity_sensor_value < float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
 		):
 
 
@@ -1158,12 +1158,12 @@ def evaluate_environmental_conditions_perform_automated_responses():
 	#if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature'):
 
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turned on by temperature")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by temperature")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
 
 		# evaulate if we need to enable output #2 turn on the USB heating pad
-		if (int(current_temperature_sensor_value) <= int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
+		if (float(int(current_temperature_sensor_value)) <= float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
 
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Enabling Output #2 by temperature")
 
@@ -1173,7 +1173,7 @@ def evaluate_environmental_conditions_perform_automated_responses():
 			current_output_status = control_outputs(output_number, output_status)
 
 		# evaulate if we need to disable output #2 turn off the USB heating pad
-		elif (int(current_temperature_sensor_value) > int(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
+		elif (float(int(current_temperature_sensor_value)) > float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
 			
 			if DISPLAY_PROCESS_MESSAGES == True: print ("Disable Output #2 by temperature")
 
