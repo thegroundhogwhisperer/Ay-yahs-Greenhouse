@@ -167,16 +167,16 @@ print "<table class=\"table table-bordered table-striped mb-0\" align=\"center\"
 print "    <thead>\n";
 print "        <tr>\n";
 print "         <th scope=\"col\">Luminosity</th>\n";
-print "         <th scope=\"col\">Temperature</th>\n";
+print "         <th scope=\"col\">Temp.</th>\n";
 print "         <th scope=\"col\">Humidity</th>\n";
-print "         <th scope=\"col\">Soil Moisture</th>\n";
+print "         <th scope=\"col\">Soil M.</th>\n";
 print "         <th scope=\"col\">Solenoid</th>\n";
 print "         <th scope=\"col\">Actuator</th>\n";
-print "         <th scope=\"col\">Output #1</th>\n";
-print "         <th scope=\"col\">Output #2</th>\n";
-print "         <th scope=\"col\">Output #3</th>\n";
-print "         <th scope=\"col\">Record Date</th>\n";
-print "         <th scope=\"col\">Record Time</th>\n";
+print "         <th scope=\"col\">Out. #1</th>\n";
+print "         <th scope=\"col\">Out. #2</th>\n";
+print "         <th scope=\"col\">Out. #3</th>\n";
+print "         <th scope=\"col\">Date</th>\n";
+print "         <th scope=\"col\">Time</th>\n";
 print "        </tr>\n";
 print "    </thead>\n";
 print "    <tbody>\n";
@@ -546,7 +546,7 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
   <tr>
     <td align="right">LINEAR_ACTUATOR_RUNTIME_VALUE: =</td>
     <td align="left"><br><input type="text" name="LINEAR_ACTUATOR_RUNTIME_VALUE" size="5" value="<?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE;?>">
-  <span class="error">* <?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE_Err;?></span>
+  <span class="error">Seconds * <?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE_Err;?></span>
   <br><br>
     </td>
   </tr>
@@ -555,7 +555,7 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 		      Logic: When the temperature reaches the minimum specified value retract the actuator (Close Window)
     </td>
     <td align="left"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE;?>"
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span><br><br><br>
+  <span class="error">Degrees F * <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span><br><br><br>
    <br>
     </td>
   </tr>
@@ -565,9 +565,9 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 		      Logic: When the temperature reaches the minimum specified value AND when the humidity reaches the minimum specified value turn off output #1 (Fan).
     </td>
     <td align="left"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span>
+  <span class="error">Degrees F * <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span>
    <br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span><br><br><br><br>
+  <span class="error">% 0-100 * <?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span><br><br><br><br>
     </td>
   </tr>
   <tr>
@@ -584,7 +584,7 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 		      Logic: When the temperature reaches the minimum specified value turn off output two.
     </td>
     <td align="left"><br><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br><br>
+  <span class="error">Degrees F * <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br>
   <br><br>
     </td>
   </tr>
@@ -593,14 +593,14 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 		      Logic: When the luminosity reaches the minimum specified value turn off output two.
     </td>
     <td align="left"><br><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br><br>
+  <span class="error">Volts 0-5 * <?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br>
   <br><br>
     </td>
   </tr>
   <tr>
     <td align="right">MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE: >=</td>
     <td align="left"><br><input type="text" name="MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE" size="5" value="<?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE;?>">
-  <span class="error">* <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err;?></span>
+  <span class="error">Volts 0-5 * <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err;?></span>
   <br><br>
     </td>
   </tr>
