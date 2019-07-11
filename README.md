@@ -21,7 +21,7 @@ https://github.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/wiki
 
 ![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Manual%20Operations%20GUI.png)
 
-# Example web interface screenshots
+# Example web interface screenshot
 
 ![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
 
