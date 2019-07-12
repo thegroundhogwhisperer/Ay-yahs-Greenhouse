@@ -19,6 +19,7 @@ th, td {
 </style>
 </head>
 <body>
+ <center>
 <h1 align="center">Ay-yah's Greenhouse Automation System</h1>
   <table style="width:30%" align="center">
     <tr>
@@ -103,6 +104,7 @@ while ($row_returned = $query_results->fetchArray())
   $current_record_time_value = $row_returned['currenttime'];
 
    # display the data in a table 
+   print "<h2 align=\"center\" valign=\"center\">Status Information</h2>";
    print "<table style=\"width:20%\" align=\"center\" valign=\"top\">\n";
    print "    <tr>\n";
    print "      <th>Reading Name</th>\n";
@@ -179,11 +181,10 @@ print "      <td valign=\"top\">";
 
 
 
-print "<h2 align=\"center\" valign=\"center\">Status Information<br>";
-      $timestamp = date('Y/m/d H:i:s A');
+$timestamp = date('Y/m/d H:i:s A');
+print "<center><h2>\n";
 print $timestamp;
 print "</h2>\n";
-print "<center>\n";
 print "<a href=\"/greenhousehigh.jpg\">\n";
 print "<img src=\"/greenhouselow.gif\" alt=\"Greenhouse Camera Image - Animated GIF file\"  height=\"240\" width=\"320\" border=\"5\">\n";
 print "<br>Click for high resolution</center></a>";
@@ -220,79 +221,16 @@ print "</table>\n";
 
 
 
+print "<br><br><center>Automation System Wiring Diagram<br><a href=\"/wiringhigh.png\"><img src=\"/wiringlow.png\" alt=\"Automation System Wiring Diagram\"><a></center>";
+
+
+
+
 print "   </td>";
-print "    </tr>";
-print "</table>";
- 
+print "   <td>";
 
-
-
-
-print "<br><h2 align=\"center\">Environmental Record (24 Hours)</h2>\n";
-
-# execute a query returning the last 720 records (greenhouse.py is executed every two minutes) = the last 24 hours.
-$query_results = $db->query('SELECT * FROM greenhouse ORDER BY id DESC LIMIT 720;') or print('<h1>Greenhouse.db select query failed</h1>');
-
-# make the table scrollable
-print "<div class=\"table-wrapper-scroll-y the-table-scrollbar\">\n";
-
-# display a table containing the last 24 hours of the environmental record
-print "<table class=\"table table-bordered table-striped mb-0\" align=\"center\">\n";
-print "    <thead>\n";
-print "        <tr>\n";
-print "         <th scope=\"col\">Luminosity</th>\n";
-print "         <th scope=\"col\">Temp.</th>\n";
-print "         <th scope=\"col\">Humidity</th>\n";
-print "         <th scope=\"col\">Soil M.</th>\n";
-print "         <th scope=\"col\">Solenoid</th>\n";
-print "         <th scope=\"col\">Actuator</th>\n";
-print "         <th scope=\"col\">Out. #1</th>\n";
-print "         <th scope=\"col\">Out. #2</th>\n";
-print "         <th scope=\"col\">Out. #3</th>\n";
-print "         <th scope=\"col\">Date</th>\n";
-print "         <th scope=\"col\">Time</th>\n";
-print "        </tr>\n";
-print "    </thead>\n";
-print "    <tbody>\n";
-
-
-while ($row_returned = $query_results->fetchArray())
-{
-
-	print "        <tr>\n";
-	print "         <td scope=\"row\">{$row_returned['luminosity']} Volts</td>\n";
-	print "         <td>{$row_returned['temperature']} F</td>\n";
-	print "         <td>{$row_returned['humidity']} %</td>\n";
-	print "         <td>{$row_returned['soilmoisture']} Volts</td>\n";
-	print "         <td>{$row_returned['solenoidstatus']}</td>\n";
-	print "         <td>{$row_returned['actuatorstatus']}</td>\n";
-	print "         <td>{$row_returned['outputonestatus']}</td>\n";
-	print "         <td>{$row_returned['outputtwostatus']}</td>\n";
-	print "         <td>{$row_returned['outputthreestatus']}</td>\n";
-	print "         <td>{$row_returned['currentdate']}</td>\n";
-	print "         <td>{$row_returned['currenttime']}</td>\n";
-	print "        </tr>\n";
-
-}
-
-print "    <tbody>\n";
-print "</table>\n";
-print "</div>\n";
-
-
-
-
-
-
-
-
-
-# display the manual operations inteface in a table
 ?>
-
-<br><br>
 <h2 align="center"><p><span class="error">Manual Operations</span></p></h2>
-<h3 align="center">Note: Manually performing operations are not reflected anywhere in this system.</h3>
 <table style="width:20%" align="center">
   <tr>
     <th>Action Description</th>
@@ -363,12 +301,87 @@ print "</div>\n";
     <td align="right">Disable output three manually:</td>
     <td align="center"><br><form action="closeoutputonemanual.php" method="post">
     <input type="image" src="out_put_off.png" width="100" height="100" alt="Manually disable output three" border="1">
-    </form></td>
+    </form>
+   </td>
   </tr>
 </table>
-<br><br><br>
+
 
 <?php
+
+
+
+
+
+print "<p align=\"center\">Note: Manually performing operations are not reflected anywhere in this system.</p>";
+
+print "   </td>";
+print "    </tr>";
+print "</table>";
+
+
+
+ 
+
+
+
+
+print "<br><h2 align=\"center\">Environmental Record (24 Hours)</h2>\n";
+
+# execute a query returning the last 720 records (greenhouse.py is executed every two minutes) = the last 24 hours.
+$query_results = $db->query('SELECT * FROM greenhouse ORDER BY id DESC LIMIT 720;') or print('<h1>Greenhouse.db select query failed</h1>');
+
+# make the table scrollable
+print "<div class=\"table-wrapper-scroll-y the-table-scrollbar\">\n";
+
+# display a table containing the last 24 hours of the environmental record
+print "<table class=\"table table-bordered table-striped mb-0\" align=\"center\">\n";
+print "    <thead>\n";
+print "        <tr>\n";
+print "         <th scope=\"col\">Luminosity</th>\n";
+print "         <th scope=\"col\">Temp.</th>\n";
+print "         <th scope=\"col\">Humidity</th>\n";
+print "         <th scope=\"col\">Soil M.</th>\n";
+print "         <th scope=\"col\">Solenoid</th>\n";
+print "         <th scope=\"col\">Actuator</th>\n";
+print "         <th scope=\"col\">Out. #1</th>\n";
+print "         <th scope=\"col\">Out. #2</th>\n";
+print "         <th scope=\"col\">Out. #3</th>\n";
+print "         <th scope=\"col\">Date</th>\n";
+print "         <th scope=\"col\">Time</th>\n";
+print "        </tr>\n";
+print "    </thead>\n";
+print "    <tbody>\n";
+
+
+while ($row_returned = $query_results->fetchArray())
+{
+
+	print "        <tr>\n";
+	print "         <td scope=\"row\">{$row_returned['luminosity']} Volts</td>\n";
+	print "         <td>{$row_returned['temperature']} F</td>\n";
+	print "         <td>{$row_returned['humidity']} %</td>\n";
+	print "         <td>{$row_returned['soilmoisture']} Volts</td>\n";
+	print "         <td>{$row_returned['solenoidstatus']}</td>\n";
+	print "         <td>{$row_returned['actuatorstatus']}</td>\n";
+	print "         <td>{$row_returned['outputonestatus']}</td>\n";
+	print "         <td>{$row_returned['outputtwostatus']}</td>\n";
+	print "         <td>{$row_returned['outputthreestatus']}</td>\n";
+	print "         <td>{$row_returned['currentdate']}</td>\n";
+	print "         <td>{$row_returned['currenttime']}</td>\n";
+	print "        </tr>\n";
+
+}
+
+print "    <tbody>\n";
+print "</table>\n";
+print "</div>\n";
+
+
+
+
+
+
 
 # define the variables using during form submission
 $LINEAR_ACTUATOR_RUNTIME_VALUE = "";
@@ -589,8 +602,6 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 # display a form containing the system configuration values
 ?>
 
-<center><a href="/wiringhigh.png"><img src="/wiringlow.png" alt="Automation System Wiring Diagram"><a></center>
-
 <h1 align="center">Automation System Configuration Values</h1>
 
 <h2 align="center"><p><span class="error">* required field</span></p></h2>
@@ -686,7 +697,7 @@ function test_input($data) {
 
 
 ?>
-
+ </center>
 </body>
 </html>
 
