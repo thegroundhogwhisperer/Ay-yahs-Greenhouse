@@ -221,7 +221,7 @@ print "</table>\n";
 
 
 
-print "<br><br><center>Automation System Wiring Diagram<br><a href=\"/wiringhigh.png\"><img src=\"/wiringlow.png\" alt=\"Automation System Wiring Diagram\"><a></center>";
+print "<br><br><h3 align=\"center\">Automation System Wiring Diagram<br><br><a href=\"/wiringhigh.png\"><img src=\"/wiringlow.png\" alt=\"Automation System Wiring Diagram\"><a></h3>";
 
 
 
@@ -601,10 +601,9 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 
 # display a form containing the system configuration values
 ?>
-
-<h1 align="center">Automation System Configuration Values</h1>
-
-<h2 align="center"><p><span class="error">* required field</span></p></h2>
+<br><br>
+<h2 align="center">Automation System Configuration Values<br>
+<span class="error">* required field</span></h2>
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
  <table style="width:50%" align="center">
   <tr>
