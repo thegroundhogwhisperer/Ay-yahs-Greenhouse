@@ -44,39 +44,12 @@ DATABASE_TABLE_NAME = 'greenhouse'
 # Number of historic environmental data rows to display in the history window =< 1500
 LIMIT_NUMBER_ROWS_DISPLAYED = '1000'
 
-# Remote IP address of the GreenhouePi
-IP_GREENHOUSE_PI = '192.168.0.104'
+# text file containing the remote host IP address for the GreenhousePi
+IP_GREENHOUSE_PI_FILE_NAME = 'greenhouseip.txt'
 
 # Timeout in seconds before urllib2 fails to fetch the remote URL 
 # (e.g. Downloading a file or performing a manual greenhouse operation.)
 URL_FETCH_TIMEOUT_SECONDS = 3
-
-# Action selection input number to remote control function list
-# 0/1 Turn on/off the greenhouse fan
-# 2/3 Turn on/off the greenhouse light
-# 4/5 Turn on/off output three
-# 6/7 Open/close the water solenoid valve
-# 8/9 Open/close the window
-REMOTE_CONTROL_URLS = ["http://{}/openoutputonemanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/closeoutputonemanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/openoutputtwomanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/closeoutputtwomanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/openoutputthreemanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/closeoutputthreemanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/openwatermanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/closewatermanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/openwindowmanual.php".format(IP_GREENHOUSE_PI),
-			"http://{}/closewindowmanual.php".format(IP_GREENHOUSE_PI)]
-
-REMOTE_VARIABLE_URLS = ["http://{}/actuatorruntime.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/mintemactretract.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/mintemoutoneoff.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/minhumoutoneoff.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/mintemouttwooff.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/minlumouttwooff.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/minsoilsoleopen.txt".format(IP_GREENHOUSE_PI),
-			"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI)]
-
 
 # Create the main GUI window class
 class MyWindow(Gtk.Window):
@@ -449,6 +422,7 @@ def fetch_greenhouse_data():
 	conn.close()
 
 
+
 # Create the high resolution camera image GUI window class
 class Large_Image_Window(Gtk.Window):
 
@@ -480,6 +454,58 @@ class Large_Image_Window(Gtk.Window):
 class System_Configuration_Window(Gtk.Window):
 
 	def __init__(self):
+
+
+
+		# define the variable containg the remote host IP address
+		global IP_GREENHOUSE_PI
+
+		try: 
+			# read the current GreenhousePi remote IP address from file
+			ip_greenhouse_pi_file_handle = open(IP_GREENHOUSE_PI_FILE_NAME, 'r')
+			IP_GREENHOUSE_PI = ip_greenhouse_pi_file_handle.readline().rstrip()
+			print ("Read remote host address IP_GREENHOUSE_PI from file", IP_GREENHOUSE_PI)
+			ip_greenhouse_pi_file_handle.close()
+	
+		except OSError:
+	
+			print ("An error occurred reading file name: ", IP_GREENHOUSE_PI_FILE_NAME)
+			quit()
+
+
+
+		# Action selection input number to remote control function list
+		# 0/1 Turn on/off the greenhouse fan
+		# 2/3 Turn on/off the greenhouse light
+		# 4/5 Turn on/off output three
+		# 6/7 Open/close the water solenoid valve
+		# 8/9 Open/close the window
+		global REMOTE_CONTROL_URLS
+		REMOTE_CONTROL_URLS = ["http://{}/openoutputonemanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/closeoutputonemanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/openoutputtwomanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/closeoutputtwomanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/openoutputthreemanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/closeoutputthreemanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/openwatermanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/closewatermanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/openwindowmanual.php".format(IP_GREENHOUSE_PI),
+					"http://{}/closewindowmanual.php".format(IP_GREENHOUSE_PI)]
+
+
+
+
+		global REMOTE_VARIABLE_URLS
+		REMOTE_VARIABLE_URLS = ["http://{}/actuatorruntime.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/mintemactretract.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/mintemoutoneoff.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/minhumoutoneoff.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/mintemouttwooff.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/minlumouttwooff.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/minsoilsoleopen.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI)]
+
+
 
 		global LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
 		global MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE
