@@ -64,7 +64,7 @@ Port the manual GUI interface as an .apk if I can ever get p4a or tivy or buildo
 
 Write a send SMS/Email script to use if the greenhouse location has internet connectivity.  The existing send SMS/Email notification script reads a RTTY log from Fldigi.  This local script could fetch and query the greenhouse.db file.
 
-All notification scripts (e.g. greenhousealarm.py, etc.) that fetch and parse the index.csv file via wget should be recoded to fetch and query the greenhouse.db file via urllib2.  It is more efficient to query the last row of the .db file than to prase the entire index.csv file for the last line.  Using urllib2 will also eliminate the requirement of the exteral application wget.
+All notification scripts (e.g. greenhousealarm.py, etc.) that fetch and parse the index.csv file via wget should be recoded to fetch and query the greenhouse.db file via urllib2.  It is more efficient to query the last row of the .db file than to prase the entire index.csv file for the last line.  Using urllib2 will also eliminate the requirement of the exteral application wget.  Use the module requests to replace urllib2.
 
 Lots of other things...
 
