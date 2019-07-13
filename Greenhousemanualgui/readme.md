@@ -18,8 +18,6 @@ python-gi
 
 sqlite3
 
-urllib2
-
 
 # 
 # Produces:
