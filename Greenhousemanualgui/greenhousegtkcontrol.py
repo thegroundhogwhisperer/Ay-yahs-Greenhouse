@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
-# greenhousegtkcontrol.py Version 1.02
+# greenhousegtkcontrol.py Version 1.02 - Ay-yah's Greenhouse Desktop Interface GUI
 # Copyright (C) 2019 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,10 +30,9 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Pango
 import time
-import urllib
-import urllib2
+import requests
 import sqlite3
-import sys
+#import sys
 
 # Name of the Sqlite3 database file
 SQLITE_DATABASE_FILE = 'greenhouse.db'
@@ -47,8 +46,11 @@ LIMIT_NUMBER_ROWS_DISPLAYED = '1000'
 # text file containing the remote host IP address for the GreenhousePi
 IP_GREENHOUSE_PI_FILE_NAME = 'greenhouseip.txt'
 
-# Timeout in seconds before urllib2 fails to fetch the remote URL 
-# (e.g. Downloading a file or performing a manual greenhouse operation.)
+# Timeout in seconds before 'requests' fails to fetch the remote URL 
+# (e.g. Downloading a file or performing a manual greenhouse operation).
+# If this value is less than the linear actuator runtime value this operation
+# will timeout before completion while waiting on the linear actuator to
+# retract or extend.
 URL_FETCH_TIMEOUT_SECONDS = 3
 
 # Create the main GUI window class
@@ -254,19 +256,23 @@ class MyWindow(Gtk.Window):
 # Define the function called after the button selection function performing the remote URL fetch (manual operation)
 def fetch_url_trigger_event(remote_command_number_option):
 
-	print ("Fetching URL: ", REMOTE_CONTROL_URLS[remote_command_number_option])
-
-	remote_control_command_request_url = urllib2.Request(REMOTE_CONTROL_URLS[remote_command_number_option])
+	print ("Fetching URL triggering event: ", REMOTE_CONTROL_URLS[remote_command_number_option])
 
 	try: 
-		response_control_command = urllib2.urlopen(remote_control_command_request_url, timeout = URL_FETCH_TIMEOUT_SECONDS)
-		object_containing_the_output_response_page = response_control_command.read()
+		object_containing_the_output_response_page = requests.get(REMOTE_CONTROL_URLS[remote_command_number_option], timeout=URL_FETCH_TIMEOUT_SECONDS)
 		print ("Operation successful!")
-		print ("URL fetch results: ", object_containing_the_output_response_page)
+		print ("URL fetch results: ", object_containing_the_output_response_page.text)
 
-	except urllib2.URLError as e:
-		print ("***Operation Failed*** An error occurred: ")
-		print (e.reason)
+		if object_containing_the_output_response_page.status_code is not 200:
+			print ("An error has occurred. Error code: ", object_containing_the_output_response_page.status_code)
+			exit()
+
+	except requests.ConnectionError as e:
+		print ("Connection Error: ", e)
+
+	except requests.HTTPError as e:
+		print ("HTTP Error: ", e)
+		raise requests.HTTPError(e.response.text, response=e.response)
 
 
 
@@ -337,39 +343,70 @@ def fetch_greenhouse_data():
 	print ("Downloading the low resolution animated .GIF image file.")
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))
-		datatowrite = filedata.read()
-		with open('greenhouselow.gif', 'wb') as f:
-			f.write(datatowrite)
 
-	except urllib2.URLError as e:
-		print ("Failed to download the low resolution animated .GIF image. An error occurred: ")
-		print (e.reason)
+		filedata = requests.get("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))
+		if filedata.status_code == 200:
+			with open('greenhouselow.gif', 'wb') as f:
+				f.write(filedata.content)
+
+		# catch any error I cannot successfully catch using requests.HTTPError as e:
+		if filedata.status_code is not 200:
+			print ("An error has occurred. Error code: ", filedata.status_code)
+			exit()
+
+	except requests.ConnectionError as e:
+		print ("Connection Error: ", e)
+
+	except requests.HTTPError as e:
+		print ("HTTP Error: ", e)
+		raise requests.HTTPError(e.response.text, response=e.response)
+
 
 	print ("Downloading the high resolution .JPG image file.")
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))
-		datatowrite = filedata.read()
-		with open('greenhousehigh.jpg', 'wb') as f:
-			f.write(datatowrite)
 
-	except urllib2.URLError as e:
-		print ("Failed to download the high resolution .JPG image. An error occurred: ")
-		print (e.reason)
+		filedata = requests.get("http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))
+		if filedata.status_code == 200:
+			with open('greenhousehigh.jpg', 'wb') as f:
+				f.write(filedata.content)
+
+		# catch any error I cannot successfully catch using requests.HTTPError as e:
+		if filedata.status_code is not 200:
+			print ("An error has occurred. Error code: ", filedata.status_code)
+			exit()
+
+	except requests.ConnectionError as e:
+		print ("Connection Error: ", e)
+
+	except requests.HTTPError as e:
+		print ("HTTP Error: ", e)
+		raise requests.HTTPError(e.response.text, response=e.response)
 
 
 	print ("Downloading the historic environmental record greenhouse.db file.")
 
 	try:
-		filedata = urllib2.urlopen("http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
-		datatowrite = filedata.read()
-		with open('greenhouse.db', 'wb') as f:
-			f.write(datatowrite)
 
-	except urllib2.URLError as e:
-		print ("Failed to download the historic environmental record greenhouse.db file. An error occurred: ")
-		print (e.reason)
+
+		filedata = requests.get("http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
+		if filedata.status_code == 200:
+			with open('greenhouse.db', 'wb') as f:
+				f.write(filedata.content)
+
+		# catch any error I cannot successfully catch using requests.HTTPError as e:
+		if filedata.status_code is not 200:
+			print ("An error has occurred. Error code: ", filedata.status_code)
+			exit()
+
+	except requests.ConnectionError as e:
+		print ("Connection Error: ", e)
+
+	except requests.HTTPError as e:
+		print ("HTTP Error: ", e)
+		raise requests.HTTPError(e.response.text, response=e.response)
+
+
 
 	# Define global variable accessible in other functions
 	global current_luminosity_sensor_value
@@ -456,7 +493,6 @@ class System_Configuration_Window(Gtk.Window):
 	def __init__(self):
 
 
-
 		# define the variable containg the remote host IP address
 		global IP_GREENHOUSE_PI
 
@@ -472,7 +508,8 @@ class System_Configuration_Window(Gtk.Window):
 			print ("An error occurred reading file name: ", IP_GREENHOUSE_PI_FILE_NAME)
 			quit()
 
-
+		# the list of remote URLs that trigger manual operations
+		global REMOTE_CONTROL_URLS
 
 		# Action selection input number to remote control function list
 		# 0/1 Turn on/off the greenhouse fan
@@ -480,7 +517,7 @@ class System_Configuration_Window(Gtk.Window):
 		# 4/5 Turn on/off output three
 		# 6/7 Open/close the water solenoid valve
 		# 8/9 Open/close the window
-		global REMOTE_CONTROL_URLS
+
 		REMOTE_CONTROL_URLS = ["http://{}/openoutputonemanual.php".format(IP_GREENHOUSE_PI),
 					"http://{}/closeoutputonemanual.php".format(IP_GREENHOUSE_PI),
 					"http://{}/openoutputtwomanual.php".format(IP_GREENHOUSE_PI),
@@ -492,10 +529,9 @@ class System_Configuration_Window(Gtk.Window):
 					"http://{}/openwindowmanual.php".format(IP_GREENHOUSE_PI),
 					"http://{}/closewindowmanual.php".format(IP_GREENHOUSE_PI)]
 
-
-
-
+		# remote text files containing system configuration values
 		global REMOTE_VARIABLE_URLS
+
 		REMOTE_VARIABLE_URLS = ["http://{}/actuatorruntime.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/mintemactretract.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/mintemoutoneoff.txt".format(IP_GREENHOUSE_PI),
@@ -504,8 +540,6 @@ class System_Configuration_Window(Gtk.Window):
 					"http://{}/minlumouttwooff.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/minsoilsoleopen.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI)]
-
-
 
 		global LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
 		global MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE
@@ -522,18 +556,23 @@ class System_Configuration_Window(Gtk.Window):
 		while (temporary_counter_variable < 8):
 			print ("Fetching automation system control values")
 			print ("Fetching URL: ", REMOTE_VARIABLE_URLS[temporary_counter_variable])
-			remote_control_command_request_url = urllib2.Request(REMOTE_VARIABLE_URLS[temporary_counter_variable])
 
 			try: 
-				response_control_command = urllib2.urlopen(remote_control_command_request_url)
-				temporary_remote_response_value = response_control_command.read()
-				remote_control_values_list.insert(temporary_counter_variable, temporary_remote_response_value) 
+				temporary_remote_response_value = requests.get(REMOTE_VARIABLE_URLS[temporary_counter_variable])
+				remote_control_values_list.insert(temporary_counter_variable, temporary_remote_response_value.text) 
 				print ("Operation successful!")
 				print ("URL fetch results: ", remote_control_values_list[temporary_counter_variable])
 
-			except urllib2.URLError as e:
-				print ("***Operation Failed*** An error occurred: ")
-				print (e.reason)
+				# catch any error I cannot successfully catch using requests.HTTPError as e:
+				if temporary_remote_response_value.status_code is not 200:
+					print ("An error has occurred. Error code: ", temporary_remote_response_value.status_code)
+					exit()
+
+			except requests.ConnectionError as e:
+				print ("Connection Error: ", e)
+			except requests.HTTPError as e:
+				print ("HTTP Error: ", e)
+				raise requests.HTTPError(e.response.text, response=e.response)
 
 			temporary_counter_variable = temporary_counter_variable + 1	
 
@@ -565,7 +604,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_actuator_runtime.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_actuator_runtime = Gtk.Entry()
-		self.entry_actuator_runtime.set_text(LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE)
+		self.entry_actuator_runtime.set_text(str(LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE))
 		self.entry_actuator_runtime.set_activates_default(True)
 		self.entry_actuator_runtime.set_width_chars(5)
 
@@ -578,7 +617,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_temperature_sensor_actuator_retract_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_temperature_sensor_actuator_retract_value_remote = Gtk.Entry()
-		self.entry_minimum_temperature_sensor_actuator_retract_value_remote.set_text(MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE)
+		self.entry_minimum_temperature_sensor_actuator_retract_value_remote.set_text(str(MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE))
 		self.entry_minimum_temperature_sensor_actuator_retract_value_remote.set_activates_default(True)
 
 		label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit = Gtk.Label(xalign=0)
@@ -590,7 +629,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_temperature_sensor_output_one_off_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_temperature_sensor_output_one_off_value_remote = Gtk.Entry()
-		self.entry_minimum_temperature_sensor_output_one_off_value_remote.set_text(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE)
+		self.entry_minimum_temperature_sensor_output_one_off_value_remote.set_text(str(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE))
 		self.entry_minimum_temperature_sensor_output_one_off_value_remote.set_activates_default(True)
 
 		label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit = Gtk.Label(xalign=0)
@@ -602,7 +641,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_humidity_sensor_output_one_off_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_humidity_sensor_output_one_off_value_remote = Gtk.Entry()
-		self.entry_minimum_humidity_sensor_output_one_off_value_remote.set_text(MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE)
+		self.entry_minimum_humidity_sensor_output_one_off_value_remote.set_text(str(MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_REMOTE))
 		self.entry_minimum_humidity_sensor_output_one_off_value_remote.set_activates_default(True)
 
 		label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit = Gtk.Label(xalign=0)
@@ -614,7 +653,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_temperature_sensor_output_two_off_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_temperature_sensor_output_two_off_value_remote = Gtk.Entry()
-		self.entry_minimum_temperature_sensor_output_two_off_value_remote.set_text(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE)
+		self.entry_minimum_temperature_sensor_output_two_off_value_remote.set_text(str(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE))
 		self.entry_minimum_temperature_sensor_output_two_off_value_remote.set_activates_default(True)
 
 		label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit = Gtk.Label(xalign=0)
@@ -626,7 +665,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_luminosity_sensor_output_two_off_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_luminosity_sensor_output_two_off_value_remote = Gtk.Entry()
-		self.entry_minimum_luminosity_sensor_output_two_off_value_remote.set_text(MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE)
+		self.entry_minimum_luminosity_sensor_output_two_off_value_remote.set_text(str(MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE))
 		self.entry_minimum_luminosity_sensor_output_two_off_value_remote.set_activates_default(True)
 
 		label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit = Gtk.Label(xalign=0)
@@ -638,7 +677,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote = Gtk.Entry()
-		self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_text(MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE)
+		self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_text(str(MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE))
 		self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_activates_default(True)
 
 		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit = Gtk.Label(xalign=0)
@@ -736,12 +775,11 @@ class System_Configuration_Window(Gtk.Window):
 					'OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE' : OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE }
 
 		print ("Submitting configuration values:")
-		print post_form_values
-		form_data_encoded = urllib.urlencode(post_form_values)
-		request_post_form_data_url = urllib2.Request(remote_post_form_url, form_data_encoded)
-		request_post_form_data_response = urllib2.urlopen(request_post_form_data_url) 
-		object_containing_the_output_response_page = request_post_form_data_response.read()
-		#print object_containing_the_output_response_page
+		print (post_form_values)
+		session = requests.session()
+		object_containing_the_output_response_page = requests.post(remote_post_form_url, data=post_form_values)
+		print (object_containing_the_output_response_page)
+
 
 
 win = System_Configuration_Window()
