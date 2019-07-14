@@ -9,6 +9,6 @@ print("Output two manual on operation starting.")
 pigsGPIOCommandLine = ["/usr/bin/pigs", "w 6 1"]
 p = subprocess.Popen(pigsGPIOCommandLine)
 
-print("Output two manual on operation starting.")
+print("Output two manual on operation complete.")
 
 
