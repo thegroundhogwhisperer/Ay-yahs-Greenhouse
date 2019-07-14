@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-# greenhouseserveremailalarm.py Version 1.02 - Ay-yah's Greenhouse server email/SMS alarm notification script
+# greenhousealarmemail.py Version 1.02 - Ay-yah's Greenhouse server email/SMS alarm notification script
 # This script runs on the GreenhousePi and sends email/SMS notifications when temperature values are too high
 # or low or soil moisture values are too high.
 # Copyright (C) 2019 The Groundhog Whisperer
@@ -27,7 +27,7 @@
 # This is a for-fun project created for the purpose of automating climate
 # control and irrigation in a small greenhouse.
 #
-# Example execution using cron and a crontab
+# Example execution using cron and a crontab every thirty minutes
 # */30 * * * * python /home/pi/Greenhouse/greenhousealarmemail.py
 
 import sqlite3
