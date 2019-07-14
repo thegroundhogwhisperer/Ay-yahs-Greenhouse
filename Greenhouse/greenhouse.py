@@ -745,7 +745,7 @@ def read_luminosity_sensor_value():
 
 				# populate a list of values
 				temporary_values_list.append(temporary_value)
-			read_counter = read_counter + 1
+				read_counter = read_counter + 1
 
 			# If the standard deviation of the series of
 			# readings is zero then the sensor produced
