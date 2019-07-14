@@ -66,6 +66,8 @@ Write a send SMS/Email script to use if the greenhouse location has internet con
 
 All notification scripts (e.g. greenhousealarm.py, etc.) that fetch and parse the index.csv file via wget should be recoded to fetch and query the greenhouse.db file via urllib2.  It is more efficient to query the last row of the .db file than to prase the entire index.csv file for the last line.  Using urllib2 will also eliminate the requirement of the exteral application wget.  Use the module requests to replace urllib2.
 
+Consider defining a timer/schedule based or soil moisture sensor based watering mode.  
+
 Lots of other things...
 
 
