@@ -141,13 +141,13 @@ INDEX_LOG_DATA_CSV_FILE_NAME = "/var/www/html/index.csv"
 INDEX_LOG_DATA_CSV_URL_FILE_NAME = "index.csv"
 
 # linear actuator status file name (Retracted | Extended
-ACTUATOR_STATUS_FILE_NAME = '/home/pi/Greenhouse/actuator.txt'
+ACTUATOR_STATUS_FILE_NAME = '/var/www/html/actuator.txt'
 
 # solenoid valve status file name (Open | Closed)
-SOLENOID_STATUS_FILE_NAME = '/home/pi/Greenhouse/solenoid.txt'
+SOLENOID_STATUS_FILE_NAME = '/var/www/html/solenoid.txt'
 
 # outputs status file name (On | Off)
-OUTPUTS_STATUS_FILE_NAME = '/home/pi/Greenhouse/outputs.txt'
+OUTPUTS_STATUS_FILE_NAME = '/var/www/html/outputs.txt'
 
 # linear actuator runtime value file name (seconds)
 LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt'
