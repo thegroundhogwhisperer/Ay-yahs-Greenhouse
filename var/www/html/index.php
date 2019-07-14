@@ -31,18 +31,18 @@ th, td {
 $SQLITE_DATABASE_FILE_NAME = "/var/www/html/greenhouse.db";
 
 # linear actuator status file name (Retracted | Extended)
-$ACTUATOR_STATUS_FILE_NAME = '/home/pi/Greenhouse/actuator.txt';
+$ACTUATOR_STATUS_FILE_NAME = '/var/www/html/actuator.txt';
 # solenoid valve status file name (Open | Closed)
-$SOLENOID_STATUS_FILE_NAME = '/home/pi/Greenhouse/solenoid.txt';
+$SOLENOID_STATUS_FILE_NAME = '/var/www/html/solenoid.txt';
 # outputs status file name (On | Off)
-$OUTPUTS_STATUS_FILE_NAME = '/home/pi/Greenhouse/outputs.txt';
+$OUTPUTS_STATUS_FILE_NAME = '/var/www/html/outputs.txt';
 
 # luminosity graph image web/url file name
 $GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME = "ghouselumi.png";
 # temperature graph image web/url file name
 $GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME = "ghousetemp.png";
 # humidity graph image web/url file name
-$GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "/ghousehumi.png";
+$GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "ghousehumi.png";
 # soil moisture graph image web/url file name
 $GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME = "ghousesoil.png";
 
