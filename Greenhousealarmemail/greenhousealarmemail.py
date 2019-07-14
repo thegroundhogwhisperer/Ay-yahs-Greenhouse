@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-# greenhousealarmemail.py Version 1.02 - Ay-yah's Greenhouse server email/SMS alarm notification script
+# greenhouseserveremailalarm.py Version 1.02 - Ay-yah's Greenhouse server email/SMS alarm notification script
 # This script runs on the GreenhousePi and sends email/SMS notifications when temperature values are too high
 # or low or soil moisture values are too high.
 # Copyright (C) 2019 The Groundhog Whisperer
@@ -27,7 +27,7 @@
 # This is a for-fun project created for the purpose of automating climate
 # control and irrigation in a small greenhouse.
 #
-# Example execution using cron and a crontab every thirty minutes
+# Example execution using cron and a crontab
 # */30 * * * * python /home/pi/Greenhouse/greenhousealarmemail.py
 
 import sqlite3
@@ -154,8 +154,8 @@ def send_email_alert_notification(email_message_content):
 	msg['From'] = 'somefromaddress@email.example'
 
 	# Set the destination addresses
-        recipients = ['sometoaddress@email.example', 'sometoaddress@email.example']
-        # recipients = ['sometoaddress@email.example'] # Example single recipient
+	recipients = ['sometoaddress@email.example', 'sometoaddress@email.example']
+	# recipients = ['sometoaddress@email.example'] # Example single recipient
 	# Join the recipients addresses into one string and set the destination values
 	msg['To'] = ", ".join(recipients)
 	# msg['To'] = recipients # Use with only single recipient and no .join()
