@@ -250,14 +250,14 @@ print "   <td>";
   </tr>
   <tr>
     <td align="right">Open the solenoid valve manually:</td>
-    <td align="center"><br><form action="opensolenoidmanual.php" method="post">
+    <td align="center"><br><form action="openwatermanual.php" method="post">
     <input type="image" src="solenoid_valve_open.png" width="100" height="100" alt="Manually open the solenoid valve" border="1">
     </form></td>
   </tr>
 
   <tr>
     <td align="right">Close the solenoid valve manually:</td>
-    <td align="center"><br><form action="closesolenoidwmanual.php" method="post">
+    <td align="center"><br><form action="closewatermanual.php" method="post">
     <input type="image" src="solenoid_valve_closed.png" width="100" height="100" alt="Manually close the solenoid valve" border="1">
     </form></td>
   </tr>
@@ -313,7 +313,7 @@ print "   <td>";
 
 
 
-print "<p align=\"center\">Note: Manually performing operations are not reflected anywhere in this system.</p>";
+print "<p align=\"center\">Note: Manually performed operations override all system values and are not logged or reflected anywhere in this system.</p>";
 
 print "   </td>";
 print "    </tr>";
