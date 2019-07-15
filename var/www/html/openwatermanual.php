@@ -1,6 +1,6 @@
 <?php
 
-system("sudo python /var/www/html/openwatermanual.py");
+system("python /var/www/html/openwatermanual.py");
 
 
 ?>
