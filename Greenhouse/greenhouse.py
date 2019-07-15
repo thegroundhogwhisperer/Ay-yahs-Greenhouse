@@ -219,7 +219,7 @@ def read_control_values_from_files():
 		global CURRENT_ACTUATOR_EXTENSION_STATUS 
 		# read the current linear actuator status
 		actuator_status_file_handle = open(ACTUATOR_STATUS_FILE_NAME, 'r')
-		CURRENT_ACTUATOR_EXTENSION_STATUS = actuator_status_file_handle.readline()
+		CURRENT_ACTUATOR_EXTENSION_STATUS = actuator_status_file_handle.readline().strip('\n')
 		if DISPLAY_PROCESS_MESSAGES == True: print ("Read CURRENT_ACTUATOR_EXTENSION_STATUS from file", CURRENT_ACTUATOR_EXTENSION_STATUS)
 		actuator_status_file_handle.close()
 	
