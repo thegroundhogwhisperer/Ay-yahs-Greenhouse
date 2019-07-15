@@ -53,6 +53,21 @@ MAXIMUM_TEMPERATURE_ALARM = 101.99
 # Maximum soil moisture to trigger an email/sms alarm notification
 MAXIMUM_SOIL_MOISTURE_ALARM = 3.1
 
+# Email message from address value
+FROM_EMAIL_ADDRESS_VALUE = 'somefromaddress@email.example'
+
+# Email message recipients destination address values
+RECIPIENTS_EMAIL_ADDRESS_VALUES = ['sometoaddress@email.example', 'sometoaddress@email.example']
+
+# SMTP email servers host name
+EMAIL_SMTP_SERVER_HOST_NAME = 'smtp.email.example'
+
+# SMTP server user name
+SMTP_SERVER_LOGIN_NAME = 'somefromaddress@email.example'
+
+# SMTP server password
+SMTP_SERVER_LOGIN_PASSWORD = 'shhhhaplaintextpasswordvalue'
+
 # Tag line appended to the RTTY tranmission data
 email_message_tag_line = ' Alert courtesy Ay-Yah\'s Horticultural Automation Systems @GitHub: https://git.io/fhhsY'
 
@@ -132,7 +147,7 @@ def compare_temperature_status_minimum_maximum_soil_moisture_maximum(current_tem
 
 	print ('Comparing current_soil_moisture_sensor_value > MAXIMUM_SOIL_MOISTURE_ALARM: ', current_soil_moisture_sensor_value, MAXIMUM_SOIL_MOISTURE_ALARM)
 
-	if (current_soil_moisture_sensor_value > MAXIMUM_SOIL_MOISTURE_ALARM and current_greenhouse_temperature is not None):
+	if (current_soil_moisture_sensor_value > MAXIMUM_SOIL_MOISTURE_ALARM and current_soil_moisture_sensor_value is not None):
 		alarm_soil_moisture_difference = current_soil_moisture_sensor_value - MAXIMUM_SOIL_MOISTURE_ALARM
 		email_message_content = 'Alert! Soil moisture: %d V. Maximum soil moisture alarm: %d V. Soil moisture difference of %d V. The current soil is too dry! The little plants will dry up!' % (current_soil_moisture_sensor_value, MAXIMUM_SOIL_MOISTURE_ALARM, alarm_soil_moisture_difference)
 
@@ -151,10 +166,10 @@ def send_email_alert_notification(email_message_content):
 	msg = EmailMessage()
 
 	# Set the sender address
-	msg['From'] = 'somefromaddress@email.example'
+	msg['From'] = FROM_EMAIL_ADDRESS_VALUE
 
 	# Set the destination addresses
-	recipients = ['sometoaddress@email.example', 'sometoaddress@email.example']
+	recipients = RECIPIENTS_EMAIL_ADDRESS_VALUES
 	# recipients = ['sometoaddress@email.example'] # Example single recipient
 	# Join the recipients addresses into one string and set the destination values
 	msg['To'] = ", ".join(recipients)
@@ -173,13 +188,13 @@ def send_email_alert_notification(email_message_content):
 	msg.set_content(email_message_content) 
 
 	# Send the email via smtp
-	with SMTP(host='smtp.email.example', port=587) as smtp_server:
+	with SMTP(host=EMAIL_SMTP_SERVER_HOST_NAME, port=587) as smtp_server:
 
 		try:
 			# Define a secure SSL connection
 			smtp_server.starttls(context=SSLContext(PROTOCOL_TLSv1_2))
 			# Supply authentication credentials
-			smtp_server.login(user='somefromaddress@email.example', password='shhhhapasswordvalue')
+			smtp_server.login(user=SMTP_SERVER_LOGIN_NAME, password=SMTP_SERVER_LOGIN_PASSWORD)
 			# Send the email message
 			smtp_server.send_message(msg)
 
