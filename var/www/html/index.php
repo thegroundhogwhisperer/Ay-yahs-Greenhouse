@@ -1,5 +1,5 @@
 <html>
-<head><title>Ay-yah's Greenhouse Automation System Version 1.02</title>
+<head><title>Ay-yah's Greenhouse Automation System Version 1.03</title>
 <style>
 table, th, td {
   border: 1px solid black;
@@ -42,7 +42,7 @@ $GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME = "ghouselumi.png";
 # temperature graph image web/url file name
 $GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME = "ghousetemp.png";
 # humidity graph image web/url file name
-$GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "ghousehumi.png";
+$GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "/ghousehumi.png";
 # soil moisture graph image web/url file name
 $GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME = "ghousesoil.png";
 
@@ -60,6 +60,46 @@ $current_outputthreestatus_value = "";
 $current_record_date_value = "";
 $current_record_time_value = "";
 
+# define the crontab configuration values for opening the solenoid valve
+$list_of_predefined_crontab_configurations = array(
+   "*/2 * * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two minutes",
+   "0 0 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water daily at 12AM",
+   "0 6 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water daily at 6AM",
+   "0 12 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water daily at 12PM",
+   "0 18 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water daily at 6PM",
+   "0 */12 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water twice daily at 12AM and 12PM",
+   "0 */8 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water thrice daily at 8AM and 4PM and 12AM",
+   "0 0 */2 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 12AM",
+   "0 6 */2 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 6AM",
+   "0 12 */2 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 12PM",
+   "0 18 */2 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 6PM",
+   "0 0 */3 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 12AM",
+   "0 6 */3 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 6AM",
+   "0 12 */3 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 12PM",
+   "0 18 */3 * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two days at 6PM",
+   "0 0 * * 0 /usr/bin/python /var/www/html/opensolenoidtimer.py # Water weekly on Sunday at 12AM",
+    );
+
+# define the descriptions of the crontab configuration values for opening the solenoid valve
+$list_of_predefined_crontab_configuration_descriptions = array(
+
+   "Water Daily Every Two Minutes",
+   "Water Daily @ 12AM",
+   "Water Daily @ 6AM",
+   "Water Daily @ 12PM",
+   "Water Daily @ 6PM",
+   "Water Twice Daily @ 12AM & 12PM",
+   "Water Thrice Daily @ 8AM & 4PM & 12AM",
+   "Water Every Two Days @ 12AM",
+   "Water Every Two Days @ 6AM",
+   "Water Every Two Days @ 12PM",
+   "Water Every Two Days @ 6PM",
+   "Water Every Three Days @ 12AM",
+   "Water Every Three Days @ 6AM",
+   "Water Every Three Days @ 12PM",
+   "Water Every Three Days @ 6PM",
+   "Water Weekly Sunday @ Midnight",
+    );
 
 # read the current linear actuator status from a text file on disk instead of from the SQLite database file
 $linear_actuator_status_file_pointer = fopen($ACTUATOR_STATUS_FILE_NAME, "r") or die("Unable to open file!");
@@ -79,11 +119,6 @@ $current_outputthreestatus_value_from_file_not_database = $current_outputs_statu
 
 # Open the database and execute a query returning the last row in the table
 $db = new SQLite3($SQLITE_DATABASE_FILE_NAME) or print('<h1>Unable to open database!!!</h1>');
-
-
-
-
-
 
 $query_results = $db->query('SELECT * FROM greenhouse ORDER BY id DESC LIMIT 1;') or print('<h1>Database select query failed</h1>');
 
@@ -162,23 +197,8 @@ while ($row_returned = $query_results->fetchArray())
    print "  </table>\n";
 }
 
-
-
-
-
-
-
-
-
 print "      </td>";
 print "      <td valign=\"top\">";
-
-
-
-
-
-
-
 
 
 $timestamp = date('Y/m/d H:i:s A');
@@ -217,15 +237,7 @@ print "        <tr>\n";
 print "        </tr>\n";
 print "    <tbody>\n";
 print "</table>\n";
-
-
-
-
 print "<br><br><h3 align=\"center\">Automation System Wiring Diagram<br><br><a href=\"/wiringhigh.png\"><img src=\"/wiringlow.png\" alt=\"Automation System Wiring Diagram\"><a></h3>";
-
-
-
-
 print "   </td>";
 print "   <td>";
 
@@ -254,49 +266,42 @@ print "   <td>";
     <input type="image" src="solenoid_valve_open.png" width="100" height="100" alt="Manually open the solenoid valve" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Close the solenoid valve manually:</td>
     <td align="center"><br><form action="closewatermanual.php" method="post">
     <input type="image" src="solenoid_valve_closed.png" width="100" height="100" alt="Manually close the solenoid valve" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Enable output one manually:</td>
     <td align="center"><br><form action="openoutputonemanual.php" method="post">
     <input type="image" src="out_put_on.png" width="100" height="100" alt="Manually enable output one" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Disable output one manually:</td>
     <td align="center"><br><form action="closeoutputonemanual.php" method="post">
     <input type="image" src="out_put_off.png" width="100" height="100" alt="Manually disable output one" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Enable output two manually:</td>
     <td align="center"><br><form action="openoutputtwomanual.php" method="post">
     <input type="image" src="out_put_on.png" width="100" height="100" alt="Manually enable output two" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Disable output two manually:</td>
     <td align="center"><br><form action="closeoutputtwomanual.php" method="post">
     <input type="image" src="out_put_off.png" width="100" height="100" alt="Manually disable output two" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Enable output three manually:</td>
     <td align="center"><br><form action="openoutputthreemanual.php" method="post">
     <input type="image" src="out_put_on.png" width="100" height="100" alt="Manually enable output three" border="1">
     </form></td>
   </tr>
-
   <tr>
     <td align="right">Disable output three manually:</td>
     <td align="center"><br><form action="closeoutputonemanual.php" method="post">
@@ -306,23 +311,12 @@ print "   <td>";
   </tr>
 </table>
 
-
 <?php
 
-
-
-
-
 print "<p align=\"center\">Note: Manually performed operations override all system values and are not logged or reflected anywhere in this system.</p>";
-
 print "   </td>";
 print "    </tr>";
 print "</table>";
-
-
-
- 
-
 
 
 
@@ -333,7 +327,6 @@ $query_results = $db->query('SELECT * FROM greenhouse ORDER BY id DESC LIMIT 720
 
 # make the table scrollable
 print "<div class=\"table-wrapper-scroll-y the-table-scrollbar\">\n";
-
 # display a table containing the last 24 hours of the environmental record
 print "<table class=\"table table-bordered table-striped mb-0\" align=\"center\">\n";
 print "    <thead>\n";
@@ -353,10 +346,8 @@ print "        </tr>\n";
 print "    </thead>\n";
 print "    <tbody>\n";
 
-
 while ($row_returned = $query_results->fetchArray())
 {
-
 	print "        <tr>\n";
 	print "         <td scope=\"row\">{$row_returned['luminosity']} Volts</td>\n";
 	print "         <td>{$row_returned['temperature']} F</td>\n";
@@ -370,17 +361,11 @@ while ($row_returned = $query_results->fetchArray())
 	print "         <td>{$row_returned['currentdate']}</td>\n";
 	print "         <td>{$row_returned['currenttime']}</td>\n";
 	print "        </tr>\n";
-
 }
 
 print "    <tbody>\n";
 print "</table>\n";
 print "</div>\n";
-
-
-
-
-
 
 
 # define the variables using during form submission
@@ -392,18 +377,22 @@ $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE = "";
 $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE = "";
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE = "";
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE = "";
+$SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = "";
+$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE = "";
+$SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE = "";
 
 # define the variables used to detect incomplete/unallowed form submission values
 $LINEAR_ACTUATOR_RUNTIME_VALUE_Err = "";
-$MINIMUM_LUMINOSITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "";
 $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "";
-$MINIMUM_HUMIDITY_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "";
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err = "";
 $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err = "";
 $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "";
 $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "";
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err = "";
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err = "";
+$SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err = "";
+$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_Err = "";
+$SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_Err = "";
 
 # define the file names of control values stored on disk
 $LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt';
@@ -414,6 +403,10 @@ $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME = '/var/www/html/mint
 $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME = '/var/www/html/minlumouttwooff.txt';
 $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME = '/var/www/html/minsoilsoleopen.txt';
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME = '/var/www/html/outtwotemlum.txt';
+$SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/soleoffsensch.txt';
+$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_FILE_NAME = '/var/www/html/solschtimesel.txt';
+$SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_FILE_NAME = '/var/www/html/solschruntim.txt';
+$SOLENOID_VALVE_SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME = '/var/www/html/solschtempcron.txt';
 
 # read linear actuator runtime value file name (seconds)
 $linear_actuator_runtime_file_pointer = fopen($LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME, "r") or die("Unable to open file!");
@@ -455,12 +448,28 @@ $output_two_configure_temperature_or_luminosity_file_pointer = fopen($OUTPUT_TWO
 $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE = fgets($output_two_configure_temperature_or_luminosity_file_pointer);
 fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 
+# read solenoid valve configuration between a state of off or soil moisture sensor values or a schedule (Off | Sensor | Schedule)
+$solenoid_valve_configure_off_sensor_schedule_file_pointer = fopen($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, "r") or die("Unable to open file initial read attempt!");
+$SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = fgets($solenoid_valve_configure_off_sensor_schedule_file_pointer);
+fclose($solenoid_valve_configure_off_sensor_schedule_file_pointer);
+
+# read solenoid valve time selection list item number value (0-9)
+$solenoid_valve_scheduled_time_selection_value_file_pointer = fopen($SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_FILE_NAME, "r") or die("Unable to open file initial read attempt!");
+$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE = fgets($solenoid_valve_scheduled_time_selection_value_file_pointer);
+fclose($solenoid_valve_scheduled_time_selection_value_file_pointer);
+
+# read solenoid valve open runtime value (time in minutes)
+$solenoid_valve_scheduled_open_runtime_value_file_pointer = fopen($SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_FILE_NAME, "r") or die("Unable to open file initial read attempt!");
+$SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE = fgets($solenoid_valve_scheduled_open_runtime_value_file_pointer);
+fclose($solenoid_valve_scheduled_open_runtime_value_file_pointer);
+
+
 # process form submission data
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
 
 # clean the form input data values using test_input(), verify the data values are not blank, 
 # and verify the data values contain only allowed characters
-if (empty($_POST["LINEAR_ACTUATOR_RUNTIME_VALUE"])) {
+if (strlen($_POST['LINEAR_ACTUATOR_RUNTIME_VALUE']) == 0) {
   $LINEAR_ACTUATOR_RUNTIME_VALUE_Err = "LINEAR_ACTUATOR_RUNTIME_VALUE is required";
 } else {
   $LINEAR_ACTUATOR_RUNTIME_VALUE = test_input($_POST["LINEAR_ACTUATOR_RUNTIME_VALUE"]);
@@ -470,7 +479,7 @@ if (empty($_POST["LINEAR_ACTUATOR_RUNTIME_VALUE"])) {
 }
 }
 
-if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE"])) {
+if (strlen($_POST['MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE']) == 0) {
   $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE is required";
 } else {
   $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE = test_input($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE"]);
@@ -480,7 +489,7 @@ if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE"])) {
 }
 }
 
-if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE"])) {
+if (strlen($_POST['MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE']) == 0) {
   $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE is required";
 } else {
   $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE = test_input($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE"]);
@@ -490,7 +499,7 @@ if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE"])) {
 }
 }
 
-if (empty($_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE"])) {
+if (strlen($_POST['MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE']) == 0) {
   $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err = "MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE is required";
 } else {
   $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE = test_input($_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE"]);
@@ -500,7 +509,7 @@ if (empty($_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE"])) {
 }
 }
 
-if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
+if (strlen($_POST['MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE']) == 0) {
   $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE is required";
 } else {
   $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE = test_input($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE"]);
@@ -509,8 +518,7 @@ if (empty($_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
     $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "Only numbers allowed";
 }
 }
-
-if (empty($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
+if (strlen($_POST['MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE']) == 0) {
   $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "TEMPLATE is required";
 } else {
   $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE = test_input($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE"]);
@@ -519,8 +527,7 @@ if (empty($_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE"])) {
     $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err = "Only letters and white space allowed";
 }
 }
-
-if (empty($_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE"])) {
+if (strlen($_POST['MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE']) == 0) {
   $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err = "MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE is required";
 } else {
   $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE = test_input($_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE"]);
@@ -529,8 +536,7 @@ if (empty($_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE"])) {
     $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err = "Only numbers allowed";
 }
 }
-
-if (empty($_POST["OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE"])) {
+if (strlen($_POST['OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE']) == 0) {
   $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err = "OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE is required";
 } else {
   $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE = test_input($_POST["OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE"]);
@@ -539,7 +545,38 @@ if (empty($_POST["OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VAL
     $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err = "Only letters allowed";
 }
 }
+############print "*****XOXOXOXOXGot a SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE from the incoming form of: $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE";
+if (strlen($_POST['SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE']) == 0) {
+  $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err = "SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE is required";
+} else {
+  $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = test_input($_POST["SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE"]);
+  // check if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE only contains letters and whitespace
+  if (!preg_match("/^[a-zA-Z]*$/",$SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)) {
+    $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err = "Only letters allowed";
+}
+}
 
+if (strlen($_POST['SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE']) == 0) {
+  $SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_Err = "SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE is required";
+} else {
+  $SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE = test_input($_POST["SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE"]);
+  // check if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE only contains numbers
+  if (!preg_match("/^[0-9\.]*$/",$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE)) {
+    $SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_Err = "Only numbers allowed";
+}
+}
+
+if (strlen($_POST['SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE']) == 0) {
+  $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_Err = "SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE is required";
+} else {
+  $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE = test_input($_POST["SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE"]);
+  // check if OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE only contains numbers
+  if (!preg_match("/^[0-9\.]*$/",$SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE)) {
+    $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_Err = "Only numbers allowed";
+}
+}
+
+# if a successful POST is performed write the values to the configuration files
 if ($_SERVER["REQUEST_METHOD"] == "POST" &&
     empty($LINEAR_ACTUATOR_RUNTIME_VALUE_Err) &&
     empty($MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err) &&
@@ -548,14 +585,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" &&
     empty($MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err) &&
     empty($MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err) &&
     empty($MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err) &&
-    empty($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err))
+    empty($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err) &&
+    empty($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err) &&
+    empty($SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_Err) &&
+    empty($SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_Err))
+          
 
 {
 
+# read the incoming form values if no errors exist after the parse of input
+$LINEAR_ACTUATOR_RUNTIME_VALUE = $_POST["LINEAR_ACTUATOR_RUNTIME_VALUE"];
+$MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE = $_POST["MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE"];
+$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE = $_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_ONE_OFF_VALUE"];
+$MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE = $_POST["MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE"];
+$MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE = $_POST["MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE"];
+$MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE = $_POST["MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE"];
+$MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE = $_POST["MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE"];
+$OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE = $_POST["OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE"];
+$SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = $_POST["SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE"];
+$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE = $_POST["SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE"];
+$SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE = $_POST["SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE"];
+
 # display a saved values confirmation message when successful
 print "<br><br><br>\n<h2 align=\"center\" style=\"color:blue;\">Automation system configuration values saved!</h2>\n";
-
-}
 
 # write linear actuator runtime value file name (seconds)
 $linear_actuator_runtime_file_pointer = fopen($LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME, "w") or die("Unable to open file!");
@@ -597,7 +649,40 @@ $output_two_configure_temperature_or_luminosity_file_pointer = fopen($OUTPUT_TWO
 fwrite($output_two_configure_temperature_or_luminosity_file_pointer, $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE);
 fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 
+# write solenoid valve configuration between a state of off or soil moisture sensor values or a schedule (Off | Sensor | Schedule)
+$solenoid_valve_configure_off_sensor_schedule_file_pointer = fopen($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, "w") or die("Unable to open file write attempt!");
+fwrite($solenoid_valve_configure_off_sensor_schedule_file_pointer, $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE);
+fclose($solenoid_valve_configure_off_sensor_schedule_file_pointer);
+
+# write solenoid valve time selection list item number value (0-9)
+$solenoid_valve_scheduled_time_selection_value_file_pointer = fopen($SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_FILE_NAME, "w") or die("Unable to open file write attempt!");
+fwrite($solenoid_valve_scheduled_time_selection_value_file_pointer, $SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE);
+fclose($solenoid_valve_scheduled_time_selection_value_file_pointer);
+
+# write solenoid valve open runtime value (time in minutes)
+$solenoid_valve_scheduled_open_runtime_value_file_pointer = fopen($SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_FILE_NAME, "w") or die("Unable to open file write attempt!");
+fwrite($solenoid_valve_scheduled_open_runtime_value_file_pointer, $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE);
+fclose($solenoid_valve_scheduled_open_runtime_value_file_pointer);
+
+# define the conditional evaluation process for either adding the time schedule (crontab entry) or removing the crontab entry
+if ($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE != "Off" && $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE != "Sensor") {
+
+       $list_of_predefined_crontab_configurations[$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE] .= "\n\n";
+       $solenoid_valve_scheduled_temporary_crontab_configuration_value_file_pointer = fopen($SOLENOID_VALVE_SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, "w") or die("Unable to open file!");
+       fwrite($solenoid_valve_scheduled_temporary_crontab_configuration_value_file_pointer, $list_of_predefined_crontab_configurations[$SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE]);
+       fclose($solenoid_valve_scheduled_temporary_crontab_configuration_value_file_pointer);
 }
+
+if ($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE != 'Schedule') {
+       $solenoid_valve_scheduled_temporary_crontab_configuration_value_file_pointer = fopen($SOLENOID_VALVE_SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, "w") or die("Unable to open file!");
+       fwrite($solenoid_valve_scheduled_temporary_crontab_configuration_value_file_pointer, "#\n\n");
+       fclose($solenoid_valve_scheduled_temporary_crontab_configuration_value_file_pointer);
+}
+          
+
+}
+}
+        
 
 # display a form containing the system configuration values
 ?>
@@ -605,23 +690,25 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
 <h2 align="center">Automation System Configuration Values<br>
 <span class="error">* required field</span></h2>
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
- <table style="width:50%" align="center">
+ <table style="width:70%" align="center">
   <tr>
-    <th style="width:80%;">Value Description</th>
-    <th style="width:20%;">Value</th> 
+    <th style="width:50%;">Value Description</th>
+    <th style="width:50%;">Value</th> 
   </tr>
   <tr>
-    <td align="right">LINEAR_ACTUATOR_RUNTIME_VALUE: =</td>
+    <td align="right">LINEAR_ACTUATOR_RUNTIME_VALUE: =<br><br>
+		      Logic: Length of time in seconds to perform linear actuator extension or retraction.
+   </td>
     <td align="left"><br><input type="text" name="LINEAR_ACTUATOR_RUNTIME_VALUE" size="5" value="<?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE;?>">
   <span class="error">Seconds * <?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE_Err;?></span>
-  <br><br>
+  <br><br><br><br>
     </td>
   </tr>
   <tr>
     <td align="right">MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE: <=<br><br>
 		      Logic: When the temperature reaches the minimum specified value retract the actuator (Close Window)
     </td>
-    <td align="left"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE;?>"
+    <td align="left"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE;?>">"
   <span class="error">Degrees F * <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span><br><br><br>
    <br>
     </td>
@@ -643,7 +730,7 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Temperature") echo "checked";?> value="Temperature">Temperature*<br>
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Luminosity") echo "checked";?> value="Luminosity">Luminosity
   <span class="error">* <?php echo $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err;?></span>
-  <br>
+  <br><br>
     </td>
   </tr>
   <tr>
@@ -665,17 +752,70 @@ fclose($output_two_configure_temperature_or_luminosity_file_pointer);
     </td>
   </tr>
   <tr>
-    <td align="right">MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE: >=</td>
+    <td align="right">SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE:<br><br>
+		      Logic: Select between no watering, scheduled watering, or soil moisture sensor based watering.
+    </td>
+    <td align="left"><br>
+  <input type="radio" name="SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Off") echo "checked";?> value="Off">Off*<br>
+  <input type="radio" name="SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Schedule") echo "checked";?> value="Schedule">Schedule*<br>
+  <input type="radio" name="SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
+  <span class="error"><?php echo $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
+  <br><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE:<br><br>
+		      Logic: Select a predefined watering schedule applied during scheduled watering.
+    </td>
+    <td align="left">
+
+  <?php
+
+    $temporary_counter_value = 0;
+
+    while ($temporary_counter_value < sizeof($list_of_predefined_crontab_configuration_descriptions)) {
+
+       print "<input type=\"radio\" name=\"SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE\" "; 
+       if (isset($SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE) && trim($SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE) == $temporary_counter_value) print "checked ";
+       print "value=\"";
+       print "$temporary_counter_value";
+       print "\"";
+       print ">";
+       print $list_of_predefined_crontab_configuration_descriptions[$temporary_counter_value];
+       print "*<br>\n";
+       $temporary_counter_value++;
+} 
+
+;?>
+
+<span class="error"><?php echo $SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_Err;?></span>
+  <br>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE: =<br><br>
+		      Logic: Length of watering in minutes applied during schedule based watering.
+
+    </td>
+    <td align="left"><br><input type="text" name="SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE" size="5" value="<?php echo $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE;?>">
+  <span class="error">Minutes * <?php echo $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_Err;?></span>
+  <br><br><br><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE: >=<br><br>
+		      Logic: Soil moisture sensor value in volts applied during sesnor based watering.
+    </td>
     <td align="left"><br><input type="text" name="MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE" size="5" value="<?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE;?>">
   <span class="error">Volts 0-5 * <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err;?></span>
-  <br><br>
+  <br><br><br><br>
     </td>
   </tr>
  </table>
   <center>
     <input type="image" src="save_settings.png" width="100" height="100" alt="Save automation system configuration values">
 </form>
-</center>
+ </center>
 <br><br>
 
 <?php
@@ -692,11 +832,9 @@ function test_input($data) {
   return $data;
 }
 
-
-
-
 ?>
  </center>
 </body>
 </html>
+
 

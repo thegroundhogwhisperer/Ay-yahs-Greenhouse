@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # manual operation of the linear actuator extension
 import time
 import automationhat
