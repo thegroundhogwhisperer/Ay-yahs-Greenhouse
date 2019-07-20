@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-# greenhouse.py Version 1.02
+# greenhouse.py Version 1.03
 # Copyright (C) 2019 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -172,6 +172,9 @@ MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME = '/var/www/htm
 
 # output two configuration between using temperature or luminosity value file name (Temperature | Luminosity)
 OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME = '/var/www/html/outtwotemlum.txt'
+
+# solenoid valve configuration between off, sensor based watering, or scheduled watering (Off | Sensor | Schedule)
+SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/soleoffsensch.txt';
 
 # luminosity graph image local output file name
 GRAPH_IMAGE_LUMINOSITY_FILE_NAME = "/var/www/html/ghouselumi.png"
@@ -350,6 +353,21 @@ def read_control_values_from_files():
 
 		print ("An error occurred reading file name: ", OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME)
 		quit()
+
+	try: 
+		global SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE
+		# read the output two control configuration value switching between temperature or luminosity from a file
+		solenoid_valve_configuration_between_off_sensor_schedule_value_file_handle = open(SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, 'r')
+		SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = solenoid_valve_configuration_between_off_sensor_schedule_value_file_handle.readline()
+		solenoid_valve_configuration_between_off_sensor_schedule_value_file_handle.close()
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Read SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE from file", SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
+		
+	except OSError:
+
+		print ("An error occurred reading file name: ", SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME)
+		quit()
+
+
 
 
 
@@ -1213,34 +1231,41 @@ def evaluate_environmental_conditions_perform_automated_responses():
 			output_status = 'Off'
 			current_output_status = control_outputs(output_number, output_status)
 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if the solenoid valve should be open or closed")
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value >= float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN))
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN))
 
-	# evaluate if the solenoid valve should be open or closed
-	if (current_soil_moisture_sensor_value >= float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
+	# evaluate if temperature controls output two
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if the solenoid valve is configured in a state of: Off or Schedule or Sensor. Only continue if the value is Sensor.")
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE == 'Sensor':", SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Disabling output #1 to conserve power for the solenoid valve")
+	if (SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE.rstrip() == 'Sensor'):
 
-		# disable output one
-		output_number = 0
-		output_status = 'Off'
-		current_output_status = control_outputs(output_number, output_status)
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if the solenoid valve should be open or closed")
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value >= float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN))
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN", current_soil_moisture_sensor_value, float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN))
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Opening the solenoid valve now")
+		# evaluate if the solenoid valve should be open or closed
+		if (current_soil_moisture_sensor_value >= float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
 
-		# enable relay three opening the solenoid valve
-		solenoid_valve_status = 'Open'
-		solenoid_valve_operation(solenoid_valve_status)
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Disabling output #1 to conserve power for the solenoid valve")
+
+			# disable output one
+			output_number = 0
+			output_status = 'Off'
+			current_output_status = control_outputs(output_number, output_status)
+
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Opening the solenoid valve now")
+
+			# enable relay three opening the solenoid valve
+			solenoid_valve_status = 'Open'
+			solenoid_valve_operation(solenoid_valve_status)
 
 
-	elif (current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
+		elif (current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Closing the solenoid valve now")
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Closing the solenoid valve now")
 
-		# disable relay three closing the solenoid valve
-		solenoid_valve_status = 'Closed'
-		solenoid_valve_operation(solenoid_valve_status)
+			# disable relay three closing the solenoid valve
+			solenoid_valve_status = 'Closed'
+			solenoid_valve_operation(solenoid_valve_status)
 
 
 # begin Sqlite database, CSV file, and graph image updates

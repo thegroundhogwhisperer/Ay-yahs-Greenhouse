@@ -1,0 +1,1 @@
+0 12 * * * /var/www/html/opensolenoidtimer.py # Water daily at noon
