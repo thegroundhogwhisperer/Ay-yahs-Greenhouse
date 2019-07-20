@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-# greenhousegtkcontrol.py Version 1.02 - Ay-yah's Greenhouse Desktop Interface GUI
+# greenhousegtkcontrol.py Version 1.03 - Ay-yah's Greenhouse Desktop Interface GUI
 # Copyright (C) 2019 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -66,10 +66,11 @@ class MyWindow(Gtk.Window):
 		# Set the window size
 		self.set_size_request(400, 300)
 		self.set_border_width(10)
+		self.move(900, 100)
 		# Create a a vertical container box 
 		self.box = Gtk.VBox(spacing=0)
 		self.add(self.box)
-
+		
 		# Construct a Gtk image object
 		img = Gtk.Image()
 		# Set the image data from the contents of a file
@@ -299,7 +300,7 @@ class DialogWindow(Gtk.Window):
 		Gtk.Window.__init__(self, title="Historic Environmental Record")
 		self.set_default_size(975, 350)
 		self.set_border_width(10)
-
+		self.move(200, 500)
 		# Make the window scrollable
 		scrolled_window = Gtk.ScrolledWindow()
 		scrolled_window.set_border_width(10)
@@ -468,7 +469,7 @@ class Large_Image_Window(Gtk.Window):
 		# Create the window object, set the title, and set the size
 		Gtk.Window.__init__(self, title="High Resolution Camera Image")
 		self.set_default_size(640, 480)
-
+		self.move(150, 100)
 		# Create a scrollable window
 		scrolled_window = Gtk.ScrolledWindow()
 		scrolled_window.set_border_width(10)
@@ -539,7 +540,10 @@ class System_Configuration_Window(Gtk.Window):
 					"http://{}/mintemouttwooff.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/minlumouttwooff.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/minsoilsoleopen.txt".format(IP_GREENHOUSE_PI),
-					"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI)]
+					"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/soleoffsensch.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/solschtimesel.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/solschruntim.txt".format(IP_GREENHOUSE_PI)]
 
 		global LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
 		global MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE
@@ -549,11 +553,15 @@ class System_Configuration_Window(Gtk.Window):
 		global MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE
 		global MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE
 		global OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE
+		global SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+		global SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+		global SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE
+
 
 		remote_control_values_list = []
 		temporary_counter_variable = 0
 
-		while (temporary_counter_variable < 8):
+		while (temporary_counter_variable < 11):
 			print ("Fetching automation system control values")
 			print ("Fetching URL: ", REMOTE_VARIABLE_URLS[temporary_counter_variable])
 
@@ -584,11 +592,15 @@ class System_Configuration_Window(Gtk.Window):
 		MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = remote_control_values_list[5]
 		MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = remote_control_values_list[6]
 		OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = remote_control_values_list[7]
+		SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = remote_control_values_list[8]
+		SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = remote_control_values_list[9]
+		SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = remote_control_values_list[10]
 
 		# Create the window object, set the title, and set the size
 		Gtk.Window.__init__(self, title="Automation System Configuration")
 		self.set_default_size(100, 200)
 		self.set_hexpand(False)
+		self.move(100, 50)
 		# Create a a vertical container box 
 		self.box = Gtk.VBox(spacing=0)
 		self.add(self.box)
@@ -673,7 +685,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
 
 		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote = Gtk.Label(xalign=1)
-		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_text('Minimum Soil Moisture Open Solenoid Valve:')
+		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_text('Minimum Moisture Sensor Open Solenoid:')
 		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote = Gtk.Entry()
@@ -689,7 +701,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote.set_justify(Gtk.Justification.LEFT)
 
 		temperature_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Temperature")
-		temperature_radio_button.connect("toggled", self.on_button_toggled, "1")
+		temperature_radio_button.connect("toggled", self.on_button_toggled_1, "0")
 
 		if OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE == 'Temperature': temperature_radio_button.set_active(True)
 
@@ -698,12 +710,189 @@ class System_Configuration_Window(Gtk.Window):
 
 		if OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE == 'Luminosity': luminosity_radio_button.set_active(True)
 
-		luminosity_radio_button.connect("toggled", self.on_button_toggled, "2")
+		luminosity_radio_button.connect("toggled", self.on_button_toggled_1, "1")
+
+
+
+
+
+
+		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote.set_text('Solenoid Valve Off OR Schedule OR Sensor:')
+		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		solenoid_valve_configuration_off_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Off")
+
+		solenoid_valve_configuration_off_radio_button.connect("toggled", self.on_button_toggled_2, "0")
+
+		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Off': solenoid_valve_configuration_off_radio_button.set_active(True)
+
+		solenoid_valve_configuration_schedule_radio_button = Gtk.RadioButton.new_from_widget(solenoid_valve_configuration_off_radio_button)
+
+		solenoid_valve_configuration_schedule_radio_button.set_label("Schedule")
+
+		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Schedule': solenoid_valve_configuration_schedule_radio_button.set_active(True)
+
+		solenoid_valve_configuration_schedule_radio_button.connect("toggled", self.on_button_toggled_2, "1")
+
+		solenoid_valve_configuration_sensor_radio_button = Gtk.RadioButton.new_from_widget(solenoid_valve_configuration_off_radio_button)
+		solenoid_valve_configuration_sensor_radio_button.set_label("Sensor")
+
+		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Sensor': solenoid_valve_configuration_sensor_radio_button.set_active(True)
+
+		solenoid_valve_configuration_sensor_radio_button.connect("toggled", self.on_button_toggled_2, "2")
+
+
+		label_radio_buttons_solenoid_valve_scheduled_time_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_solenoid_valve_scheduled_time_value_remote.set_text('Solenoid Valve Scheduled Time Selection:')
+		label_radio_buttons_solenoid_valve_scheduled_time_value_remote.set_justify(Gtk.Justification.LEFT)
+
+
+		label_entry_solenoid_valve_scheduled_open_runtime_value_remote = Gtk.Label(xalign=1)
+		label_entry_solenoid_valve_scheduled_open_runtime_value_remote.set_text('Solenoid Valve Scheduled Open Runtime:')
+		label_entry_solenoid_valve_scheduled_open_runtime_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		self.entry_solenoid_valve_scheduled_open_runtime_value_remote = Gtk.Entry()
+		self.entry_solenoid_valve_scheduled_open_runtime_value_remote.set_text(str(SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE))
+		self.entry_solenoid_valve_scheduled_open_runtime_value_remote.set_activates_default(True)
+
+		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit = Gtk.Label(xalign=0)
+		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit.set_text('Minutes')
+		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit.set_justify(Gtk.Justification.LEFT)
+
+
+
+
+		label_empty_spacer_for_table_local_0 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_0.set_text(' ')
+		label_empty_spacer_for_table_local_0.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_1 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_1.set_text(' ')
+		label_empty_spacer_for_table_local_1.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_2 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_2.set_text(' ')
+		label_empty_spacer_for_table_local_2.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_3 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_3.set_text(' ')
+		label_empty_spacer_for_table_local_3.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_4 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_4.set_text(' ')
+		label_empty_spacer_for_table_local_4.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_5 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_5.set_text(' ')
+		label_empty_spacer_for_table_local_5.set_justify(Gtk.Justification.LEFT)
+
+		### Need a list and a while loop that produces a radio button for each element
+		# define the descriptions of the crontab configuration values for opening the solenoid valve
+		list_of_predefined_crontab_configuration_descriptions = [
+					"Water Daily Every Two Minutes",
+					"Water Daily @ 12AM",
+					"Water Daily @ 6AM",
+					"Water Daily @ 12PM",
+					"Water Daily @ 6PM",
+					"Water Twice Daily @ 12AM & 12PM",
+					"Water Thrice Daily @ 8AM & 4PM & 12AM",
+					"Water Every Two Days @ 12AM",
+					"Water Every Two Days @ 6AM",
+					"Water Every Two Days @ 12PM",
+					"Water Every Two Days @ 6PM",
+					"Water Every Three Days @ 12AM",
+					"Water Every Three Days @ 6AM",
+					"Water Every Three Days @ 12PM",
+					"Water Every Three Days @ 6PM",
+					"Water Weekly Sunday @ Midnight",
+					]
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_0 = Gtk.RadioButton.new_with_label_from_widget(None, list_of_predefined_crontab_configuration_descriptions[0])
+		solenoid_valve_scheduled_time_value_remote_radio_button_0.connect("toggled", self.on_button_toggled_3, "0")
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '0': solenoid_valve_scheduled_time_value_remote_radio_button_0.set_active(True)
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_1 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_1.set_label(list_of_predefined_crontab_configuration_descriptions[1])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '1': solenoid_valve_scheduled_time_value_remote_radio_button_1.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_1.connect("toggled", self.on_button_toggled_3, "1")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_2 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_2.set_label(list_of_predefined_crontab_configuration_descriptions[2])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '2': solenoid_valve_scheduled_time_value_remote_radio_button_2.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_2.connect("toggled", self.on_button_toggled_3, "2")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_3 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_3.set_label(list_of_predefined_crontab_configuration_descriptions[3])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '3': solenoid_valve_scheduled_time_value_remote_radio_button_3.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_3.connect("toggled", self.on_button_toggled_3, "3")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_4 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_4.set_label(list_of_predefined_crontab_configuration_descriptions[4])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '4': solenoid_valve_scheduled_time_value_remote_radio_button_4.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_4.connect("toggled", self.on_button_toggled_3, "4")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_5 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_5.set_label(list_of_predefined_crontab_configuration_descriptions[5])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '5': solenoid_valve_scheduled_time_value_remote_radio_button_5.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_5.connect("toggled", self.on_button_toggled_3, "5")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_6 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_6.set_label(list_of_predefined_crontab_configuration_descriptions[6])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '6': solenoid_valve_scheduled_time_value_remote_radio_button_6.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_6.connect("toggled", self.on_button_toggled_3, "6")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_7 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_7.set_label(list_of_predefined_crontab_configuration_descriptions[7])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '7': solenoid_valve_scheduled_time_value_remote_radio_button_7.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_7.connect("toggled", self.on_button_toggled_3, "7")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_8 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_8.set_label(list_of_predefined_crontab_configuration_descriptions[8])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '8': solenoid_valve_scheduled_time_value_remote_radio_button_8.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_8.connect("toggled", self.on_button_toggled_3, "8")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_9 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_9.set_label(list_of_predefined_crontab_configuration_descriptions[9])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '9': solenoid_valve_scheduled_time_value_remote_radio_button_9.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_9.connect("toggled", self.on_button_toggled_3, "9")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_10 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_10.set_label(list_of_predefined_crontab_configuration_descriptions[10])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '10': solenoid_valve_scheduled_time_value_remote_radio_button_10.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_10.connect("toggled", self.on_button_toggled_3, "10")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_11 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_11.set_label(list_of_predefined_crontab_configuration_descriptions[11])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '11': solenoid_valve_scheduled_time_value_remote_radio_button_11.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_11.connect("toggled", self.on_button_toggled_3, "11")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_12 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_12.set_label(list_of_predefined_crontab_configuration_descriptions[12])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '12': solenoid_valve_scheduled_time_value_remote_radio_button_12.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_12.connect("toggled", self.on_button_toggled_3, "12")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_13 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_13.set_label(list_of_predefined_crontab_configuration_descriptions[13])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '13': solenoid_valve_scheduled_time_value_remote_radio_button_13.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_13.connect("toggled", self.on_button_toggled_3, "13")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_14 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_14.set_label(list_of_predefined_crontab_configuration_descriptions[14])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '14': solenoid_valve_scheduled_time_value_remote_radio_button_14.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_14.connect("toggled", self.on_button_toggled_3, "14")
+
+		solenoid_valve_scheduled_time_value_remote_radio_button_15 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
+		solenoid_valve_scheduled_time_value_remote_radio_button_15.set_label(list_of_predefined_crontab_configuration_descriptions[15])
+		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '15': solenoid_valve_scheduled_time_value_remote_radio_button_15.set_active(True)
+		solenoid_valve_scheduled_time_value_remote_radio_button_15.connect("toggled", self.on_button_toggled_3, "15")
+
+
 
 		button_post_form_values = Gtk.Button.new_with_label("Save Settings")
 		button_post_form_values.connect("clicked", self.on_button_post_form_values_clicked)
 
-		layout_table = Gtk.Table(10, 3, False)
+		layout_table = Gtk.Table(39, 3, False)
 		self.box.add(layout_table)
 		layout_table.set_border_width(10)
 		layout_table.attach(label_entry_actuator_runtime, 0, 1, 0, 1)
@@ -718,24 +907,75 @@ class System_Configuration_Window(Gtk.Window):
 		layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote, 0, 1, 3, 4)
 		layout_table.attach(self.entry_minimum_humidity_sensor_output_one_off_value_remote, 1, 2, 3, 4)
 		layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit, 2, 3, 3, 4)
-		layout_table.attach(label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote, 0, 1, 4, 5)
-		layout_table.attach(temperature_radio_button, 1, 2, 4, 5)
-		layout_table.attach(luminosity_radio_button, 2, 3, 4, 5)
-		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote, 0, 1, 5, 6)
-		layout_table.attach(self.entry_minimum_temperature_sensor_output_two_off_value_remote, 1, 2, 5, 6)
-		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit, 2, 3, 5, 6)
-		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote, 0, 1, 6, 7)
-		layout_table.attach(self.entry_minimum_luminosity_sensor_output_two_off_value_remote, 1, 2, 6, 7)
-		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit, 2, 3, 6, 7)
-		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 0, 1, 7, 8)
-		layout_table.attach(self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 1, 2, 7, 8)
-		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit, 2, 3, 7, 8)
-		layout_table.attach(button_post_form_values, 0, 3, 8, 9)
+
+		layout_table.attach(label_empty_spacer_for_table_local_0, 0, 1, 4, 5)
+
+		layout_table.attach(label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote, 0, 1, 5, 6)
+		layout_table.attach(temperature_radio_button, 1, 2, 5, 6)
+		layout_table.attach(luminosity_radio_button, 1, 2, 6, 7)
+
+		layout_table.attach(label_empty_spacer_for_table_local_1, 0, 1, 9, 10)
+
+		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote, 0, 1, 10, 11)
+		layout_table.attach(self.entry_minimum_temperature_sensor_output_two_off_value_remote, 1, 2, 10, 11)
+		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit, 2, 3, 10, 11)
+
+		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote, 0, 1, 11, 12)
+		layout_table.attach(self.entry_minimum_luminosity_sensor_output_two_off_value_remote, 1, 2, 11, 12)
+		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit, 2, 3, 11, 12)
 
 
-	def on_button_toggled(self, button, name):
 
-		# define the variable
+		layout_table.attach(label_empty_spacer_for_table_local_2, 0, 1, 12, 13)
+
+		layout_table.attach(label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote, 0, 1, 13, 14)
+		layout_table.attach(solenoid_valve_configuration_off_radio_button, 1, 2, 13, 14)
+		layout_table.attach(solenoid_valve_configuration_schedule_radio_button, 1, 2, 14, 15)
+		layout_table.attach(solenoid_valve_configuration_sensor_radio_button, 1, 2, 15, 16)
+
+		layout_table.attach(label_empty_spacer_for_table_local_3, 0, 1, 16, 17)
+
+
+
+
+
+		layout_table.attach(label_radio_buttons_solenoid_valve_scheduled_time_value_remote, 0, 1, 17, 18)
+
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_0, 1, 2, 17, 18)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_1, 1, 2, 18, 19)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_2, 1, 2, 20, 21)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_3, 1, 2, 21, 22)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_4, 1, 2, 22, 23)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_5, 1, 2, 23, 24)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_6, 1, 2, 24, 25)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_7, 1, 2, 25, 26)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_8, 1, 2, 26, 27)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_9, 1, 2, 27, 28)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_10, 1, 2, 28, 29)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_11, 1, 2, 29, 30)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_12, 1, 2, 30, 31)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_13, 1, 2, 31, 32)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_14, 1, 2, 32, 33)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_15, 1, 2, 33, 34)
+
+		layout_table.attach(label_empty_spacer_for_table_local_4, 0, 1, 34, 35)
+
+		layout_table.attach(label_entry_solenoid_valve_scheduled_open_runtime_value_remote, 0, 1, 35, 36)
+		layout_table.attach(self.entry_solenoid_valve_scheduled_open_runtime_value_remote, 1, 2, 35, 36)
+		layout_table.attach(label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit, 2, 3, 35, 36)
+
+		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 0, 1, 36, 37)
+		layout_table.attach(self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 1, 2, 36, 37)
+		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit, 2, 3, 36, 37)
+
+		layout_table.attach(label_empty_spacer_for_table_local_5, 0, 1, 37, 38)
+
+		layout_table.attach(button_post_form_values, 0, 3, 38, 39)
+
+
+	def on_button_toggled_1(self, button, name):
+
+		# define the global variable
 		global OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE
 
 		if button.get_active():
@@ -744,10 +984,54 @@ class System_Configuration_Window(Gtk.Window):
 		else:
 			state = "off"
 
-		if (name == '1') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Temperature'
-		if (name == '2') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Luminosity'
+		if (name == '0') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Temperature'
+		if (name == '1') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = 'Luminosity'
 
-		print ("OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE is set to:", OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE)
+
+	def on_button_toggled_2(self, button, name):
+
+		# define the variable
+		global SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Off'
+		if (name == '1') and (state == 'on'): SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Schedule'
+		if (name == '2') and (state == 'on'): SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Sensor'
+
+
+	def on_button_toggled_3(self, button, name):
+
+		# define the variable
+		global SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 0
+		if (name == '1') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 1
+		if (name == '2') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 2
+		if (name == '3') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 3
+		if (name == '4') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 4
+		if (name == '5') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 5
+		if (name == '6') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 6
+		if (name == '7') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 7
+		if (name == '8') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 8
+		if (name == '9') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 9
+		if (name == '10') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 10
+		if (name == '11') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 11
+		if (name == '12') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 12
+		if (name == '13') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 13
+		if (name == '14') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 14
+		if (name == '15') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 15
+		if (name == '16') and (state == 'on'): SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 16
 
 
 	# Define the functions performed when a button is selected/clicked
@@ -760,6 +1044,7 @@ class System_Configuration_Window(Gtk.Window):
 		MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = self.entry_minimum_temperature_sensor_output_two_off_value_remote.get_text()
 		MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = self.entry_minimum_luminosity_sensor_output_two_off_value_remote.get_text()
 		MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.get_text()
+		SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = self.entry_solenoid_valve_scheduled_open_runtime_value_remote.get_text()
 
 		print("Saving Settings...")
 
@@ -772,7 +1057,10 @@ class System_Configuration_Window(Gtk.Window):
 					'MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE' : MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE,
 					'MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE' : MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE,
 					'MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE' : MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE,
-					'OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE' : OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE }
+					'OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE' : OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE,
+					'SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE' : SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE,
+					'SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE' : SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE,
+					'SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE' :  SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE }
 
 		print ("Submitting configuration values:")
 		print (post_form_values)
