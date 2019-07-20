@@ -1,7 +1,6 @@
 <?php
 
-system("sudo python /var/www/html/closewatermanual.py");
-
+system("python /var/www/html/closewatermanual.py");
 
 ?>
 

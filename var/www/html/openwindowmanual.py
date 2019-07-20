@@ -1,8 +1,6 @@
-#!/usr/bin/env python
 # manual operation of the linear actuator extension
 import time
-import automationhat
-time.sleep(0.1) # short pause after ads1015 class creation recommended
+import subprocess
 
 # linear actuator runtime value file name (seconds)
 LINEAR_ACTUATOR_RUNTIME_VALUE_FILE_NAME = '/var/www/html/actuatorruntime.txt'
@@ -23,12 +21,16 @@ except OSError:
 
 print("Linear actuator manual extension operation starting.")
 
-# toggle relay #2 on to extend the linear actuator
-automationhat.relay.one.toggle()
+# toggle relay #1 on to extend the linear actuator
+pigsGPIOCommandLine = ["/usr/bin/pigs", "w 13 1"]
+p = subprocess.Popen(pigsGPIOCommandLine)
+
 time.sleep(float(LINEAR_ACTUATOR_RUN_TIME_VALUE))
 
-# toggle relay #2 off
-automationhat.relay.one.toggle()
+# toggle relay #1 off
+pigsGPIOCommandLine = ["/usr/bin/pigs", "w 13 0"]
+p = subprocess.Popen(pigsGPIOCommandLine)
+
 print("Linear actuator manual extension operation complete.")
 
 

@@ -654,14 +654,14 @@ $solenoid_valve_configure_off_sensor_schedule_file_pointer = fopen($SOLENOID_VAL
 fwrite($solenoid_valve_configure_off_sensor_schedule_file_pointer, $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE);
 fclose($solenoid_valve_configure_off_sensor_schedule_file_pointer);
 
-# If the solenoid valve is open when the system irrigation configuration
+# If the the solenoid valve is open when the sytem irrigation configuration
 # is changed to (Off | Schedule | Sensor) the solenoid valve could remain open indefinitely.
 # Close the solenoid valve and write the status as 'Closed'
 # The subsequent executions of greenhouse.py or the crontab executed scheduled watering
-# opensolenoidtimer.py should return the solenoid valve to the appropriate state.
+# opensolenoidtimer.py should retun the solenoid valve to the appropriate state.
 #
 # close the solenoid valve now
-system("sudo python /var/www/html/closewatermanual.py");
+system("python /var/www/html/closewatermanual.py");
 
 # write the solenoid valve status to a text file on disk instead of to/from the SQLite database file
 $solenoid_status_file_pointer = fopen($SOLENOID_STATUS_FILE_NAME, "w") or die("Unable to open file!");
