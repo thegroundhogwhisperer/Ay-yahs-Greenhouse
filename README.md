@@ -23,6 +23,9 @@ https://github.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/wiki
 
 ![Greenhouse Web Interface Screenshot One](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Web%20Interface%20Screenshot%20One.png)
 
+# Example web interface screenshot
+
+![GreenhousePi Mounted Enclosure](https://raw.githubusercontent.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/master/Images/Greenhouse%20Mounted%20Enclosure%20Small%20Image.png)
 
 # Example camera images
 
