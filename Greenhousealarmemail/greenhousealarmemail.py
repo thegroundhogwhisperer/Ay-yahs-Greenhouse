@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousealarmemail.py					##
+## Application file name: greenhousealarmemail.py		    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Produces alarm notifications via email/SMS			##
-## Description: 													##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Produces alarm notifications via email/SMS	    ##
+## Description: 						    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #    
 # This script runs on the GreenhousePi and sends email/SMS notifications when temperature values are too high
