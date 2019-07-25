@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousesendrttyemail.py				##
+## Application file name: greenhousesendrttyemail.py		    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Locates text transmissions from Fldigi and sends   	##
-## Description: the text data via email/SMS							##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Locates text transmissions from Fldigi and sends    ##
+## Description: the text data via email/SMS			    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # This script monitors the /talk/textout.txt file produced by Fldigi 
