@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-
-# greenhouseserveremailalarm.py Version 1.02 - Ay-yah's Greenhouse server email/SMS alarm notification script
+#
+######################################################################
+## Application file name: greenhousealarmemail.py					##
+## Description: A component of Ay-yahs-Greenhouse Automation System ##
+## Description: Produces alarm notifications via email/SMS			##
+## Description: 													##
+## Version: 1.03													##
+## Project Repository: https://git.io/fhhsY							##
+## Copyright (C) 2019 The Groundhog Whisperer						##
+######################################################################
+#    
 # This script runs on the GreenhousePi and sends email/SMS notifications when temperature values are too high
 # or low or soil moisture values are too high.
-# Copyright (C) 2019 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -69,7 +77,7 @@ SMTP_SERVER_LOGIN_NAME = 'somefromaddress@email.example'
 SMTP_SERVER_LOGIN_PASSWORD = 'shhhhaplaintextpasswordvalue'
 
 # Tag line appended to the RTTY tranmission data
-email_message_tag_line = ' Alert courtesy Ay-Yah\'s Horticultural Automation Systems @GitHub: https://git.io/fhhsY'
+EMAIL_MESSAGE_TAG_LINE = ' Alert courtesy Ay-Yah\'s Horticultural Automation Systems @GitHub: https://git.io/fhhsY'
 
 
 # Read the database for the last environmental status values
@@ -127,7 +135,7 @@ def greenhousepi_server_check_values_send_email_alarm():
 	compare_temperature_status_minimum_maximum_soil_moisture_maximum(current_temperature, current_soil_moisture_sensor_value)
 
 
-# evaluate temperature alarm status
+# Evaluate temperature alarm status
 def compare_temperature_status_minimum_maximum_soil_moisture_maximum(current_temperature, current_soil_moisture_sensor_value):
 
 	# Initilize the message content variable
@@ -181,7 +189,7 @@ def send_email_alert_notification(email_message_content):
 	msg['Subject'] = ""
 
 	# Append the tag line to the message body
-	email_message_content = email_message_content + email_message_tag_line
+	email_message_content = email_message_content + EMAIL_MESSAGE_TAG_LINE
 	print (email_message_content)
 
 	# Populate the message content with message body
