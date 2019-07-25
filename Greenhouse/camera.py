@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: camera.py									##
+## Application file name: camera.py				    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Reads luminosity sensor and produces image data  	##
-## Description: from a camera.										##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Reads luminosity sensor and produces image data     ##
+## Description: from a camera.					    ##
+## Version: 1.03					 	    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
