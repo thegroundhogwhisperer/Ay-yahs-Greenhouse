@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousealarm-notify-send.py			##
+## Application file name: greenhousealarm-notify-send.py	    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Performs alarm noitifications on an Ubuntu desktop	##
-## Description: 													##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Performs alarm noitifications on an Ubuntu desktop  ##
+## Description: 						    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # A Python script that retrieves the latest
