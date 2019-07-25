@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousesendsstvemail.py				##
+## Application file name: greenhousesendsstvemail.py		    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Locates image transmissions from QSSTV and sends  	##
-## Description: the images via email/SMS							##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Locates image transmissions from QSSTV and sends    ##
+## Description: the images via email/SMS			    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # Produces:
