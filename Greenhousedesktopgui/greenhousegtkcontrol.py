@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousegtkcontrol.py					##
+## Application file name: greenhousegtkcontrol.py		    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Graphical desktop user interface for greenhouse		##
-## Description: monitoring and configuration interface application	##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Graphical desktop user interface for greenhouse	    ##
+## Description: monitoring and configuration interface application  ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
