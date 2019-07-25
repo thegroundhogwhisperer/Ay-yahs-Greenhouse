@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousestatusttsrttysstvrf.py			##
+## Application file name: greenhousestatusttsrttysstvrf.py	    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Produces GUI notification, text-to-speech, RTTY,  	##
-## Description: SSTV audio for radio frequency transmission			##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Produces GUI notification, text-to-speech, RTTY,    ##
+## Description: SSTV audio for radio frequency transmission	    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 #
