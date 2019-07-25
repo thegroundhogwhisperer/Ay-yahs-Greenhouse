@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhouse.py								##
+## Application file name: greenhouse.py				    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Performs the primary greenhouse automation process.	##
-## Description: 													##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Performs the primary greenhouse automation process. ##
+## Description: 						    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
