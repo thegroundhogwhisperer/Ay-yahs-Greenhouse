@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-
-# greenhousegtkcontrol.py Version 1.03 - Ay-yah's Greenhouse Desktop Interface GUI
-# Copyright (C) 2019 The Groundhog Whisperer
+#
+######################################################################
+## Application file name: greenhousegtkcontrol.py					##
+## Description: A component of Ay-yahs-Greenhouse Automation System ##
+## Description: Graphical desktop user interface for greenhouse		##
+## Description: monitoring and configuration interface application	##
+## Version: 1.03													##
+## Project Repository: https://git.io/fhhsY							##
+## Copyright (C) 2019 The Groundhog Whisperer						##
+######################################################################
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -204,52 +211,52 @@ class MyWindow(Gtk.Window):
 
 	# Define the functions performed when a button is selected/clicked
 	def on_button0_clicked(self, widget):
-		print("Turning Fan On")
+		print ("Turning Fan On")
 		remote_command_number_option = 0
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button1_clicked(self, widget):
-		print("Turning Fan Off")
+		print ("Turning Fan Off")
 		remote_command_number_option = 1
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button2_clicked(self, widget):
-		print("Turning Light On")
+		print ("Turning Light On")
 		remote_command_number_option = 2
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button3_clicked(self, widget):
-		print("Turning Light Off")
+		print ("Turning Light Off")
 		remote_command_number_option = 3
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button4_clicked(self, widget):
-		print("Turning Unused Output Three On")
+		print ("Turning Unused Output Three On")
 		remote_command_number_option = 4
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button5_clicked(self, widget):
-		print("Turning Unused Output Three Off")
+		print ("Turning Unused Output Three Off")
 		remote_command_number_option = 5
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button6_clicked(self, widget):
-		print("Opening Solenoid Valve")
+		print ("Opening Solenoid Valve")
 		remote_command_number_option = 6
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button7_clicked(self, widget):
-		print("Closing Solenoid Valve")
+		print ("Closing Solenoid Valve")
 		remote_command_number_option = 7
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button8_clicked(self, widget):
-		print("Opening Window")
+		print ("Opening Window")
 		remote_command_number_option = 8
 		fetch_url_trigger_event(remote_command_number_option)
 
 	def on_button9_clicked(self, widget):
-		print("Closing Window")
+		print ("Closing Window")
 		remote_command_number_option = 9
 		fetch_url_trigger_event(remote_command_number_option)
 
@@ -438,7 +445,7 @@ def fetch_greenhouse_data():
 
 	if last_row_exists:
 
-		# print('(Record Returned): {}'.format(last_row_exists))
+		# print ('(Record Returned): {}'.format(last_row_exists))
 		last_row_greenhouse_table_sqlite3 = last_row_exists
 		current_database_record_id = last_row_greenhouse_table_sqlite3[0]
 		current_luminosity_sensor_value = last_row_greenhouse_table_sqlite3[1]
@@ -1046,7 +1053,7 @@ class System_Configuration_Window(Gtk.Window):
 		MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote.get_text()
 		SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = self.entry_solenoid_valve_scheduled_open_runtime_value_remote.get_text()
 
-		print("Saving Settings...")
+		print ("Saving Settings...")
 
 		remote_post_form_url = "http://{}/index.php".format(IP_GREENHOUSE_PI)
 
