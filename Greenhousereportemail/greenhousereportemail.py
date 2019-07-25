@@ -1,9 +1,17 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 # encoding: utf-8
-
-# greenhousereportemail.py Version 1.03 - Ay-yah's GreenhousePi server email report notification script
+#
+######################################################################
+## Application file name: greenhousereportemail.py					##
+## Description: A component of Ay-yahs-Greenhouse Automation System ##
+## Description: Sends status report notifications via email		  	##
+## Description: 													##
+## Version: 1.03													##
+## Project Repository: https://git.io/fhhsY							##
+## Copyright (C) 2019 The Groundhog Whisperer						##
+######################################################################
+#
 # This script runs on the GreenhousePi and sends email reports containing system status information.
-# Copyright (C) 2019 The Groundhog Whisperer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -83,6 +91,9 @@ SMTP_SERVER_LOGIN_NAME = 'somefromaddress@email.example'
 
 # SMTP server password
 SMTP_SERVER_LOGIN_PASSWORD = 'shhhhaplaintextpasswordvalue'
+
+# Email message subject line
+EMAIL_MESSAGE_SUBJECT_LINE = "Ay-yah's Greenhouse Status Report"
 
 # Tag line appended to the email data
 EMAIL_MESSAGE_TAG_LINE = 'Report notification courtesy Ay-Yah\'s Horticultural Automation Systems @GitHub: https://git.io/fhhsY'
@@ -290,7 +301,7 @@ def send_email_report_notification():
 	
 	# Define the message subject
 	# email_subject = "Ay-yah's Greenhouse Status Report: {0}".format(current_time_stamp)
-	email_subject = "Ay-yah's Greenhouse Status Report"
+	email_subject = EMAIL_MESSAGE_SUBJECT_LINE
 	msg['Subject'] = Header(email_subject, 'utf-8').encode()
 
 	# Create the text based message content object that is 'plain'
