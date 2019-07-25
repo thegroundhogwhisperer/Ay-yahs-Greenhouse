@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousesendrttyemailalarm.py			##
+## Application file name: greenhousesendrttyemailalarm.py	    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Locates text and image transmissions from Fldigi  	##
-## Description: and QSSTV sending email/SMS at specific values		##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Locates text and image transmissions from Fldigi    ##
+## Description: and QSSTV sending email/SMS at specific values	    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # Produces:
