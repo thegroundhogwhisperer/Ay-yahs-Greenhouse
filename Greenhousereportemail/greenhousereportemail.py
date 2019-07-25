@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: greenhousereportemail.py					##
+## Application file name: greenhousereportemail.py		    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Sends status report notifications via email		  	##
-## Description: 													##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Sends status report notifications via email	    ##
+## Description: 						    ##
+## Version: 1.03						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # This script runs on the GreenhousePi and sends email reports containing system status information.
