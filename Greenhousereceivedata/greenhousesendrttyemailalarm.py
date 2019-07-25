@@ -1,11 +1,15 @@
+#!/usr/bin/env python
 # encoding: utf-8
-
-# greenhousesendrttyemailalarm.py
-# Copyright (C) 2019 The Groundhog Whisperer
 #
-# Requirements: 
-# Fldigi - digital modem program for hamradio operators
-# Python 3
+######################################################################
+## Application file name: greenhousesendrttyemailalarm.py			##
+## Description: A component of Ay-yahs-Greenhouse Automation System ##
+## Description: Locates text and image transmissions from Fldigi  	##
+## Description: and QSSTV sending email/SMS at specific values		##
+## Version: 1.03													##
+## Project Repository: https://git.io/fhhsY							##
+## Copyright (C) 2019 The Groundhog Whisperer						##
+######################################################################
 #
 # Produces:
 # Email messages containing RTTY data received via a radio tranmissions when specific values are received
@@ -33,158 +37,188 @@ from email.headerregistry import Address
 from ssl import SSLContext, PROTOCOL_TLSv1_2
 import glob
 
-# Set the alarm notification constant values
+# Set the alarm notification constants
 # Soil moisture must be greater than n
-soil_moisture_too_low_value = 1.80
-# Temperature must be greater than n
-temperature_too_high_value = 100
-# Temperature must be less than n
-temperature_too_low_value = 31
+SOIL_MOISTURE_SENSOR_VALUE_TOO_LOW = 1.80
 
+# Temperature must be greater than n
+TEMPERATURE_SENSOR_VALUE_TOO_HIGH = 100
+
+# Temperature must be less than n
+TEMPERATURE_SENSOR_VALUE_TOO_LOW = 31
+
+# Local file text file that stores the last good time stamp value
+LAST_RTTY_UNIX_EPOCH_TIME_STAMP_FILE_NAME = '/home/livestream/lastepochalarm.txt'
+
+# Path and file name to the Fldigi textout.txt file
+# Enabled under Fldigi Configuration->Misc->Text i/o->Capture rx text to external file->Enable rx text stream
+FLDIGI_TEXT_OUT_FILE_NAME = '/home/livestream/.fldigi/talk/textout.txt'
+
+# RTTY radio call sign from (DE) header value - replace with radio transmitters licensed call sign value
+RTTY_FROM_CALL_SIGN_HEADER = 'DE NOCALL'
+
+# Define the senders email address value
+SENDERS_EMAIL_ADDRESS = 'somefromaddress@email.example'
+
+# Define the destination email address values list 
+DESTINATION_EMAIL_ADDRESS_LIST = ['sometoaddress@email.example', 'sometoaddress@email.example']
+
+# SMTP email servers host name
+EMAIL_SMTP_SERVER_HOST_NAME = 'smtp.email.example'
+		
+# SMTP server user name
+SMTP_SERVER_LOGIN_NAME = 'somefromaddress@email.example'
+
+# SMTP server password
+SMTP_SERVER_LOGIN_PASSWORD = 'shhhhaplaintextpasswordvalue'
+
+# Tag line appended to the RTTY tranmission data
+LIVE_STEAM_URL_MESSAGE_TAG_LINE = ' Voice/RTTY/SSTV Live Stream: http://0.0.0.0:8000/greenhouse.mp3 GitHub: https://git.io/fhhsY'
 
 def send_rtty_sms_message():
 
-    # Tag line appended to the RTTY tranmission data
-    live_stream_url_message_tag_line = ' Voice/RTTY/SSTV: http://0.0.0.0:8000/greenhouse.mp3 GitHub: https://git.io/fhhsY'
+	# Open the file for read
+	last_rtty_unix_epoch_time_stamp_file_list = open(LAST_RTTY_UNIX_EPOCH_TIME_STAMP_FILE_NAME,'r')
+	# Read the file
+	latest_rtty_time_stamp_sent = last_rtty_unix_epoch_time_stamp_file_list.read()
+	# Close the file
+	last_rtty_unix_epoch_time_stamp_file_list.close()
+	# Print what we have stored in the text file as the last good time stamp value
+	print ('last time stamp')
+	print (latest_rtty_time_stamp_sent)
 
-    # Local file text file that stores the last good time stamp value
-    last_rtty_unix_epoch_time_stamp_file = '/home/livestream/lastepochalarm.txt'
-    # Open the file for read
-    last_rtty_unix_epoch_time_stamp_file_list = open(last_rtty_unix_epoch_time_stamp_file,'r')
-    # Read the file
-    latest_rtty_time_stamp_sent = last_rtty_unix_epoch_time_stamp_file_list.read()
-    # Close the file
-    last_rtty_unix_epoch_time_stamp_file_list.close()
-    # Print what we have stored in the text file as the last good time stamp value
-    print('last time stamp')
-    print(latest_rtty_time_stamp_sent)
+	# Open the file to read
+	fldigi_text_out_file_list = open(FLDIGI_TEXT_OUT_FILE_NAME,'r')
 
-    # Path and file name to the Fldigi textout.txt file
-    # Enabled under Fldigi Configuration->Misc->Text i/o->Capture rx text to external file->Enable rx text stream
-    fldigi_text_out_file = '/home/livestream/.fldigi/talk/textout.txt'
-    # Open the file to read
-    fldigi_text_out_file_list = open(fldigi_text_out_file,'r')
+	# Define the lastmatched line value
+	last_match_found_with_call_sign = None
+	
+	# Loop through reading each line of the file
+	for line in fldigi_text_out_file_list.readlines():
+		
+		# Parse the line for the call sign
+		if RTTY_FROM_CALL_SIGN_HEADER in line:
+			last_match_found_with_call_sign = line
 
-    # Define the lastmatched line value
-    last_match_found_with_call_sign = None
-    # Loop through reading each line of the file
-    for line in fldigi_text_out_file_list.readlines():
-        # Parse the line for the call sign
-        if 'DE NOCALL' in line:
-            last_match_found_with_call_sign = line
-        # If we find a match for the call sign then search for the time stamp value
-        if last_match_found_with_call_sign is not None:
-            print (last_match_found_with_call_sign)
-            # Search for the prefix and suffix of the time stamp value (e.g. UNIX EPOCH: and .)
-            m = re.search('UNIX EPOCH: (.+?). ', last_match_found_with_call_sign)
-            if m:
-                # When we have a match set the found value to the time stamp value
-                found_rtty_time_stamp = m.group(1)
-                # When we have a match set the last_string_good_match value to the last line found with valid values
-                # If not the loop will continue and the last line of the text file will be returned instead of the last known good line
-                last_string_good_match = last_match_found_with_call_sign
+		# If we find a match for the call sign then search for the time stamp value
+		if last_match_found_with_call_sign is not None:
+			print (last_match_found_with_call_sign)
+			# Search for the prefix and suffix of the time stamp value (e.g. UNIX EPOCH: and .)
 
-            m = re.search('TEMP: (.+?) DEGREES, ', last_match_found_with_call_sign)
-            if m:
-                # When we have a match set the found value to the temperature value
-                found_temp_value = m.group(1)
-                # When we have a match set the last_string_good_match value to the last line found with valid values
-                # If not the loop will continue and the last line of the text file will be returned instead of the last known good line
-                last_good_match_temp_value = found_temp_value
+			m = re.search('UNIX EPOCH: (.+?). ', last_match_found_with_call_sign)
+			
+			if m:
+				# When we have a match set the found value to the time stamp value
+				found_rtty_time_stamp = m.group(1)
+				# When we have a match set the last_string_good_match value to the last line found with valid values
+				# If not the loop will continue and the last line of the text file will be returned instead of the last known good line
+				last_string_good_match = last_match_found_with_call_sign
 
-            m = re.search('SOIL MOISTURE: (.+?) VOLTS, ', last_match_found_with_call_sign)
-            if m:
-                # When we have a match set the found value to the temperature value
-                found_soil_moisture_value = m.group(1)
-                # When we have a match set the last_string_good_match value to the last line found with valid values
-                # If not the loop will continue and the last line of the text file will be returned instead of the last known good line
-                last_good_match_soil_moisture_value = found_soil_moisture_value
+			m = re.search('TEMP: (.+?) DEGREES, ', last_match_found_with_call_sign)
+			
+			if m:
+				# When we have a match set the found value to the temperature value
+				found_temp_value = m.group(1)
+				# When we have a match set the last_string_good_match value to the last line found with valid values
+				# If not the loop will continue and the last line of the text file will be returned instead of the last known good line
+				last_good_match_temp_value = found_temp_value
 
-    print("Soil Moisture Value:\n")
-    print(last_good_match_soil_moisture_value)
+			m = re.search('SOIL MOISTURE: (.+?) VOLTS, ', last_match_found_with_call_sign)
+			
+			if m:
+				# When we have a match set the found value to the temperature value
+				found_soil_moisture_value = m.group(1)
+				# When we have a match set the last_string_good_match value to the last line found with valid values
+				# If not the loop will continue and the last line of the text file will be returned instead of the last known good line
+				last_good_match_soil_moisture_value = found_soil_moisture_value
 
-    print("Temperature Value\n")
-    print(last_good_match_temp_value)
+	print ("Soil Moisture Value:\n")
+	print (last_good_match_soil_moisture_value)
 
-    print(found_rtty_time_stamp, latest_rtty_time_stamp_sent)
-    print('last good string')
-    print(last_string_good_match)
+	print ("Temperature Value\n")
+	print (last_good_match_temp_value)
+	print (found_rtty_time_stamp, latest_rtty_time_stamp_sent)
+	
+	print ('last good string')
+	print (last_string_good_match)
 
-    # Need to not send if the last rtty time stamp value is not populated
-    # if the length of the second since unix epoch is less than ? exit and wait for a good value
-    if (len(found_rtty_time_stamp) < 10):
-        print('Invalid seconds since unix epoch found')
-        print(found_rtty_time_stamp)
-        print('Exiting')
-        return
+	# Need to not send if the last rtty time stamp value is not populated
+	# if the length of the second since unix epoch is less than ? exit and wait for a good value
+	if (len(found_rtty_time_stamp) < 10):
+		print ('Invalid seconds since unix epoch found')
+		print (found_rtty_time_stamp)
+		print ('Exiting')
+		return
 
-    # If we have a valid time stamp value we should send this RTTY data as an email through the SMTP server
-    if (found_rtty_time_stamp != latest_rtty_time_stamp_sent):
+	# If we have a valid time stamp value we should send this RTTY data as an email through the SMTP server
+	if (found_rtty_time_stamp != latest_rtty_time_stamp_sent):
 
-        if (float(last_good_match_soil_moisture_value) > soil_moisture_too_low_value):
-            message_subject = 'Alert! Soil Moisture Low: ' + last_good_match_soil_moisture_value + ' Volts!'
-            last_string_good_match = 'Attention! Soil Moisture Low: ' + last_good_match_soil_moisture_value + ' Go check the water supply now before the little plants all wither away!'
-            print(message_subject)
+		if (float(last_good_match_soil_moisture_value) > SOIL_MOISTURE_SENSOR_VALUE_TOO_LOW):
+			message_subject = 'Alert! Soil Moisture Low: ' + last_good_match_soil_moisture_value + ' Volts!'
+			last_string_good_match = 'Attention! Soil Moisture Low: ' + last_good_match_soil_moisture_value + ' Go check the water supply now before the little plants all wither away!'
+			print (message_subject)
 
-        if (float(last_good_match_temp_value) > temperature_too_high_value):
-            message_subject = 'Alert! Temperature Too High: ' + last_good_match_temp_value + '°!'
-            last_string_good_match = 'Attention! Temperature Too High: ' + last_good_match_temp_value + '°! Go check the fan and linear actuator now before the little plants all wither away!'
-            print(message_subject)
+		if (float(last_good_match_temp_value) > TEMPERATURE_SENSOR_VALUE_TOO_HIGH):
+			message_subject = 'Alert! Temperature Too High: ' + last_good_match_temp_value + '°!'
+			last_string_good_match = 'Attention! Temperature Too High: ' + last_good_match_temp_value + '°! Go check the fan and linear actuator now before the little plants all wither away!'
+			print (message_subject)
 
-        if (float(last_good_match_temp_value) < temperature_too_low_value):
-            message_subject = 'Alert! Temperature Too Low: ' + last_good_match_temp_value + '°!'
-            last_string_good_match = 'Attention! Temperature Too Low: ' + last_good_match_temp_value + '°! Go check heating pad, cover any small plants with container lids, make sure the window and door are closed, and consider maybe starting a little fire in the stove now before the little plants all freeze!'
-            print(message_subject)
+		if (float(last_good_match_temp_value) < TEMPERATURE_SENSOR_VALUE_TOO_LOW):
+			message_subject = 'Alert! Temperature Too Low: ' + last_good_match_temp_value + '°!'
+			last_string_good_match = 'Attention! Temperature Too Low: ' + last_good_match_temp_value + '°! Go check heating pad, cover any small plants with container lids, make sure the window and door are closed, and consider maybe starting a little fire in the stove now before the little plants all freeze!'
+			print (message_subject)
 
-        if (float(last_good_match_soil_moisture_value) < soil_moisture_too_low_value and float(last_good_match_temp_value) < temperature_too_high_value and float(last_good_match_temp_value) > temperature_too_low_value):
-            print('No conditions found for alarm notifications. Exiting.')
-            return
+		if (float(last_good_match_soil_moisture_value) < SOIL_MOISTURE_SENSOR_VALUE_TOO_LOW and float(last_good_match_temp_value) < TEMPERATURE_SENSOR_VALUE_TOO_HIGH and float(last_good_match_temp_value) > TEMPERATURE_SENSOR_VALUE_TOO_LOW):
+			print ('No conditions found for alarm notifications. Exiting.')
+			return
 
-        print('we should send this alarm...')
-        # Open for writing the last_rtty_unix_epoch_time_stamp_file_list file and record the last known good time stamp value
-        last_rtty_unix_epoch_time_stamp_file_list = open(last_rtty_unix_epoch_time_stamp_file,'w')
-        # Write the value to the file
-        last_rtty_unix_epoch_time_stamp_file_list.write(found_rtty_time_stamp)
-        # Close the file
-        last_rtty_unix_epoch_time_stamp_file_list.close()
+		print ('we should send this alarm.')
+		# Open for writing the last_rtty_unix_epoch_time_stamp_file_list file and record the last known good time stamp value
+		last_rtty_unix_epoch_time_stamp_file_list = open(LAST_RTTY_UNIX_EPOCH_TIME_STAMP_FILE_NAME,'w')
+		# Write the value to the file
+		last_rtty_unix_epoch_time_stamp_file_list.write(found_rtty_time_stamp)
+		# Close the file
+		last_rtty_unix_epoch_time_stamp_file_list.close()
 
+		# Creating an email object
+		msg = EmailMessage()
+		# Set the sender address
+		msg['From'] = SENDERS_EMAIL_ADDRESS
+		# Set the destination addresses
+		recipients = DESTINATION_EMAIL_ADDRESS_LIST
+		# recipients = [''sometoaddress@email.example']
+		# Join the recipients addresses into one string and set the destination values
+		msg['To'] = ", ".join(recipients)
+		# msg['To'] = recipients
+		# Set the message subject
+		msg['Subject'] = message_subject
+		# msg['Subject'] = 'RTTY/SMS courtesy Ay-Yah\'s Horticultural Automation Systems'
 
-        # Creating an email object
-        msg = EmailMessage()
-        # Set the sender address
-        msg['From'] = 'somefromaddress@email.example'
-        # Set the destination addresses
-        recipients = ['sometoaddress@email.example', 'sometoaddress@email.example']
-#        recipients = [''sometoaddress@email.example']
-        # Join the recipients addresses into one string and set the destination values
-        msg['To'] = ", ".join(recipients)
-#        msg['To'] = recipients
-        # Set the message subject
-        msg['Subject'] = message_subject
-#        msg['Subject'] = 'RTTY/SMS courtesy Ay-Yah\'s Horticultural Automation Systems'
+		# Append the tag line to the RTTY data string
+		last_string_good_match = last_string_good_match + LIVE_STEAM_URL_MESSAGE_TAG_LINE
+		print (last_string_good_match)
 
-        # Append the tag line to the RTTY data string
-        last_string_good_match = last_string_good_match + live_stream_url_message_tag_line
-        print(last_string_good_match)
+		# Populate the message content with the RTTY data
+		msg.set_content(last_string_good_match) 
 
-        # Populate the message content with the RTTY data
-        msg.set_content(last_string_good_match) 
+		# Send the email via smtp
+		with SMTP(host=EMAIL_SMTP_SERVER_HOST_NAME, port=587) as smtp_server:
+			
+			try:
+				
+				# Define a secure SSL connection
+				smtp_server.starttls(context=SSLContext(PROTOCOL_TLSv1_2))
+				# Supply authentication credentials
+				smtp_server.login(user=SMTP_SERVER_LOGIN_NAME, password=SMTP_SERVER_LOGIN_PASSWORD)
+				# Send the email message
+				smtp_server.send_message(msg)
 
-        # Send the email via smtp
-        with SMTP(host='smtp.email.example', port=587) as smtp_server:
-            try:
-                # Define a secure SSL connection
-                smtp_server.starttls(context=SSLContext(PROTOCOL_TLSv1_2))
-                # Supply authentication credentials
-                smtp_server.login(user='somefromaddress@email.example', password='shhhhapasswordvalue')
-                # Send the email message
-                smtp_server.send_message(msg)
+			except Exception as e:
+				
+				print ('Error sending email. Details: {} - {}'.format(e.__class__, e))
 
-            except Exception as e:
-                print('Error sending email. Details: {} - {}'.format(e.__class__, e))
-
-    # Close the Fldigi textout.txt file
-    fldigi_text_out_file_list.close()
+	# Close the Fldigi textout.txt file
+	fldigi_text_out_file_list.close()
 
 # Call the main subroutine
 send_rtty_sms_message()

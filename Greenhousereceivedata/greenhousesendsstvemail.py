@@ -1,12 +1,15 @@
-#!/usr/bin/python3.5
+#!/usr/bin/python3
 # encoding: utf-8
-
-# greenhousesendsstvemail.py
-# Copyright (C) 2019 The Groundhog Whisperer
 #
-# Requirements: 
-# QSSTV - Qt based slow scan television and fax
-# Python 3
+######################################################################
+## Application file name: greenhousesendsstvemail.py				##
+## Description: A component of Ay-yahs-Greenhouse Automation System ##
+## Description: Locates image transmissions from QSSTV and sends  	##
+## Description: the images via email/SMS							##
+## Version: 1.03													##
+## Project Repository: https://git.io/fhhsY							##
+## Copyright (C) 2019 The Groundhog Whisperer						##
+######################################################################
 #
 # Produces:
 # Email messages containing SSTV image data received via a radio tranmissions
@@ -31,76 +34,104 @@ from ssl import SSLContext, PROTOCOL_TLSv1_2
 import glob
 import os
 
+# Location containing QSSTV .PNG image files
+LOCATION_SSTV_IMAGE_FILES = '/home/livestream/*.png'
+
+# Local configuration file containing that last value image file name transmitted used to prevent retransmission of image data
+LAST_IMAGE_VALUE_FILE_NAME = '/home/livestream/lastimg.txt'
+
+# Define the senders email address value
+SENDERS_EMAIL_ADDRESS = 'somefromaddress@email.example'
+
+# Define the destination email address values list 
+DESTINATION_EMAIL_ADDRESS_LIST = ['sometoaddress@email.example', 'sometoaddress@email.example']
+
+# SMTP email servers host name
+EMAIL_SMTP_SERVER_HOST_NAME = 'smtp.email.example'
+		
+# SMTP server user name
+SMTP_SERVER_LOGIN_NAME = 'somefromaddress@email.example'
+
+# SMTP server password
+SMTP_SERVER_LOGIN_PASSWORD = 'shhhhaplaintextpasswordvalue'
+
+# Define the email message subject line value
+EMAIL_MESSAGE_SUBJECT_LINE = 'RTTY/SMS courtesy Ay-Yah\'s Horticultural Automation Systems'
+
 
 def send_sstv_email_message():
-    
-    # Return a list of path names for the folder containing the QSSTV image files
-    list_of_files = glob.glob('/home/livestream/*.png') 
-    # Return the latest image file found in the folder
-    latest_file = max(list_of_files, key=os.path.getctime)
+	
+	# Return a list of path names for the folder containing the QSSTV image files
+	list_of_files = glob.glob(LOCATION_SSTV_IMAGE_FILES) 
+	# Return the latest image file found in the folder
+	latest_file = max(list_of_files, key=os.path.getctime)
 
-    # Define the path and name of the text file storing the name of the last image file sent
-    last_image_name_list_file = '/home/livestream/lastimg.txt'
-    # Open the file for reading
-    last_image_name_list = open(last_image_name_list_file,'r')
-    # Read the value of the last image file sent
-    latest_image_name_sent = last_image_name_list.read()
-    # Close the file
-    last_image_name_list.close()
+	# Define the path and name of the text file storing the name of the last image file sent
+	last_image_name_list_file = LAST_IMAGE_VALUE_FILE_NAME
+	# Open the file for reading
+	last_image_name_list = open(last_image_name_list_file,'r')
+	# Read the value of the last image file sent
+	latest_image_name_sent = last_image_name_list.read()
+	# Close the file
+	last_image_name_list.close()
 
-    print('Youngist SSTV image file: ')
-    print(latest_file)
-    print('Last SSTV image file sent: ')
-    print(latest_image_name_sent)
+	print ('Youngist SSTV image file: ')
+	print (latest_file)
+	
+	print ('Last SSTV image file sent: ')
+	print (latest_image_name_sent)
 
-    # Compare the last record file name to the most recent file found in the folder to determine if we send email
-    if (latest_file != latest_image_name_sent):
-        print('We send now and record the file name.')
-        # Open the text file storing the name of the last image sent for writing
-        last_image_name_list = open(last_image_name_list_file,'w')
-        # Update the value stored in the text file with the new file name value we are sending now
-        last_image_name_list.write(latest_file)
-        # Close the file
-        last_image_name_list.close()
+	# Compare the last record file name to the most recent file found in the folder to determine if we send email
+	if (latest_file != latest_image_name_sent):
+		print ('We send now and record the file name.')
+		# Open the text file storing the name of the last image sent for writing
+		last_image_name_list = open(last_image_name_list_file,'w')
+		# Update the value stored in the text file with the new file name value we are sending now
+		last_image_name_list.write(latest_file)
+		# Close the file
+		last_image_name_list.close()
 
-        # Creating an email object
-        msg = EmailMessage()
-        # Set the sender address
-        msg['From'] = 'somefromaddress@email.example'
-        # Set the destination addresses
-        recipients = ['sometoaddress@email.example', 'sometoaddress@email.example']
-        # Join the recipients addresses into one string and set the destination values
-        msg['To'] = ", ".join(recipients)
-        # Set the message subject
-        msg['Subject'] = 'SSTV/SMS courtesy Ay-yah\'s Horticultural Automation Systems'    
+		# Creating an email object
+		msg = EmailMessage()
+		# Set the sender address
+		msg['From'] = SENDERS_EMAIL_ADDRESS
+		# Set the destination addresses
+		recipients = DESTINATION_EMAIL_ADDRESS_LIST
+		# Join the recipients addresses into one string and set the destination values
+		msg['To'] = ", ".join(recipients)
+		# Set the message subject
+		msg['Subject'] = EMAIL_MESSAGE_SUBJECT_LINE	
 
-        # Open the SSTV image file for reading in binary mode
-        fp = open(latest_file, 'rb')
-        # MIME encode image
-        att = MIMEImage(fp.read())
-        # Close the image file
-        fp.close()
+		# Open the SSTV image file for reading in binary mode
+		fp = open(latest_file, 'rb')
+		# MIME encode image
+		att = MIMEImage(fp.read())
+		# Close the image file
+		fp.close()
 
-        # Define the file name and prefix the file with our local second since Unix epoch time stamp
-        file_name = '%s_SSTV_Image.png' % time.time()
-        # Define the filename of the attached file
-        att.add_header('Content-Disposition', 'attachment', filename='%s' % file_name)
-        # Convert the message to multipart/mixed content
-        msg.make_mixed()
-        # Add the attachment to the multipart message content
-        msg.attach(att)
+		# Define the file name and prefix the file with our local second since Unix epoch time stamp
+		file_name = '%s_SSTV_Image.png' % time.time()
+		# Define the filename of the attached file
+		att.add_header('Content-Disposition', 'attachment', filename='%s' % file_name)
+		# Convert the message to multipart/mixed content
+		msg.make_mixed()
+		# Add the attachment to the multipart message content
+		msg.attach(att)
 
-        # Define the SMTP server connection
-        with SMTP(host=''smtp.email.example', port=587) as smtp_server:
-            try:
-                # Establish a secure SSL connection to the SMTP server
-                smtp_server.starttls(context=SSLContext(PROTOCOL_TLSv1_2))
-                # Provide authentication credentials
-                smtp_server.login(user='somefromaddress@email.example', password='shhhhapasswordvalue')
-                # Send the email message
-                smtp_server.send_message(msg)
+		# Define the SMTP server connection
+		with SMTP(host=EMAIL_SMTP_SERVER_HOST_NAME, port=587) as smtp_server:
+			
+			try:
+				
+				# Establish a secure SSL connection to the SMTP server
+				smtp_server.starttls(context=SSLContext(PROTOCOL_TLSv1_2))
+				# Provide authentication credentials
+				smtp_server.login(user=SMTP_SERVER_LOGIN_NAME, password=SMTP_SERVER_LOGIN_PASSWORD)
+				# Send the email message
+				smtp_server.send_message(msg)
 
-            except Exception as e:                
-                print('Error sending email. Details: {} - {}'.format(e.__class__, e))
+			except Exception as e:				
+				
+				print ('Error sending email. Details: {} - {}'.format(e.__class__, e))
 
 send_sstv_email_message()
