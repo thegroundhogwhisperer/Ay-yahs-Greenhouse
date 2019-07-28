@@ -6,7 +6,7 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Combines text-to-speeh, RTTY, SSTV audio as a	    ##
 ## Description: single audio file for use with play_audio.py	    ##
-## Version: 1.03						    ##
+## Version: 1.04						    ##
 ## Project Repository: https://git.io/fhhsY			    ##
 ## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
