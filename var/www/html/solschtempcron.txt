@@ -1,2 +1,0 @@
-0 */8 * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water thrice daily at 8AM and 4PM and 12AM
-
