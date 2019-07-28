@@ -22,7 +22,7 @@ except OSError:
 	print ("An error occurred reading file name: ", OUTPUTS_STATUS_FILE_NAME)
 	quit()
 
-# Linear actuator extension runtime length value during scheduled linear actuator regulation
+# Output two runtime length value during scheduled output regulation
 OUTPUT_TWO_SCHEDULED_ENABLE_RUNTIME_VALUE_FILE_NAME = '/var/www/html/outtwoschruntim.txt'
 
 try:

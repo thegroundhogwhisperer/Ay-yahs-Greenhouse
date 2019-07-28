@@ -28,7 +28,7 @@ LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE_FILE_NAME = '/var/www/html/linsch
 try:
 	# read linear actuator extension runtime value (time in minutes)
 	linear_actuator_scheduled_extension_runtime_value_file_pointer = open(LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE_FILE_NAME, 'r')
-	LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE_FILE_NAME = linear_actuator_scheduled_extension_runtime_value_file_pointer.readline().rstrip('\n')
+	LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE = linear_actuator_scheduled_extension_runtime_value_file_pointer.readline().rstrip('\n')
 	linear_actuator_scheduled_extension_runtime_value_file_pointer.close()
 	
 except OSError:
@@ -39,7 +39,7 @@ except OSError:
 
 print ("Linear actuator scheduled extension operation starting.\n")
 print ("Linear actuator runtime in seconds: ", LINEAR_ACTUATOR_RUN_TIME_VALUE)
-print ("Extending the linear acutator for the following time in minutes: ", LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE_FILE_NAME)
+print ("Extending the linear acutator for the following time in minutes: ", LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE)
 
 # toggle relay #1 on to extend the linear actuator
 pigsGPIOCommandLine = ["/usr/bin/pigs", "w 13 1"]
@@ -71,7 +71,7 @@ print ("Linear actuator scheduled extension operation complete.")
 
 
 # sleep before retracting the linear actuator
-time.sleep(float(LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE_FILE_NAME) * 60 ) 
+time.sleep(float(LINEAR_ACTUATOR_SCHEDULED_EXTEND_RUNTIME_VALUE) * 60 ) 
 
 print ("Linear actuator scheduled retraction operation starting.")
 
