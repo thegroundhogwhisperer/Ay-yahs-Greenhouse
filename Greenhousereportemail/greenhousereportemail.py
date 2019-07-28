@@ -163,7 +163,7 @@ def send_email_report_notification():
 
 	# Define the html based message content
 	email_message_html_content = '<html>' \
-			'<head><title>Ay-yah\'s Greenhouse Automation System Version 1.03</title>' \
+			'<head><title>Ay-yah\'s Greenhouse Automation System Version 1.04</title>' \
 			'<style>' \
 			'table, th, td {' \
 			'  border: 1px solid black;' \
