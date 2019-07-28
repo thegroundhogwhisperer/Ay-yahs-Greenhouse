@@ -6,7 +6,7 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Reads luminosity sensor and produces image data     ##
 ## Description: from a camera.					    ##
-## Version: 1.03					 	    ##
+## Version: 1.04					 	    ##
 ## Project Repository: https://git.io/fhhsY			    ##
 ## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
