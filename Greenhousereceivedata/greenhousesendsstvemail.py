@@ -6,7 +6,7 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Locates image transmissions from QSSTV and sends    ##
 ## Description: the images via email/SMS			    ##
-## Version: 1.03						    ##
+## Version: 1.04						    ##
 ## Project Repository: https://git.io/fhhsY			    ##
 ## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
