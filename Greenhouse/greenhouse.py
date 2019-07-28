@@ -6,7 +6,7 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Performs the primary greenhouse automation process. ##
 ## Description: 						    ##
-## Version: 1.03						    ##
+## Version: 1.04						    ##
 ## Project Repository: https://git.io/fhhsY			    ##
 ## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
@@ -93,7 +93,7 @@ SERIAL_LCD_DEVICE_NAME = '/dev/ttyACM0'
 DISPLAY_LCD_MESSAGE_LENGTH_SECONDS = .9
 
 # Messages broadcast via the wall command are suffixed with this string
-WALL_TERMINAL_MESSAGE_SUFFIX_STRING = "Ay-yahs.Greenhouse.Garden.Area.One.Version.1.02"
+WALL_TERMINAL_MESSAGE_SUFFIX_STRING = "Ay-yahs.Greenhouse.Garden.Area.One.Version.1.04"
 
 # Switch to enable or disable LCD screen messages True/False
 DISPLAY_LCD_SCREEN_MESSAGES_ACTIVE_SWTICH = False
@@ -176,8 +176,17 @@ MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME = '/var/www/htm
 # Output two configuration between using temperature or luminosity value file name (Temperature | Luminosity)
 OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME = '/var/www/html/outtwotemlum.txt'
 
+# Linear actuator configuration between off, sensor based operation, or scheduled operation (Off | Sensor | Schedule)
+LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/linoffsensch.txt'
+
+# Output one configuration between off, sensor based operation, or scheduled operation (Off | Sensor | Schedule)
+OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/outoneoffsensch.txt'
+
+# Output two configuration between off, sensor based operation, or scheduled operation (Off | Sensor | Schedule)
+OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/outtwooffsensch.txt'
+
 # Solenoid valve configuration between off, sensor based watering, or scheduled watering (Off | Sensor | Schedule)
-SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/soleoffsensch.txt';
+SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME = '/var/www/html/soleoffsensch.txt'
 
 # Luminosity graph image local output file name
 GRAPH_IMAGE_LUMINOSITY_FILE_NAME = "/var/www/html/ghouselumi.png"
@@ -301,7 +310,6 @@ def read_control_values_from_files():
 		quit()
 
 	try:
-		
 		global MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF 
 		# Read the minimum temperature sensor output two on value from a file
 		minimum_temperature_sensor_output_two_off_value_file_handle = open(MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, 'r')
@@ -315,7 +323,6 @@ def read_control_values_from_files():
 		quit()
 
 	try: 
-		
 		global MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF
 		# Read the minimum luminosity sensor output two on value from a file
 		minimum_luminosity_sensor_output_two_off_value_file_handle = open(MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_FILE_NAME, 'r')
@@ -329,7 +336,6 @@ def read_control_values_from_files():
 		quit()
 
 	try:
-		
 		global MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN
 		# Read the soil moisture sensor solenoid open value from a file
 		minimum_soil_moisture_sensor_solenoid_open_value_file_handle = open(MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_FILE_NAME, 'r')
@@ -343,7 +349,6 @@ def read_control_values_from_files():
 		quit()
 
 	try: 
-		
 		global OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY
 		# Read the output two control configuration value switching between temperature or luminosity from a file
 		output_two_configuration_value_file_handle = open(OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_FILE_NAME, 'r')
@@ -357,7 +362,45 @@ def read_control_values_from_files():
 		quit()
 
 	try:
+		global LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE
+		# Read the output two control configuration value switching between temperature or luminosity from a file
+		linear_actuator_configuration_between_off_sensor_schedule_value_file_handle = open(LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, 'r')
+		LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = linear_actuator_configuration_between_off_sensor_schedule_value_file_handle.readline()
+		linear_actuator_configuration_between_off_sensor_schedule_value_file_handle.close()
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Read LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE from file", LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
 		
+	except OSError:
+
+		print ("An error occurred reading file name: ", LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME)
+		quit()
+
+	try:
+		global OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE
+		# Read the output two control configuration value switching between temperature or luminosity from a file
+		output_one_configuration_between_off_sensor_schedule_value_file_handle = open(OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, 'r')
+		OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = output_one_configuration_between_off_sensor_schedule_value_file_handle.readline()
+		output_one_configuration_between_off_sensor_schedule_value_file_handle.close()
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Read OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE from file", OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
+		
+	except OSError:
+
+		print ("An error occurred reading file name: ", OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME)
+		quit()
+
+	try:
+		global OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE
+		# Read the output two control configuration value switching between temperature or luminosity from a file
+		output_two_configuration_between_off_sensor_schedule_value_file_handle = open(OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, 'r')
+		OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE = output_two_configuration_between_off_sensor_schedule_value_file_handle.readline()
+		output_two_configuration_between_off_sensor_schedule_value_file_handle.close()
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Read OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE from file", OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
+		
+	except OSError:
+
+		print ("An error occurred reading file name: ", OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME)
+		quit()
+
+	try:
 		global SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE
 		# Read the output two control configuration value switching between temperature or luminosity from a file
 		solenoid_valve_configuration_between_off_sensor_schedule_value_file_handle = open(SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_FILE_NAME, 'r')
@@ -1122,120 +1165,135 @@ def evaluate_environmental_conditions_perform_automated_responses():
 
 	# Evaulate if we close or open the window
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Performing evaluate_environmental_conditions_perform_automated_responses() comparison process now")
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate the linear actuator is configured in a state of: Off or Schedule or Sensor. Only continue if the value is Sensor.")
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE == 'Sensor':", OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
 
-	if (current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
-		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
-		):
+	if (LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE.rstrip() == 'Sensor'):
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Closing the window now")
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT), CURRENT_SOLENOID_VALVE_STATUS)
+		if (current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
+			CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
+			):
 
-		# Retract the linear actuator and close the window
-		actuator_extension_status = 'Retracted'
-		CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Closing the window now")
+
+			# Retract the linear actuator and close the window
+			actuator_extension_status = 'Retracted'
+			CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
 	
 
-	elif (current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
-		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
-		):
+		elif (current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_SENSOR_VALUE_ACTUATOR_RETRACT) and
+			CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
+			):
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Opening the window now")
-		# extend the linear actuator and open the window
-		actuator_extension_status = 'Extended'
-		CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Opening the window now")
+			# extend the linear actuator and open the window
+			actuator_extension_status = 'Extended'
+			CURRENT_ACTUATOR_EXTENSION_STATUS = linear_actuator_extension_retraction(actuator_extension_status)
 
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if output one is configured in a state of: Off or Schedule or Sensor. Only continue if the value is Sensor.")
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE == 'Sensor':", OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value >= float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value >= float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value < float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
+	if (OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE.rstrip() == 'Sensor'):
 
-	# Evaulate if we need to enable output #1 turn on the fan
-	if (current_temperature_sensor_value >= float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
-		current_humidity_sensor_value >= float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and
-		CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
-		 ):
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value >= float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value >= float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value < float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) or current_humidity_sensor_value < float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and CURRENT_SOLENOID_VALVE_STATUS == 'Closed':", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF), current_humidity_sensor_value, float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF), CURRENT_SOLENOID_VALVE_STATUS) 
 
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Enabling Output #1")
-		# Enable output one
-		output_number = 0
-		output_status = 'On'
-		current_output_status = control_outputs(output_number, output_status)
+		# Evaulate if we need to enable output #1 turn on the fan
+		if (current_temperature_sensor_value >= float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
+			current_humidity_sensor_value >= float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF) and
+			CURRENT_SOLENOID_VALVE_STATUS == 'Closed'
+			 ):
 
-	elif (current_temperature_sensor_value < float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
-		current_humidity_sensor_value < float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
-		):
-
-
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Disabling Output #1")
-
-		# Disable output one
-		output_number = 0
-		output_status = 'Off'
-		current_output_status = control_outputs(output_number, output_status)
-
-	# Evaluate if temperature controls output two
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if temperature or luminosity controls output #2")
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature':", OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
-
-	if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Temperature'):
-	#if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature'):
-
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turned on by temperature")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by temperature")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
-
-		# Evaulate if we need to enable output #2 turn on the USB heating pad
-		if (float(int(current_temperature_sensor_value)) <= float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
-
-			if DISPLAY_PROCESS_MESSAGES == True: print ("Enabling Output #2 by temperature")
-
-			# Enable output two
-			output_number = 1
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Enabling Output #1")
+			# Enable output one
+			output_number = 0
 			output_status = 'On'
 			current_output_status = control_outputs(output_number, output_status)
 
-		# Evaulate if we need to disable output #2 turn off the USB heating pad
-		elif (float(int(current_temperature_sensor_value)) > float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
+		elif (current_temperature_sensor_value < float(MINIMUM_TEMPERATURE_OUTPUT_ONE_OFF) and
+			current_humidity_sensor_value < float(MINIMUM_HUMIDITY_OUTPUT_ONE_OFF)
+			):
+
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Disabling Output #1")
+
+			# Disable output one
+			output_number = 0
+			output_status = 'Off'
+			current_output_status = control_outputs(output_number, output_status)
+
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if output two is configured in a state of: Off or Schedule or Sensor. Only continue if the value is Sensor.")
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE == 'Sensor':", OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
+
+	if (OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE.rstrip() == 'Sensor'):
+
+		# Evaluate if temperature controls output two
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if temperature or luminosity controls output #2")
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature':", OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
+
+		if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Temperature'):
+		#if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Temperature'):
+
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turned on by temperature")
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value <= float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by temperature")
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_temperature_sensor_value > float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF:", current_temperature_sensor_value, float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF))
+
+			# Evaulate if we need to enable output #2 turn on the USB heating pad
+			if (float(int(current_temperature_sensor_value)) <= float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
+
+				if DISPLAY_PROCESS_MESSAGES == True: print ("Enabling Output #2 by temperature")
+
+				# Enable output two
+				output_number = 1
+				output_status = 'On'
+				current_output_status = control_outputs(output_number, output_status)
+
+			# Evaulate if we need to disable output #2 turn off the USB heating pad
+			elif (float(int(current_temperature_sensor_value)) > float(MINIMUM_TEMPERATURE_OUTPUT_TWO_OFF)):
 			
-			if DISPLAY_PROCESS_MESSAGES == True: print ("Disable Output #2 by temperature")
+				if DISPLAY_PROCESS_MESSAGES == True: print ("Disable Output #2 by temperature")
 
-			# Disable output two
-			output_number = 1
-			output_status = 'Off'
-			current_output_status = control_outputs(output_number, output_status)
+				# Disable output two
+				output_number = 1
+				output_status = 'Off'
+				current_output_status = control_outputs(output_number, output_status)
 
-	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Luminosity':", OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if output two is configured in a state of: Off or Schedule or Sensor. Only continue if the value is Sensor.")
+	if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE == 'Sensor':", OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE)
 
-	# Evaluate if luminosity controls output two
-	if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Luminosity'):
+	if (OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE.rstrip() == 'Sensor'):
+
+		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY == 'Luminosity':", OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY)
+
+		# Evaluate if luminosity controls output two
+		if (OUTPUT_TWO_CONFIGURATION_VALUE_BETWEEN_TEMPERATURE_OR_LUMINOSITY.rstrip() == 'Luminosity'):
 		
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn on by luminosity")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF))
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by luminosity")
-		if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF))
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn on by luminosity")
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF))
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate output #2 turn off by luminosity")
+			if DISPLAY_PROCESS_MESSAGES == True: print ("Comparing current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF:", current_luminosity_sensor_value, float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF))
 
-		# Evaulate if we need to enable output #2 turn on the grow light
-		if (current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)):
+			# Evaulate if we need to enable output #2 turn on the grow light
+			if (current_luminosity_sensor_value <= float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)):
 
-			if DISPLAY_PROCESS_MESSAGES == True: print ("Enable Output #2 by luminosity")
+				if DISPLAY_PROCESS_MESSAGES == True: print ("Enable Output #2 by luminosity")
 
-			# Enable output two
-			output_number = 1
-			output_status = 'On'
-			current_output_status = control_outputs(output_number, output_status)
+				# Enable output two
+				output_number = 1
+				output_status = 'On'
+				current_output_status = control_outputs(output_number, output_status)
 
+			# Evaulate if we need to disable output #2 turn off the grow light
+			elif (current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)):
 
-		# Evaulate if we need to disable output #2 turn off the grow light
-		elif (current_luminosity_sensor_value > float(MINIMUM_LUMINOSITY_OUTPUT_TWO_OFF)):
+				if DISPLAY_PROCESS_MESSAGES == True: print ("Disable Output #2 by luminosity")
 
-			if DISPLAY_PROCESS_MESSAGES == True: print ("Disable Output #2 by luminosity")
-
-			# Disable output two
-			output_number = 1
-			output_status = 'Off'
-			current_output_status = control_outputs(output_number, output_status)
-
+				# Disable output two
+				output_number = 1
+				output_status = 'Off'
+				current_output_status = control_outputs(output_number, output_status)
 
 	# Evaluate if temperature controls output two
 	if DISPLAY_PROCESS_MESSAGES == True: print ("Evaluate if the solenoid valve is configured in a state of: Off or Schedule or Sensor. Only continue if the value is Sensor.")
@@ -1262,7 +1320,6 @@ def evaluate_environmental_conditions_perform_automated_responses():
 			# Enable relay three opening the solenoid valve
 			solenoid_valve_status = 'Open'
 			solenoid_valve_operation(solenoid_valve_status)
-
 
 		elif (current_soil_moisture_sensor_value < float(MINIMUM_SOIL_MOISTURE_SENSOR_VALUE_SOLENOID_OPEN)):
 
