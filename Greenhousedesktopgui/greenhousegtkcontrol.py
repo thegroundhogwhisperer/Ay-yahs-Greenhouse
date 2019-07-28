@@ -6,7 +6,7 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Graphical desktop user interface for greenhouse	    ##
 ## Description: monitoring and configuration interface application  ##
-## Version: 1.03						    ##
+## Version: 1.04						    ##
 ## Project Repository: https://git.io/fhhsY			    ##
 ## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
@@ -548,9 +548,20 @@ class System_Configuration_Window(Gtk.Window):
 					"http://{}/minlumouttwooff.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/minsoilsoleopen.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/outtwotemlum.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/linoffsensch.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/linschtimesel.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/linschruntim.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outoneoffsensch.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outoneschtimesel.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outoneschruntim.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outtwooffsensch.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outtwoschtimesel.txt".format(IP_GREENHOUSE_PI),
+					"http://{}/outtwoschruntim.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/soleoffsensch.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/solschtimesel.txt".format(IP_GREENHOUSE_PI),
 					"http://{}/solschruntim.txt".format(IP_GREENHOUSE_PI)]
+
+
 
 		global LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE
 		global MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_REMOTE
@@ -560,6 +571,15 @@ class System_Configuration_Window(Gtk.Window):
 		global MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE
 		global MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE
 		global OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE
+		global LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+		global LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+		global LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE
+		global OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+		global OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+		global OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE
+		global OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+		global OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+		global OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE
 		global SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
 		global SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
 		global SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE
@@ -568,7 +588,7 @@ class System_Configuration_Window(Gtk.Window):
 		remote_control_values_list = []
 		temporary_counter_variable = 0
 
-		while (temporary_counter_variable < 11):
+		while (temporary_counter_variable < 20):
 			print ("Fetching automation system control values")
 			print ("Fetching URL: ", REMOTE_VARIABLE_URLS[temporary_counter_variable])
 
@@ -599,33 +619,38 @@ class System_Configuration_Window(Gtk.Window):
 		MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE = remote_control_values_list[5]
 		MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE = remote_control_values_list[6]
 		OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE = remote_control_values_list[7]
-		SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = remote_control_values_list[8]
-		SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = remote_control_values_list[9]
-		SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = remote_control_values_list[10]
+		LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = remote_control_values_list[8]
+		LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = remote_control_values_list[9]
+		LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = remote_control_values_list[10]
+		OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = remote_control_values_list[11]
+		OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = remote_control_values_list[12]
+		OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = remote_control_values_list[13]
+		OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = remote_control_values_list[14]
+		OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = remote_control_values_list[15]
+		OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = remote_control_values_list[16]
+		SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = remote_control_values_list[17]
+		SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = remote_control_values_list[18]
+		SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE = remote_control_values_list[19]
 
 		# Create the window object, set the title, and set the size
-		Gtk.Window.__init__(self, title="Automation System Configuration")
-		self.set_default_size(100, 200)
-		self.set_hexpand(False)
-		self.move(100, 50)
-		# Create a a vertical container box 
-		self.box = Gtk.VBox(spacing=0)
-		self.add(self.box)
-
-		# Create a scrollable window
-		scrolled_window = Gtk.ScrolledWindow()
-		scrolled_window.set_border_width(10)
-		# There is always the scrollbar automaticaly or none if not needed
-		scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
+		Gtk.Window.__init__(self, title="Automation System Configuration Main")
+		self.set_title("Automation System Configuration Values")
+		self.set_size_request(850, 600)
+		self.move(150, 50)
+		scrolling_window = Gtk.ScrolledWindow()
+		layout_table = Gtk.Table(39, 3, False)
+		scrolling_window.add_with_viewport(layout_table)
 
 		label_entry_actuator_runtime = Gtk.Label(xalign=1)
 		label_entry_actuator_runtime.set_text('Linear Actuator Runtime: ')
 		label_entry_actuator_runtime.set_justify(Gtk.Justification.LEFT)
 
 		self.entry_actuator_runtime = Gtk.Entry()
-		self.entry_actuator_runtime.set_text(str(LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE))
+		self.entry_actuator_runtime.set_text(LINEAR_ACTUATOR_RUNTIME_VALUE_REMOTE)
 		self.entry_actuator_runtime.set_activates_default(True)
 		self.entry_actuator_runtime.set_width_chars(5)
+
+		layout_table.set_border_width(10)
 
 		label_entry_actuator_runtime_description_unit = Gtk.Label(xalign=0)
 		label_entry_actuator_runtime_description_unit.set_text('Seconds')
@@ -703,6 +728,7 @@ class System_Configuration_Window(Gtk.Window):
 		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit.set_text('Volts 0-5')
 		label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit.set_justify(Gtk.Justification.LEFT)
 
+
 		label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote = Gtk.Label(xalign=1)
 		label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote.set_text('Output #2 Mode Temperature OR Luminosity:')
 		label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote.set_justify(Gtk.Justification.LEFT)
@@ -719,56 +745,47 @@ class System_Configuration_Window(Gtk.Window):
 
 		luminosity_radio_button.connect("toggled", self.on_button_toggled_1, "1")
 
+		label_radio_buttons_linear_actuator_configuration_between_off_schedule_sensor_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_linear_actuator_configuration_between_off_schedule_sensor_value_remote.set_text('Linear Actuator Off OR Schedule OR Sensor:')
+		label_radio_buttons_linear_actuator_configuration_between_off_schedule_sensor_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		linear_actuator_configuration_off_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Off")
+
+		linear_actuator_configuration_off_radio_button.connect("toggled", self.on_button_toggled_2, "0")
+
+		if LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Off': linear_actuator_configuration_off_radio_button.set_active(True)
+
+		linear_actuator_configuration_schedule_radio_button = Gtk.RadioButton.new_from_widget(linear_actuator_configuration_off_radio_button)
+
+		linear_actuator_configuration_schedule_radio_button.set_label("Schedule")
+
+		if LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Schedule': linear_actuator_configuration_schedule_radio_button.set_active(True)
+
+		linear_actuator_configuration_schedule_radio_button.connect("toggled", self.on_button_toggled_2, "1")
+
+		linear_actuator_configuration_sensor_radio_button = Gtk.RadioButton.new_from_widget(linear_actuator_configuration_off_radio_button)
+		linear_actuator_configuration_sensor_radio_button.set_label("Sensor")
+
+		if LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Sensor': linear_actuator_configuration_sensor_radio_button.set_active(True)
+
+		linear_actuator_configuration_sensor_radio_button.connect("toggled", self.on_button_toggled_2, "2")
+
+		label_radio_buttons_linear_actuator_scheduled_time_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_linear_actuator_scheduled_time_value_remote.set_text('Linear Actuator Scheduled Time Selection:')
+		label_radio_buttons_linear_actuator_scheduled_time_value_remote.set_justify(Gtk.Justification.LEFT)
 
 
+		label_entry_linear_actuator_scheduled_open_runtime_value_remote = Gtk.Label(xalign=1)
+		label_entry_linear_actuator_scheduled_open_runtime_value_remote.set_text('Linear Actuator Scheduled Open Runtime:')
+		label_entry_linear_actuator_scheduled_open_runtime_value_remote.set_justify(Gtk.Justification.LEFT)
 
+		self.entry_linear_actuator_scheduled_open_runtime_value_remote = Gtk.Entry()
+		self.entry_linear_actuator_scheduled_open_runtime_value_remote.set_text(str(LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE))
+		self.entry_linear_actuator_scheduled_open_runtime_value_remote.set_activates_default(True)
 
-
-		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote = Gtk.Label(xalign=1)
-		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote.set_text('Solenoid Valve Off OR Schedule OR Sensor:')
-		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote.set_justify(Gtk.Justification.LEFT)
-
-		solenoid_valve_configuration_off_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Off")
-
-		solenoid_valve_configuration_off_radio_button.connect("toggled", self.on_button_toggled_2, "0")
-
-		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Off': solenoid_valve_configuration_off_radio_button.set_active(True)
-
-		solenoid_valve_configuration_schedule_radio_button = Gtk.RadioButton.new_from_widget(solenoid_valve_configuration_off_radio_button)
-
-		solenoid_valve_configuration_schedule_radio_button.set_label("Schedule")
-
-		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Schedule': solenoid_valve_configuration_schedule_radio_button.set_active(True)
-
-		solenoid_valve_configuration_schedule_radio_button.connect("toggled", self.on_button_toggled_2, "1")
-
-		solenoid_valve_configuration_sensor_radio_button = Gtk.RadioButton.new_from_widget(solenoid_valve_configuration_off_radio_button)
-		solenoid_valve_configuration_sensor_radio_button.set_label("Sensor")
-
-		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Sensor': solenoid_valve_configuration_sensor_radio_button.set_active(True)
-
-		solenoid_valve_configuration_sensor_radio_button.connect("toggled", self.on_button_toggled_2, "2")
-
-
-		label_radio_buttons_solenoid_valve_scheduled_time_value_remote = Gtk.Label(xalign=1)
-		label_radio_buttons_solenoid_valve_scheduled_time_value_remote.set_text('Solenoid Valve Scheduled Time Selection:')
-		label_radio_buttons_solenoid_valve_scheduled_time_value_remote.set_justify(Gtk.Justification.LEFT)
-
-
-		label_entry_solenoid_valve_scheduled_open_runtime_value_remote = Gtk.Label(xalign=1)
-		label_entry_solenoid_valve_scheduled_open_runtime_value_remote.set_text('Solenoid Valve Scheduled Open Runtime:')
-		label_entry_solenoid_valve_scheduled_open_runtime_value_remote.set_justify(Gtk.Justification.LEFT)
-
-		self.entry_solenoid_valve_scheduled_open_runtime_value_remote = Gtk.Entry()
-		self.entry_solenoid_valve_scheduled_open_runtime_value_remote.set_text(str(SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE))
-		self.entry_solenoid_valve_scheduled_open_runtime_value_remote.set_activates_default(True)
-
-		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit = Gtk.Label(xalign=0)
-		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit.set_text('Minutes')
-		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit.set_justify(Gtk.Justification.LEFT)
-
-
-
+		label_entry_linear_actuator_scheduled_open_runtime_value_description_unit = Gtk.Label(xalign=0)
+		label_entry_linear_actuator_scheduled_open_runtime_value_description_unit.set_text('Minutes')
+		label_entry_linear_actuator_scheduled_open_runtime_value_description_unit.set_justify(Gtk.Justification.LEFT)
 
 		label_empty_spacer_for_table_local_0 = Gtk.Label(xalign=1)
 		label_empty_spacer_for_table_local_0.set_text(' ')
@@ -796,7 +813,487 @@ class System_Configuration_Window(Gtk.Window):
 
 		### Need a list and a while loop that produces a radio button for each element
 		# define the descriptions of the crontab configuration values for opening the solenoid valve
-		list_of_predefined_crontab_configuration_descriptions = [
+		linear_actuator_list_of_predefined_crontab_configuration_descriptions = [
+					"Extend Actuator Daily Every Ten Minutes",
+					"Extend Actuator Daily @ 12AM",
+					"Extend Actuator Daily @ 6AM",
+					"Extend Actuator Daily @ 12PM",
+					"Extend Actuator Daily @ 6PM",
+					"Extend Actuator Twice Daily @ 12AM & 12PM",
+					"Extend Actuator Thrice Daily @ 8AM & 4PM & 12AM",
+					"Extend Actuator Every Two Days @ 12AM",
+					"Extend Actuator Every Two Days @ 6AM",
+					"Extend Actuator Every Two Days @ 12PM",
+					"Extend Actuator Every Two Days @ 6PM",
+					"Extend Actuator Every Three Days @ 12AM",
+					"Extend Actuator Every Three Days @ 6AM",
+					"Extend Actuator Every Three Days @ 12PM",
+					"Extend Actuator Every Three Days @ 6PM",
+					"Extend Actuator Weekly Sunday @ Midnight",
+					]
+
+		linear_actuator_scheduled_time_value_remote_radio_button_0 = Gtk.RadioButton.new_with_label_from_widget(None, linear_actuator_list_of_predefined_crontab_configuration_descriptions[0])
+		linear_actuator_scheduled_time_value_remote_radio_button_0.connect("toggled", self.on_button_toggled_3, "0")
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '0': linear_actuator_scheduled_time_value_remote_radio_button_0.set_active(True)
+
+		linear_actuator_scheduled_time_value_remote_radio_button_1 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_1.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[1])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '1': linear_actuator_scheduled_time_value_remote_radio_button_1.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_1.connect("toggled", self.on_button_toggled_3, "1")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_2 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_2.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[2])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '2': linear_actuator_scheduled_time_value_remote_radio_button_2.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_2.connect("toggled", self.on_button_toggled_3, "2")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_3 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_3.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[3])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '3': linear_actuator_scheduled_time_value_remote_radio_button_3.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_3.connect("toggled", self.on_button_toggled_3, "3")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_4 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_4.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[4])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '4': linear_actuator_scheduled_time_value_remote_radio_button_4.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_4.connect("toggled", self.on_button_toggled_3, "4")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_5 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_5.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[5])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '5': linear_actuator_scheduled_time_value_remote_radio_button_5.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_5.connect("toggled", self.on_button_toggled_3, "5")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_6 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_6.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[6])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '6': linear_actuator_scheduled_time_value_remote_radio_button_6.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_6.connect("toggled", self.on_button_toggled_3, "6")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_7 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_7.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[7])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '7': linear_actuator_scheduled_time_value_remote_radio_button_7.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_7.connect("toggled", self.on_button_toggled_3, "7")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_8 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_8.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[8])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '8': linear_actuator_scheduled_time_value_remote_radio_button_8.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_8.connect("toggled", self.on_button_toggled_3, "8")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_9 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_9.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[9])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '9': linear_actuator_scheduled_time_value_remote_radio_button_9.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_9.connect("toggled", self.on_button_toggled_3, "9")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_10 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_10.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[10])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '10': linear_actuator_scheduled_time_value_remote_radio_button_10.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_10.connect("toggled", self.on_button_toggled_3, "10")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_11 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_11.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[11])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '11': linear_actuator_scheduled_time_value_remote_radio_button_11.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_11.connect("toggled", self.on_button_toggled_3, "11")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_12 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_12.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[12])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '12': linear_actuator_scheduled_time_value_remote_radio_button_12.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_12.connect("toggled", self.on_button_toggled_3, "12")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_13 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_13.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[13])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '13': linear_actuator_scheduled_time_value_remote_radio_button_13.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_13.connect("toggled", self.on_button_toggled_3, "13")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_14 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_14.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[14])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '14': linear_actuator_scheduled_time_value_remote_radio_button_14.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_14.connect("toggled", self.on_button_toggled_3, "14")
+
+		linear_actuator_scheduled_time_value_remote_radio_button_15 = Gtk.RadioButton.new_from_widget(linear_actuator_scheduled_time_value_remote_radio_button_0)
+		linear_actuator_scheduled_time_value_remote_radio_button_15.set_label(linear_actuator_list_of_predefined_crontab_configuration_descriptions[15])
+		if LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '15': linear_actuator_scheduled_time_value_remote_radio_button_15.set_active(True)
+		linear_actuator_scheduled_time_value_remote_radio_button_15.connect("toggled", self.on_button_toggled_3, "15")
+
+		label_radio_buttons_output_one_configuration_between_off_schedule_sensor_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_output_one_configuration_between_off_schedule_sensor_value_remote.set_text('Output One Off OR Schedule OR Sensor:')
+		label_radio_buttons_output_one_configuration_between_off_schedule_sensor_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		output_one_configuration_off_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Off")
+
+		output_one_configuration_off_radio_button.connect("toggled", self.on_button_toggled_4, "0")
+
+		if OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Off': output_one_configuration_off_radio_button.set_active(True)
+
+		output_one_configuration_schedule_radio_button = Gtk.RadioButton.new_from_widget(output_one_configuration_off_radio_button)
+
+		output_one_configuration_schedule_radio_button.set_label("Schedule")
+
+		if OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Schedule': output_one_configuration_schedule_radio_button.set_active(True)
+
+		output_one_configuration_schedule_radio_button.connect("toggled", self.on_button_toggled_4, "1")
+
+		output_one_configuration_sensor_radio_button = Gtk.RadioButton.new_from_widget(output_one_configuration_off_radio_button)
+		output_one_configuration_sensor_radio_button.set_label("Sensor")
+
+		if OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Sensor': output_one_configuration_sensor_radio_button.set_active(True)
+
+		output_one_configuration_sensor_radio_button.connect("toggled", self.on_button_toggled_4, "2")
+
+		label_radio_buttons_output_one_scheduled_time_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_output_one_scheduled_time_value_remote.set_text('Output One Scheduled Time Selection:')
+		label_radio_buttons_output_one_scheduled_time_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		label_entry_output_one_scheduled_open_runtime_value_remote = Gtk.Label(xalign=1)
+		label_entry_output_one_scheduled_open_runtime_value_remote.set_text('Output One Scheduled Open Runtime:')
+		label_entry_output_one_scheduled_open_runtime_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		self.entry_output_one_scheduled_open_runtime_value_remote = Gtk.Entry()
+		self.entry_output_one_scheduled_open_runtime_value_remote.set_text(str(OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE))
+		self.entry_output_one_scheduled_open_runtime_value_remote.set_activates_default(True)
+
+		label_entry_output_one_scheduled_open_runtime_value_description_unit = Gtk.Label(xalign=0)
+		label_entry_output_one_scheduled_open_runtime_value_description_unit.set_text('Minutes')
+		label_entry_output_one_scheduled_open_runtime_value_description_unit.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_6 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_6.set_text(' ')
+		label_empty_spacer_for_table_local_6.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_7 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_7.set_text(' ')
+		label_empty_spacer_for_table_local_7.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_8 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_8.set_text(' ')
+		label_empty_spacer_for_table_local_8.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_9 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_9.set_text(' ')
+		label_empty_spacer_for_table_local_9.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_10 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_10.set_text(' ')
+		label_empty_spacer_for_table_local_10.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_11 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_11.set_text(' ')
+		label_empty_spacer_for_table_local_11.set_justify(Gtk.Justification.LEFT)
+
+		### Need a list and a while loop that produces a radio button for each element
+		# define the descriptions of the crontab configuration values for opening the solenoid valve
+		output_one_list_of_predefined_crontab_configuration_descriptions = [
+					"Enable Output One Daily Every Ten Minutes",
+					"Enable Output One Daily @ 12AM",
+					"Enable Output One Daily @ 6AM",
+					"Enable Output One Daily @ 12PM",
+					"Enable Output One Daily @ 6PM",
+					"Enable Output One Twice Daily @ 12AM & 12PM",
+					"Enable Output One Thrice Daily @ 8AM & 4PM & 12AM",
+					"Enable Output One Every Two Days @ 12AM",
+					"Enable Output One Every Two Days @ 6AM",
+					"Enable Output One Every Two Days @ 12PM",
+					"Enable Output One Every Two Days @ 6PM",
+					"Enable Output One Every Three Days @ 12AM",
+					"Enable Output One Every Three Days @ 6AM",
+					"Enable Output One Every Three Days @ 12PM",
+					"Enable Output One Every Three Days @ 6PM",
+					"Enable Output One Weekly Sunday @ Midnight",
+					]
+
+		output_one_scheduled_time_value_remote_radio_button_0 = Gtk.RadioButton.new_with_label_from_widget(None, output_one_list_of_predefined_crontab_configuration_descriptions[0])
+		output_one_scheduled_time_value_remote_radio_button_0.connect("toggled", self.on_button_toggled_5, "0")
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '0': output_one_scheduled_time_value_remote_radio_button_0.set_active(True)
+
+		output_one_scheduled_time_value_remote_radio_button_1 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_1.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[1])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '1': output_one_scheduled_time_value_remote_radio_button_1.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_1.connect("toggled", self.on_button_toggled_5, "1")
+
+		output_one_scheduled_time_value_remote_radio_button_2 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_2.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[2])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '2': output_one_scheduled_time_value_remote_radio_button_2.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_2.connect("toggled", self.on_button_toggled_5, "2")
+
+		output_one_scheduled_time_value_remote_radio_button_3 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_3.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[3])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '3': output_one_scheduled_time_value_remote_radio_button_3.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_3.connect("toggled", self.on_button_toggled_5, "3")
+
+		output_one_scheduled_time_value_remote_radio_button_4 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_4.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[4])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '4': output_one_scheduled_time_value_remote_radio_button_4.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_4.connect("toggled", self.on_button_toggled_5, "4")
+
+		output_one_scheduled_time_value_remote_radio_button_5 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_5.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[5])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '5': output_one_scheduled_time_value_remote_radio_button_5.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_5.connect("toggled", self.on_button_toggled_5, "5")
+
+		output_one_scheduled_time_value_remote_radio_button_6 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_6.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[6])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '6': output_one_scheduled_time_value_remote_radio_button_6.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_6.connect("toggled", self.on_button_toggled_5, "6")
+
+		output_one_scheduled_time_value_remote_radio_button_7 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_7.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[7])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '7': output_one_scheduled_time_value_remote_radio_button_7.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_7.connect("toggled", self.on_button_toggled_5, "7")
+
+		output_one_scheduled_time_value_remote_radio_button_8 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_8.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[8])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '8': output_one_scheduled_time_value_remote_radio_button_8.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_8.connect("toggled", self.on_button_toggled_5, "8")
+
+		output_one_scheduled_time_value_remote_radio_button_9 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_9.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[9])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '9': output_one_scheduled_time_value_remote_radio_button_9.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_9.connect("toggled", self.on_button_toggled_5, "9")
+
+		output_one_scheduled_time_value_remote_radio_button_10 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_10.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[10])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '10': output_one_scheduled_time_value_remote_radio_button_10.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_10.connect("toggled", self.on_button_toggled_5, "10")
+
+		output_one_scheduled_time_value_remote_radio_button_11 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_11.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[11])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '11': output_one_scheduled_time_value_remote_radio_button_11.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_11.connect("toggled", self.on_button_toggled_5, "11")
+
+		output_one_scheduled_time_value_remote_radio_button_12 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_12.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[12])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '12': output_one_scheduled_time_value_remote_radio_button_12.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_12.connect("toggled", self.on_button_toggled_5, "12")
+
+		output_one_scheduled_time_value_remote_radio_button_13 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_13.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[13])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '13': output_one_scheduled_time_value_remote_radio_button_13.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_13.connect("toggled", self.on_button_toggled_5, "13")
+
+		output_one_scheduled_time_value_remote_radio_button_14 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_14.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[14])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '14': output_one_scheduled_time_value_remote_radio_button_14.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_14.connect("toggled", self.on_button_toggled_5, "14")
+
+		output_one_scheduled_time_value_remote_radio_button_15 = Gtk.RadioButton.new_from_widget(output_one_scheduled_time_value_remote_radio_button_0)
+		output_one_scheduled_time_value_remote_radio_button_15.set_label(output_one_list_of_predefined_crontab_configuration_descriptions[15])
+		if OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '15': output_one_scheduled_time_value_remote_radio_button_15.set_active(True)
+		output_one_scheduled_time_value_remote_radio_button_15.connect("toggled", self.on_button_toggled_5, "15")
+
+		label_radio_buttons_output_two_configuration_between_off_schedule_sensor_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_output_two_configuration_between_off_schedule_sensor_value_remote.set_text('Output Two Off OR Schedule OR Sensor:')
+		label_radio_buttons_output_two_configuration_between_off_schedule_sensor_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		output_two_configuration_off_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Off")
+
+		output_two_configuration_off_radio_button.connect("toggled", self.on_button_toggled_6, "0")
+
+		if OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Off': output_two_configuration_off_radio_button.set_active(True)
+
+		output_two_configuration_schedule_radio_button = Gtk.RadioButton.new_from_widget(output_two_configuration_off_radio_button)
+
+		output_two_configuration_schedule_radio_button.set_label("Schedule")
+
+		if OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Schedule': output_two_configuration_schedule_radio_button.set_active(True)
+
+		output_two_configuration_schedule_radio_button.connect("toggled", self.on_button_toggled_6, "1")
+
+		output_two_configuration_sensor_radio_button = Gtk.RadioButton.new_from_widget(output_two_configuration_off_radio_button)
+		output_two_configuration_sensor_radio_button.set_label("Sensor")
+
+		if OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Sensor': output_two_configuration_sensor_radio_button.set_active(True)
+
+		output_two_configuration_sensor_radio_button.connect("toggled", self.on_button_toggled_6, "2")
+
+		label_radio_buttons_output_two_scheduled_time_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_output_two_scheduled_time_value_remote.set_text('Output Two Scheduled Time Selection:')
+		label_radio_buttons_output_two_scheduled_time_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		label_entry_output_two_scheduled_open_runtime_value_remote = Gtk.Label(xalign=1)
+		label_entry_output_two_scheduled_open_runtime_value_remote.set_text('Output Two Scheduled Open Runtime:')
+		label_entry_output_two_scheduled_open_runtime_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		self.entry_output_two_scheduled_open_runtime_value_remote = Gtk.Entry()
+		self.entry_output_two_scheduled_open_runtime_value_remote.set_text(str(OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE))
+		self.entry_output_two_scheduled_open_runtime_value_remote.set_activates_default(True)
+
+		label_entry_output_two_scheduled_open_runtime_value_description_unit = Gtk.Label(xalign=0)
+		label_entry_output_two_scheduled_open_runtime_value_description_unit.set_text('Minutes')
+		label_entry_output_two_scheduled_open_runtime_value_description_unit.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_12 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_12.set_text(' ')
+		label_empty_spacer_for_table_local_12.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_13 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_13.set_text(' ')
+		label_empty_spacer_for_table_local_13.set_justify(Gtk.Justification.LEFT)
+
+
+		### Need a list and a while loop that produces a radio button for each element
+		# define the descriptions of the crontab configuration values for opening the solenoid valve
+		output_two_list_of_predefined_crontab_configuration_descriptions = [
+					"Enable Output Two Daily Every Ten Minutes",
+					"Enable Output Two Daily @ 12AM",
+					"Enable Output Two Daily @ 6AM",
+					"Enable Output Two Daily @ 12PM",
+					"Enable Output Two Daily @ 6PM",
+					"Enable Output Two Twice Daily @ 12AM & 12PM",
+					"Enable Output Two Thrice Daily @ 8AM & 4PM & 12AM",
+					"Enable Output Two Every Two Days @ 12AM",
+					"Enable Output Two Every Two Days @ 6AM",
+					"Enable Output Two Every Two Days @ 12PM",
+					"Enable Output Two Every Two Days @ 6PM",
+					"Enable Output Two Every Three Days @ 12AM",
+					"Enable Output Two Every Three Days @ 6AM",
+					"Enable Output Two Every Three Days @ 12PM",
+					"Enable Output Two Every Three Days @ 6PM",
+					"Enable Output Two Weekly Sunday @ Midnight",
+					]
+
+		output_two_scheduled_time_value_remote_radio_button_0 = Gtk.RadioButton.new_with_label_from_widget(None, output_two_list_of_predefined_crontab_configuration_descriptions[0])
+		output_two_scheduled_time_value_remote_radio_button_0.connect("toggled", self.on_button_toggled_7, "0")
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '0': output_two_scheduled_time_value_remote_radio_button_0.set_active(True)
+
+		output_two_scheduled_time_value_remote_radio_button_1 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_1.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[1])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '1': output_two_scheduled_time_value_remote_radio_button_1.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_1.connect("toggled", self.on_button_toggled_7, "1")
+
+		output_two_scheduled_time_value_remote_radio_button_2 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_2.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[2])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '2': output_two_scheduled_time_value_remote_radio_button_2.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_2.connect("toggled", self.on_button_toggled_7, "2")
+
+		output_two_scheduled_time_value_remote_radio_button_3 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_3.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[3])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '3': output_two_scheduled_time_value_remote_radio_button_3.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_3.connect("toggled", self.on_button_toggled_7, "3")
+
+		output_two_scheduled_time_value_remote_radio_button_4 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_4.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[4])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '4': output_two_scheduled_time_value_remote_radio_button_4.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_4.connect("toggled", self.on_button_toggled_7, "4")
+
+		output_two_scheduled_time_value_remote_radio_button_5 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_5.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[5])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '5': output_two_scheduled_time_value_remote_radio_button_5.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_5.connect("toggled", self.on_button_toggled_7, "5")
+
+		output_two_scheduled_time_value_remote_radio_button_6 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_6.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[6])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '6': output_two_scheduled_time_value_remote_radio_button_6.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_6.connect("toggled", self.on_button_toggled_7, "6")
+
+		output_two_scheduled_time_value_remote_radio_button_7 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_7.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[7])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '7': output_two_scheduled_time_value_remote_radio_button_7.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_7.connect("toggled", self.on_button_toggled_7, "7")
+
+		output_two_scheduled_time_value_remote_radio_button_8 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_8.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[8])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '8': output_two_scheduled_time_value_remote_radio_button_8.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_8.connect("toggled", self.on_button_toggled_7, "8")
+
+		output_two_scheduled_time_value_remote_radio_button_9 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_9.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[9])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '9': output_two_scheduled_time_value_remote_radio_button_9.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_9.connect("toggled", self.on_button_toggled_7, "9")
+
+		output_two_scheduled_time_value_remote_radio_button_10 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_10.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[10])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '10': output_two_scheduled_time_value_remote_radio_button_10.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_10.connect("toggled", self.on_button_toggled_7, "10")
+
+		output_two_scheduled_time_value_remote_radio_button_11 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_11.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[11])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '11': output_two_scheduled_time_value_remote_radio_button_11.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_11.connect("toggled", self.on_button_toggled_7, "11")
+
+		output_two_scheduled_time_value_remote_radio_button_12 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_12.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[12])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '12': output_two_scheduled_time_value_remote_radio_button_12.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_12.connect("toggled", self.on_button_toggled_7, "12")
+
+		output_two_scheduled_time_value_remote_radio_button_13 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_13.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[13])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '13': output_two_scheduled_time_value_remote_radio_button_13.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_13.connect("toggled", self.on_button_toggled_7, "13")
+
+		output_two_scheduled_time_value_remote_radio_button_14 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_14.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[14])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '14': output_two_scheduled_time_value_remote_radio_button_14.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_14.connect("toggled", self.on_button_toggled_7, "14")
+
+		output_two_scheduled_time_value_remote_radio_button_15 = Gtk.RadioButton.new_from_widget(output_two_scheduled_time_value_remote_radio_button_0)
+		output_two_scheduled_time_value_remote_radio_button_15.set_label(output_two_list_of_predefined_crontab_configuration_descriptions[15])
+		if OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '15': output_two_scheduled_time_value_remote_radio_button_15.set_active(True)
+		output_two_scheduled_time_value_remote_radio_button_15.connect("toggled", self.on_button_toggled_7, "15")
+
+		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote.set_text('Solenoid Valve Off OR Schedule OR Sensor:')
+		label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		solenoid_valve_configuration_off_radio_button = Gtk.RadioButton.new_with_label_from_widget(None, "Off")
+
+		solenoid_valve_configuration_off_radio_button.connect("toggled", self.on_button_toggled_8, "0")
+
+		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Off': solenoid_valve_configuration_off_radio_button.set_active(True)
+
+		solenoid_valve_configuration_schedule_radio_button = Gtk.RadioButton.new_from_widget(solenoid_valve_configuration_off_radio_button)
+
+		solenoid_valve_configuration_schedule_radio_button.set_label("Schedule")
+
+		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Schedule': solenoid_valve_configuration_schedule_radio_button.set_active(True)
+
+		solenoid_valve_configuration_schedule_radio_button.connect("toggled", self.on_button_toggled_8, "1")
+
+		solenoid_valve_configuration_sensor_radio_button = Gtk.RadioButton.new_from_widget(solenoid_valve_configuration_off_radio_button)
+		solenoid_valve_configuration_sensor_radio_button.set_label("Sensor")
+
+		if SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE == 'Sensor': solenoid_valve_configuration_sensor_radio_button.set_active(True)
+
+		solenoid_valve_configuration_sensor_radio_button.connect("toggled", self.on_button_toggled_8, "2")
+
+		label_radio_buttons_solenoid_valve_scheduled_time_value_remote = Gtk.Label(xalign=1)
+		label_radio_buttons_solenoid_valve_scheduled_time_value_remote.set_text('Solenoid Valve Scheduled Time Selection:')
+		label_radio_buttons_solenoid_valve_scheduled_time_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		label_entry_solenoid_valve_scheduled_open_runtime_value_remote = Gtk.Label(xalign=1)
+		label_entry_solenoid_valve_scheduled_open_runtime_value_remote.set_text('Solenoid Valve Scheduled Open Runtime:')
+		label_entry_solenoid_valve_scheduled_open_runtime_value_remote.set_justify(Gtk.Justification.LEFT)
+
+		self.entry_solenoid_valve_scheduled_open_runtime_value_remote = Gtk.Entry()
+		self.entry_solenoid_valve_scheduled_open_runtime_value_remote.set_text(str(SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE))
+		self.entry_solenoid_valve_scheduled_open_runtime_value_remote.set_activates_default(True)
+
+		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit = Gtk.Label(xalign=0)
+		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit.set_text('Minutes')
+		label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_18 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_18.set_text(' ')
+		label_empty_spacer_for_table_local_18.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_19 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_19.set_text(' ')
+		label_empty_spacer_for_table_local_19.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_20 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_20.set_text(' ')
+		label_empty_spacer_for_table_local_20.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_21 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_21.set_text(' ')
+		label_empty_spacer_for_table_local_21.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_22 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_22.set_text(' ')
+		label_empty_spacer_for_table_local_22.set_justify(Gtk.Justification.LEFT)
+
+		label_empty_spacer_for_table_local_23 = Gtk.Label(xalign=1)
+		label_empty_spacer_for_table_local_23.set_text(' ')
+		label_empty_spacer_for_table_local_23.set_justify(Gtk.Justification.LEFT)
+
+		### Need a list and a while loop that produces a radio button for each element
+		# define the descriptions of the crontab configuration values for opening the solenoid valve
+		solenoid_valve_list_of_predefined_crontab_configuration_descriptions = [
 					"Water Daily Every Two Minutes",
 					"Water Daily @ 12AM",
 					"Water Daily @ 6AM",
@@ -815,169 +1312,263 @@ class System_Configuration_Window(Gtk.Window):
 					"Water Weekly Sunday @ Midnight",
 					]
 
-		solenoid_valve_scheduled_time_value_remote_radio_button_0 = Gtk.RadioButton.new_with_label_from_widget(None, list_of_predefined_crontab_configuration_descriptions[0])
-		solenoid_valve_scheduled_time_value_remote_radio_button_0.connect("toggled", self.on_button_toggled_3, "0")
+		solenoid_valve_scheduled_time_value_remote_radio_button_0 = Gtk.RadioButton.new_with_label_from_widget(None, solenoid_valve_list_of_predefined_crontab_configuration_descriptions[0])
+		solenoid_valve_scheduled_time_value_remote_radio_button_0.connect("toggled", self.on_button_toggled_9, "0")
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '0': solenoid_valve_scheduled_time_value_remote_radio_button_0.set_active(True)
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_1 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_1.set_label(list_of_predefined_crontab_configuration_descriptions[1])
+		solenoid_valve_scheduled_time_value_remote_radio_button_1.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[1])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '1': solenoid_valve_scheduled_time_value_remote_radio_button_1.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_1.connect("toggled", self.on_button_toggled_3, "1")
+		solenoid_valve_scheduled_time_value_remote_radio_button_1.connect("toggled", self.on_button_toggled_9, "1")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_2 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_2.set_label(list_of_predefined_crontab_configuration_descriptions[2])
+		solenoid_valve_scheduled_time_value_remote_radio_button_2.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[2])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '2': solenoid_valve_scheduled_time_value_remote_radio_button_2.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_2.connect("toggled", self.on_button_toggled_3, "2")
+		solenoid_valve_scheduled_time_value_remote_radio_button_2.connect("toggled", self.on_button_toggled_9, "2")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_3 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_3.set_label(list_of_predefined_crontab_configuration_descriptions[3])
+		solenoid_valve_scheduled_time_value_remote_radio_button_3.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[3])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '3': solenoid_valve_scheduled_time_value_remote_radio_button_3.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_3.connect("toggled", self.on_button_toggled_3, "3")
+		solenoid_valve_scheduled_time_value_remote_radio_button_3.connect("toggled", self.on_button_toggled_9, "3")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_4 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_4.set_label(list_of_predefined_crontab_configuration_descriptions[4])
+		solenoid_valve_scheduled_time_value_remote_radio_button_4.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[4])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '4': solenoid_valve_scheduled_time_value_remote_radio_button_4.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_4.connect("toggled", self.on_button_toggled_3, "4")
+		solenoid_valve_scheduled_time_value_remote_radio_button_4.connect("toggled", self.on_button_toggled_9, "4")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_5 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_5.set_label(list_of_predefined_crontab_configuration_descriptions[5])
+		solenoid_valve_scheduled_time_value_remote_radio_button_5.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[5])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '5': solenoid_valve_scheduled_time_value_remote_radio_button_5.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_5.connect("toggled", self.on_button_toggled_3, "5")
+		solenoid_valve_scheduled_time_value_remote_radio_button_5.connect("toggled", self.on_button_toggled_9, "5")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_6 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_6.set_label(list_of_predefined_crontab_configuration_descriptions[6])
+		solenoid_valve_scheduled_time_value_remote_radio_button_6.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[6])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '6': solenoid_valve_scheduled_time_value_remote_radio_button_6.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_6.connect("toggled", self.on_button_toggled_3, "6")
+		solenoid_valve_scheduled_time_value_remote_radio_button_6.connect("toggled", self.on_button_toggled_9, "6")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_7 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_7.set_label(list_of_predefined_crontab_configuration_descriptions[7])
+		solenoid_valve_scheduled_time_value_remote_radio_button_7.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[7])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '7': solenoid_valve_scheduled_time_value_remote_radio_button_7.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_7.connect("toggled", self.on_button_toggled_3, "7")
+		solenoid_valve_scheduled_time_value_remote_radio_button_7.connect("toggled", self.on_button_toggled_9, "7")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_8 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_8.set_label(list_of_predefined_crontab_configuration_descriptions[8])
+		solenoid_valve_scheduled_time_value_remote_radio_button_8.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[8])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '8': solenoid_valve_scheduled_time_value_remote_radio_button_8.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_8.connect("toggled", self.on_button_toggled_3, "8")
+		solenoid_valve_scheduled_time_value_remote_radio_button_8.connect("toggled", self.on_button_toggled_9, "8")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_9 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_9.set_label(list_of_predefined_crontab_configuration_descriptions[9])
+		solenoid_valve_scheduled_time_value_remote_radio_button_9.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[9])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '9': solenoid_valve_scheduled_time_value_remote_radio_button_9.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_9.connect("toggled", self.on_button_toggled_3, "9")
+		solenoid_valve_scheduled_time_value_remote_radio_button_9.connect("toggled", self.on_button_toggled_9, "9")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_10 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_10.set_label(list_of_predefined_crontab_configuration_descriptions[10])
+		solenoid_valve_scheduled_time_value_remote_radio_button_10.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[10])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '10': solenoid_valve_scheduled_time_value_remote_radio_button_10.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_10.connect("toggled", self.on_button_toggled_3, "10")
+		solenoid_valve_scheduled_time_value_remote_radio_button_10.connect("toggled", self.on_button_toggled_9, "10")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_11 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_11.set_label(list_of_predefined_crontab_configuration_descriptions[11])
+		solenoid_valve_scheduled_time_value_remote_radio_button_11.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[11])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '11': solenoid_valve_scheduled_time_value_remote_radio_button_11.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_11.connect("toggled", self.on_button_toggled_3, "11")
+		solenoid_valve_scheduled_time_value_remote_radio_button_11.connect("toggled", self.on_button_toggled_9, "11")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_12 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_12.set_label(list_of_predefined_crontab_configuration_descriptions[12])
+		solenoid_valve_scheduled_time_value_remote_radio_button_12.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[12])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '12': solenoid_valve_scheduled_time_value_remote_radio_button_12.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_12.connect("toggled", self.on_button_toggled_3, "12")
+		solenoid_valve_scheduled_time_value_remote_radio_button_12.connect("toggled", self.on_button_toggled_9, "12")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_13 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_13.set_label(list_of_predefined_crontab_configuration_descriptions[13])
+		solenoid_valve_scheduled_time_value_remote_radio_button_13.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[13])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '13': solenoid_valve_scheduled_time_value_remote_radio_button_13.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_13.connect("toggled", self.on_button_toggled_3, "13")
+		solenoid_valve_scheduled_time_value_remote_radio_button_13.connect("toggled", self.on_button_toggled_9, "13")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_14 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_14.set_label(list_of_predefined_crontab_configuration_descriptions[14])
+		solenoid_valve_scheduled_time_value_remote_radio_button_14.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[14])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '14': solenoid_valve_scheduled_time_value_remote_radio_button_14.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_14.connect("toggled", self.on_button_toggled_3, "14")
+		solenoid_valve_scheduled_time_value_remote_radio_button_14.connect("toggled", self.on_button_toggled_9, "14")
 
 		solenoid_valve_scheduled_time_value_remote_radio_button_15 = Gtk.RadioButton.new_from_widget(solenoid_valve_scheduled_time_value_remote_radio_button_0)
-		solenoid_valve_scheduled_time_value_remote_radio_button_15.set_label(list_of_predefined_crontab_configuration_descriptions[15])
+		solenoid_valve_scheduled_time_value_remote_radio_button_15.set_label(solenoid_valve_list_of_predefined_crontab_configuration_descriptions[15])
 		if SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE == '15': solenoid_valve_scheduled_time_value_remote_radio_button_15.set_active(True)
-		solenoid_valve_scheduled_time_value_remote_radio_button_15.connect("toggled", self.on_button_toggled_3, "15")
-
-
+		solenoid_valve_scheduled_time_value_remote_radio_button_15.connect("toggled", self.on_button_toggled_9, "15")
 
 		button_post_form_values = Gtk.Button.new_with_label("Save Settings")
 		button_post_form_values.connect("clicked", self.on_button_post_form_values_clicked)
 
-		layout_table = Gtk.Table(39, 3, False)
-		self.box.add(layout_table)
 		layout_table.set_border_width(10)
 		layout_table.attach(label_entry_actuator_runtime, 0, 1, 0, 1)
 		layout_table.attach(self.entry_actuator_runtime, 1, 2, 0, 1)
 		layout_table.attach(label_entry_actuator_runtime_description_unit, 2, 3, 0, 1)
-		layout_table.attach(label_entry_minimum_temperature_sensor_actuator_retract_value_remote, 0, 1, 1, 2)
-		layout_table.attach(self.entry_minimum_temperature_sensor_actuator_retract_value_remote, 1, 2, 1, 2)
-		layout_table.attach(label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit, 2, 3, 1, 2)
-		layout_table.attach(label_entry_minimum_temperature_sensor_output_one_off_value_remote, 0, 1, 2, 3)
-		layout_table.attach(self.entry_minimum_temperature_sensor_output_one_off_value_remote, 1, 2, 2, 3)
-		layout_table.attach(label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit, 2, 3, 2, 3)
-		layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote, 0, 1, 3, 4)
-		layout_table.attach(self.entry_minimum_humidity_sensor_output_one_off_value_remote, 1, 2, 3, 4)
-		layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit, 2, 3, 3, 4)
 
-		layout_table.attach(label_empty_spacer_for_table_local_0, 0, 1, 4, 5)
+		layout_table.attach(label_empty_spacer_for_table_local_0, 0, 1, 1, 2)
 
-		layout_table.attach(label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote, 0, 1, 5, 6)
-		layout_table.attach(temperature_radio_button, 1, 2, 5, 6)
-		layout_table.attach(luminosity_radio_button, 1, 2, 6, 7)
+		layout_table.attach(label_radio_buttons_linear_actuator_configuration_between_off_schedule_sensor_value_remote, 0, 1, 2, 3)
+		layout_table.attach(linear_actuator_configuration_off_radio_button, 1, 2, 2, 3)
+		layout_table.attach(linear_actuator_configuration_schedule_radio_button, 1, 2, 3, 4)
+		layout_table.attach(linear_actuator_configuration_sensor_radio_button, 1, 2, 4, 5)
 
-		layout_table.attach(label_empty_spacer_for_table_local_1, 0, 1, 9, 10)
+		layout_table.attach(label_empty_spacer_for_table_local_1, 0, 1, 5, 6)
 
-		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote, 0, 1, 10, 11)
-		layout_table.attach(self.entry_minimum_temperature_sensor_output_two_off_value_remote, 1, 2, 10, 11)
-		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit, 2, 3, 10, 11)
+		layout_table.attach(label_radio_buttons_linear_actuator_scheduled_time_value_remote, 0, 1, 6, 7)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_0, 1, 2, 6, 7)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_1, 1, 2, 7, 8)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_2, 1, 2, 8, 9)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_3, 1, 2, 9, 10)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_4, 1, 2, 10, 11)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_5, 1, 2, 11, 12)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_6, 1, 2, 12, 13)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_7, 1, 2, 13, 14)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_8, 1, 2, 14, 15)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_9, 1, 2, 15, 16)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_10, 1, 2, 16, 17)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_11, 1, 2, 17, 18)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_12, 1, 2, 18, 19)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_13, 1, 2, 19, 20)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_14, 1, 2, 20, 21)
+		layout_table.attach(linear_actuator_scheduled_time_value_remote_radio_button_15, 1, 2, 21, 22)
 
-		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote, 0, 1, 11, 12)
-		layout_table.attach(self.entry_minimum_luminosity_sensor_output_two_off_value_remote, 1, 2, 11, 12)
-		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit, 2, 3, 11, 12)
+		layout_table.attach(label_empty_spacer_for_table_local_2, 0, 1, 22, 23)
+
+		layout_table.attach(label_entry_linear_actuator_scheduled_open_runtime_value_remote, 0, 1, 23, 24)
+		layout_table.attach(self.entry_linear_actuator_scheduled_open_runtime_value_remote, 1, 2, 23, 24)
+		layout_table.attach(label_entry_linear_actuator_scheduled_open_runtime_value_description_unit, 2, 3, 23, 24)
+
+		layout_table.attach(label_entry_minimum_temperature_sensor_actuator_retract_value_remote, 0, 1, 25, 26)
+		layout_table.attach(self.entry_minimum_temperature_sensor_actuator_retract_value_remote, 1, 2, 25, 26)
+		layout_table.attach(label_entry_minimum_temperature_sensor_actuator_retract_value_remote_description_unit, 2, 3, 25, 26)
+
+		layout_table.attach(label_empty_spacer_for_table_local_3, 0, 1, 26, 27)
+
+		layout_table.attach(label_radio_buttons_output_one_configuration_between_off_schedule_sensor_value_remote, 0, 1, 32, 33)
+		layout_table.attach(output_one_configuration_off_radio_button, 1, 2, 32, 33)
+		layout_table.attach(output_one_configuration_schedule_radio_button, 1, 2, 33, 34)
+		layout_table.attach(output_one_configuration_sensor_radio_button, 1, 2, 34, 35)
+
+		layout_table.attach(label_empty_spacer_for_table_local_4, 0, 1, 41, 42)
+
+		layout_table.attach(label_radio_buttons_output_one_scheduled_time_value_remote, 0, 1, 42, 43)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_0, 1, 2, 42, 43)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_1, 1, 2, 43, 44)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_2, 1, 2, 44, 45)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_3, 1, 2, 45, 46)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_4, 1, 2, 46, 47)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_5, 1, 2, 47, 48)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_6, 1, 2, 48, 49)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_7, 1, 2, 49, 50)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_8, 1, 2, 50, 51)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_9, 1, 2, 51, 52)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_10, 1, 2, 52, 53)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_11, 1, 2, 53, 54)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_12, 1, 2, 54, 55)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_13, 1, 2, 55, 56)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_14, 1, 2, 56, 57)
+		layout_table.attach(output_one_scheduled_time_value_remote_radio_button_15, 1, 2, 57, 58)
+
+		layout_table.attach(label_empty_spacer_for_table_local_5, 0, 1, 58, 59)
+
+		layout_table.attach(label_entry_output_one_scheduled_open_runtime_value_remote, 0, 1, 59, 60)
+		layout_table.attach(self.entry_output_one_scheduled_open_runtime_value_remote, 1, 2, 59, 60)
+		layout_table.attach(label_entry_output_one_scheduled_open_runtime_value_description_unit, 2, 3, 59, 60)
+
+		layout_table.attach(label_entry_minimum_temperature_sensor_output_one_off_value_remote, 0, 1, 60, 61)
+		layout_table.attach(self.entry_minimum_temperature_sensor_output_one_off_value_remote, 1, 2, 60, 61)
+		layout_table.attach(label_entry_minimum_temperature_sensor_output_one_off_value_remote_description_unit, 2, 3, 60, 61)
+		layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote, 0, 1, 61, 62)
+		layout_table.attach(self.entry_minimum_humidity_sensor_output_one_off_value_remote, 1, 2, 61, 62)
+		layout_table.attach(label_entry_minimum_humidity_sensor_output_one_off_value_remote_description_unit, 2, 3, 61, 62)
+
+		layout_table.attach(label_empty_spacer_for_table_local_6, 0, 1, 62, 63)
+
+		layout_table.attach(label_radio_buttons_output_two_configuration_between_off_schedule_sensor_value_remote, 0, 1, 63, 64)
+		layout_table.attach(output_two_configuration_off_radio_button, 1, 2, 63, 64)
+		layout_table.attach(output_two_configuration_schedule_radio_button, 1, 2, 64, 65)
+		layout_table.attach(output_two_configuration_sensor_radio_button, 1, 2, 65, 66)
+
+		layout_table.attach(label_empty_spacer_for_table_local_7, 0, 1, 66, 67)
+
+		layout_table.attach(label_radio_buttons_output_two_scheduled_time_value_remote, 0, 1, 67, 68)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_0, 1, 2, 67, 68)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_1, 1, 2, 68, 69)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_2, 1, 2, 69, 70)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_3, 1, 2, 70, 71)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_4, 1, 2, 71, 72)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_5, 1, 2, 72, 73)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_6, 1, 2, 73, 74)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_7, 1, 2, 74, 75)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_8, 1, 2, 75, 76)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_9, 1, 2, 76, 77)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_10, 1, 2, 77, 78)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_11, 1, 2, 78, 79)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_12, 1, 2, 79, 80)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_13, 1, 2, 80, 81)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_14, 1, 2, 81, 82)
+		layout_table.attach(output_two_scheduled_time_value_remote_radio_button_15, 1, 2, 82, 83)
 
 
+		layout_table.attach(label_empty_spacer_for_table_local_8, 0, 1, 83, 84)
 
-		layout_table.attach(label_empty_spacer_for_table_local_2, 0, 1, 12, 13)
+		layout_table.attach(label_radio_buttons_output_two_configuration_between_temperature_or_luminosity_value_remote, 0, 1, 84, 85)
+		layout_table.attach(temperature_radio_button, 1, 2, 84, 85)
+		layout_table.attach(luminosity_radio_button, 1, 2, 85, 86)
 
-		layout_table.attach(label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote, 0, 1, 13, 14)
-		layout_table.attach(solenoid_valve_configuration_off_radio_button, 1, 2, 13, 14)
-		layout_table.attach(solenoid_valve_configuration_schedule_radio_button, 1, 2, 14, 15)
-		layout_table.attach(solenoid_valve_configuration_sensor_radio_button, 1, 2, 15, 16)
+		layout_table.attach(label_empty_spacer_for_table_local_9, 0, 1, 86, 87)
 
-		layout_table.attach(label_empty_spacer_for_table_local_3, 0, 1, 16, 17)
+		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote, 0, 1, 87, 88)
+		layout_table.attach(self.entry_minimum_temperature_sensor_output_two_off_value_remote, 1, 2, 87, 88)
+		layout_table.attach(label_entry_minimum_temperature_sensor_output_two_off_value_remote_description_unit, 2, 3, 87, 88)
 
+		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote, 0, 1, 88, 89)
+		layout_table.attach(self.entry_minimum_luminosity_sensor_output_two_off_value_remote, 1, 2, 88, 89)
+		layout_table.attach(label_entry_minimum_luminosity_sensor_output_two_off_value_remote_description_unit, 2, 3, 88, 89)
 
+		layout_table.attach(label_entry_output_two_scheduled_open_runtime_value_remote, 0, 1, 92, 93)
+		layout_table.attach(self.entry_output_two_scheduled_open_runtime_value_remote, 1, 2, 92, 93)
+		layout_table.attach(label_entry_output_two_scheduled_open_runtime_value_description_unit, 2, 3, 92, 93)
 
+		layout_table.attach(label_empty_spacer_for_table_local_10, 0, 1, 94, 95)
 
+		layout_table.attach(label_radio_buttons_solenoid_valve_configuration_between_off_schedule_sensor_value_remote, 0, 1, 95, 96)
+		layout_table.attach(solenoid_valve_configuration_off_radio_button, 1, 2, 95, 96)
+		layout_table.attach(solenoid_valve_configuration_schedule_radio_button, 1, 2, 97, 98)
+		layout_table.attach(solenoid_valve_configuration_sensor_radio_button, 1, 2, 98, 99)
 
-		layout_table.attach(label_radio_buttons_solenoid_valve_scheduled_time_value_remote, 0, 1, 17, 18)
+		layout_table.attach(label_empty_spacer_for_table_local_11, 0, 1, 99, 100)
 
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_0, 1, 2, 17, 18)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_1, 1, 2, 18, 19)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_2, 1, 2, 20, 21)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_3, 1, 2, 21, 22)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_4, 1, 2, 22, 23)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_5, 1, 2, 23, 24)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_6, 1, 2, 24, 25)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_7, 1, 2, 25, 26)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_8, 1, 2, 26, 27)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_9, 1, 2, 27, 28)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_10, 1, 2, 28, 29)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_11, 1, 2, 29, 30)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_12, 1, 2, 30, 31)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_13, 1, 2, 31, 32)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_14, 1, 2, 32, 33)
-		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_15, 1, 2, 33, 34)
+		layout_table.attach(label_radio_buttons_solenoid_valve_scheduled_time_value_remote, 0, 1, 100, 101)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_0, 1, 2, 100, 101)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_1, 1, 2, 101, 102)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_2, 1, 2, 102, 103)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_3, 1, 2, 103, 104)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_4, 1, 2, 104, 105)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_5, 1, 2, 105, 106)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_6, 1, 2, 106, 107)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_7, 1, 2, 107, 108)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_8, 1, 2, 108, 109)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_9, 1, 2, 109, 110)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_10, 1, 2, 110, 111)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_11, 1, 2, 111, 112)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_12, 1, 2, 112, 113)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_13, 1, 2, 113, 114)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_14, 1, 2, 114, 115)
+		layout_table.attach(solenoid_valve_scheduled_time_value_remote_radio_button_15, 1, 2, 115, 116)
 
-		layout_table.attach(label_empty_spacer_for_table_local_4, 0, 1, 34, 35)
+		layout_table.attach(label_empty_spacer_for_table_local_12, 0, 1, 118, 119)
 
-		layout_table.attach(label_entry_solenoid_valve_scheduled_open_runtime_value_remote, 0, 1, 35, 36)
-		layout_table.attach(self.entry_solenoid_valve_scheduled_open_runtime_value_remote, 1, 2, 35, 36)
-		layout_table.attach(label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit, 2, 3, 35, 36)
+		layout_table.attach(label_entry_solenoid_valve_scheduled_open_runtime_value_remote, 0, 1, 119, 120)
+		layout_table.attach(self.entry_solenoid_valve_scheduled_open_runtime_value_remote, 1, 2, 119, 120)
+		layout_table.attach(label_entry_solenoid_valve_scheduled_open_runtime_value_description_unit, 2, 3, 119, 120)
 
-		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 0, 1, 36, 37)
-		layout_table.attach(self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 1, 2, 36, 37)
-		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit, 2, 3, 36, 37)
+		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 0, 1, 121, 122)
+		layout_table.attach(self.entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote, 1, 2, 121, 122)
+		layout_table.attach(label_entry_minimum_soil_moisture_sensor_solenoid_valve_open_value_remote_description_unit, 2, 3, 121, 122)
 
-		layout_table.attach(label_empty_spacer_for_table_local_5, 0, 1, 37, 38)
+		layout_table.attach(label_empty_spacer_for_table_local_13, 0, 1, 123, 124)
 
-		layout_table.attach(button_post_form_values, 0, 3, 38, 39)
+		layout_table.attach(button_post_form_values, 0, 3, 124, 125)
+
+		self.add(scrolling_window)
+
+		self.show_all()
+
 
 
 	def on_button_toggled_1(self, button, name):
@@ -998,6 +1589,143 @@ class System_Configuration_Window(Gtk.Window):
 	def on_button_toggled_2(self, button, name):
 
 		# define the variable
+		global LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Off'
+		if (name == '1') and (state == 'on'): LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Schedule'
+		if (name == '2') and (state == 'on'): LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Sensor'
+
+
+	def on_button_toggled_3(self, button, name):
+
+		# define the variable
+		global LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 0
+		if (name == '1') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 1
+		if (name == '2') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 2
+		if (name == '3') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 3
+		if (name == '4') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 4
+		if (name == '5') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 5
+		if (name == '6') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 6
+		if (name == '7') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 7
+		if (name == '8') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 8
+		if (name == '9') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 9
+		if (name == '10') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 10
+		if (name == '11') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 11
+		if (name == '12') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 12
+		if (name == '13') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 13
+		if (name == '14') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 14
+		if (name == '15') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 15
+		if (name == '16') and (state == 'on'): LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 16
+
+	def on_button_toggled_4(self, button, name):
+
+		# define the variable
+		global OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Off'
+		if (name == '1') and (state == 'on'): OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Schedule'
+		if (name == '2') and (state == 'on'): OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Sensor'
+
+
+	def on_button_toggled_5(self, button, name):
+
+		# define the variable
+		global OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 0
+		if (name == '1') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 1
+		if (name == '2') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 2
+		if (name == '3') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 3
+		if (name == '4') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 4
+		if (name == '5') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 5
+		if (name == '6') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 6
+		if (name == '7') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 7
+		if (name == '8') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 8
+		if (name == '9') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 9
+		if (name == '10') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 10
+		if (name == '11') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 11
+		if (name == '12') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 12
+		if (name == '13') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 13
+		if (name == '14') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 14
+		if (name == '15') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 15
+		if (name == '16') and (state == 'on'): OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 16
+
+
+	def on_button_toggled_6(self, button, name):
+
+		# define the variable
+		global OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Off'
+		if (name == '1') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Schedule'
+		if (name == '2') and (state == 'on'): OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Sensor'
+
+
+	def on_button_toggled_7(self, button, name):
+
+		# define the variable
+		global OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
+
+		if button.get_active():
+
+			state = "on"
+		else:
+			state = "off"
+
+		if (name == '0') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 0
+		if (name == '1') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 1
+		if (name == '2') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 2
+		if (name == '3') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 3
+		if (name == '4') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 4
+		if (name == '5') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 5
+		if (name == '6') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 6
+		if (name == '7') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 7
+		if (name == '8') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 8
+		if (name == '9') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 9
+		if (name == '10') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 10
+		if (name == '11') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 11
+		if (name == '12') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 12
+		if (name == '13') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 13
+		if (name == '14') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 14
+		if (name == '15') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 15
+		if (name == '16') and (state == 'on'): OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE = 16
+
+
+	def on_button_toggled_8(self, button, name):
+
+		# define the variable
 		global SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE
 
 		if button.get_active():
@@ -1011,7 +1739,7 @@ class System_Configuration_Window(Gtk.Window):
 		if (name == '2') and (state == 'on'): SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE = 'Sensor'
 
 
-	def on_button_toggled_3(self, button, name):
+	def on_button_toggled_9(self, button, name):
 
 		# define the variable
 		global SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE
@@ -1065,6 +1793,15 @@ class System_Configuration_Window(Gtk.Window):
 					'MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE' : MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_REMOTE,
 					'MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE' : MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_REMOTE,
 					'OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE' : OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_REMOTE,
+					'LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE' : LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE,
+					'LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE' : LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_REMOTE,
+					'LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE' :  LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE,
+					'OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE' : OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE,
+					'OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE' : OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE,
+					'OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE' :  OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE,
+					'OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE' : OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE,
+					'OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE' : OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_REMOTE,
+					'OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE' :  OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE,
 					'SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE' : SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_REMOTE,
 					'SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE' : SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_REMOTE,
 					'SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE' :  SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_REMOTE }
