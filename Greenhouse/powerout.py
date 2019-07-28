@@ -6,9 +6,9 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Resets default values after power outage.           ##
 ## Description: 												                            ##
-## Version: 1.04										                                ##
-## Project Repository: https://git.io/fhhsY				                  ##
-## Copyright (C) 2019 The Groundhog Whisperer				                ##
+## Version: 1.04                                                    ##
+## Project Repository: https://git.io/fhhsY                         ##
+## Copyright (C) 2019 The Groundhog Whisperer                       ##
 ######################################################################
 #
 import os
