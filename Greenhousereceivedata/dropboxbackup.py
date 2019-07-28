@@ -2,13 +2,13 @@
 # encoding: utf-8
 #
 ######################################################################
-## Application file name: dropboxbackuprttysstv.py					##
+## Application file name: dropboxbackuprttysstv.py		    ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Uploads RTTY text and QSSTV images to DropBox		##
-## Description: 													##
-## Version: 1.03													##
-## Project Repository: https://git.io/fhhsY							##
-## Copyright (C) 2019 The Groundhog Whisperer						##
+## Description: Uploads RTTY text and QSSTV images to DropBox	    ##
+## Description:							    ##
+## Version: 1.04						    ##
+## Project Repository: https://git.io/fhhsY			    ##
+## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
 #
 # dropboxbackuprttysstv.py is a script that uploads Fldigi textout.txt files to
