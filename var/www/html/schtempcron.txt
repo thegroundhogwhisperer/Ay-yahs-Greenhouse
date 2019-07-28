@@ -1,0 +1,6 @@
+*/10 * * * * /usr/bin/python /var/www/html/extlinearactuatortimer.py # Extend actuator every 10 minutes
+*/10 * * * * /usr/bin/python /var/www/html/openoutputonetimer.py # Enable output one every 10 minutes
+*/10 * * * * /usr/bin/python /var/www/html/openoutputtwotimer.py # Enable output two every 10 minutes
+*/2 * * * * /usr/bin/python /var/www/html/opensolenoidtimer.py # Water every two minutes
+
+
