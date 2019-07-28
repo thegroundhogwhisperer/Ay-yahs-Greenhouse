@@ -2,13 +2,13 @@
 # script to write file stored default values due to power outage
 #
 ######################################################################
-## Application file name: powerout.py								                ##
+## Application file name: powerout.py                               ##
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
-## Description: Resets default values after power outage.			      ##
-## Description: 													                          ##
-## Version: 1.04													                          ##
-## Project Repository: https://git.io/fhhsY							            ##
-## Copyright (C) 2019 The Groundhog Whisperer						            ##
+## Description: Resets default values after power outage.           ##
+## Description: 												                            ##
+## Version: 1.04										                                ##
+## Project Repository: https://git.io/fhhsY				                  ##
+## Copyright (C) 2019 The Groundhog Whisperer				                ##
 ######################################################################
 #
 import os
