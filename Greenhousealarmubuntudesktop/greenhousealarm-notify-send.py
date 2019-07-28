@@ -6,7 +6,7 @@
 ## Description: A component of Ay-yahs-Greenhouse Automation System ##
 ## Description: Performs alarm noitifications on an Ubuntu desktop  ##
 ## Description: 						    ##
-## Version: 1.03						    ##
+## Version: 1.04						    ##
 ## Project Repository: https://git.io/fhhsY			    ##
 ## Copyright (C) 2019 The Groundhog Whisperer			    ##
 ######################################################################
