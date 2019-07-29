@@ -1172,7 +1172,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <th style="width:50%;">Value</th> 
   </tr>
   <tr style="background-color:lavender">
-    <td align="right" valign="top"><b>LINEAR ACTUATOR RUNTIMEVALUE: =</b><br>
+    <td align="right" valign="top"><b>LINEAR ACTUATOR RUNTIME VALUE: =</b><br>
               Logic: Length of time in seconds to perform linear actuator extension or retraction. (Motor Power Time) {Sensor & Scheduled Operation}
    </td>
     <td align="left" valign="top"><input type="text" name="LINEAR_ACTUATOR_RUNTIME_VALUE" size="5" value="<?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE;?>">
