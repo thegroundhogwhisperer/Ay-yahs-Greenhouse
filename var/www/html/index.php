@@ -143,7 +143,7 @@ $list_of_predefined_crontab_configurations_solenoid_valve = array(
 # define the descriptions of the crontab configuration values for extending the linear actuator
 $list_of_predefined_crontab_configuration_descriptions_linear_actuator = array(
 
-   "Extend Actuator Daily Every Two Minutes",
+   "Extend Actuator Daily Every Ten Minutes",
    "Extend Actuator Daily @ 12AM",
    "Extend Actuator Daily @ 6AM",
    "Extend Actuator Daily @ 12PM",
@@ -164,7 +164,7 @@ $list_of_predefined_crontab_configuration_descriptions_linear_actuator = array(
 # define the descriptions of the crontab configuration values for enabling output one
 $list_of_predefined_crontab_configuration_descriptions_output_one = array(
 
-   "Output One On Daily Every Two Minutes",
+   "Output One On Daily Every Ten Minutes",
    "Output One On Daily @ 12AM",
    "Output One On Daily @ 6AM",
    "Output One On Daily @ 12PM",
@@ -185,7 +185,7 @@ $list_of_predefined_crontab_configuration_descriptions_output_one = array(
 # define the descriptions of the crontab configuration values for enabling output two
 $list_of_predefined_crontab_configuration_descriptions_output_two = array(
 
-   "Output Two On Daily Every Two Minutes",
+   "Output Two On Daily Every Ten Minutes",
    "Output Two On Daily @ 12AM",
    "Output Two On Daily @ 6AM",
    "Output Two On Daily @ 12PM",
