@@ -42,7 +42,7 @@ $GRAPH_IMAGE_LUMINOSITY_URL_FILE_NAME = "ghouselumi.png";
 # temperature graph image web/url file name
 $GRAPH_IMAGE_TEMPERATURE_URL_FILE_NAME = "ghousetemp.png";
 # humidity graph image web/url file name
-$GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "/ghousehumi.png";
+$GRAPH_IMAGE_HUMIDITY_URL_FILE_NAME = "ghousehumi.png";
 # soil moisture graph image web/url file name
 $GRAPH_IMAGE_SOIL_MOISTURE_URL_FILE_NAME = "ghousesoil.png";
 
@@ -1064,7 +1064,7 @@ fclose($output_two_configure_off_sensor_schedule_file_pointer);
 # openoutputtwotimer.py should retun output two to the appropriate state.
 #
 # Disable output two now
-#system("python /var/www/html/closeoutputtwomanual.py &");
+# system("python /var/www/html/closeoutputtwomanual.py &");
 exec('bash -c "exec nohup setsid python /var/www/html/closeoutputtwomanual.py > /dev/null 2>&1 &"');
 
 # Write output two status to a text file on disk
@@ -1113,7 +1113,7 @@ fclose($solenoid_valve_configure_off_sensor_schedule_file_pointer);
 # opensolenoidtimer.py should retun the solenoid valve to the appropriate state.
 #
 # close the solenoid valve now
-#system("python /var/www/html/closewatermanual.py &");
+# system("python /var/www/html/closewatermanual.py &");
 exec('bash -c "exec nohup setsid python /var/www/html/closewatermanual.py > /dev/null 2>&1 &"');
 # Write the solenoid valve status to a text file on disk instead of to/from the SQLite database file
 $solenoid_status_file_pointer = fopen($SOLENOID_STATUS_FILE_NAME, "w") or die("Unable to open file!");
@@ -1168,8 +1168,9 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
  <table style="width:70%" align="center">
   <tr>
-    <th style="width:50%;">Value Description</th>
-    <th style="width:50%;">Value</th> 
+    <th style="width:55%;">Value Description</th>
+    <th style="width:42%;">Value</th> 
+    <th style="width:3%;">Component / Mode Icon</th>
   </tr>
   <tr style="background-color:lavender">
     <td align="right" valign="top"><b>LINEAR ACTUATOR RUNTIME VALUE: =</b><br>
@@ -1177,11 +1178,11 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
    </td>
     <td align="left" valign="top"><input type="text" name="LINEAR_ACTUATOR_RUNTIME_VALUE" size="5" value="<?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE;?>">
   <span class="error">Seconds * <?php echo $LINEAR_ACTUATOR_RUNTIME_VALUE_Err;?></span>
-
    </td>
+   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lavender">
-    <td align="right" valign="top"><b>LINEAR ACTUATOR CONFIGURATION BETWEEN OFF SCHEDULE SENSOR VALUE:</b><br><br>
+    <td align="right" valign="top"><b>LINEAR ACTUATOR CONFIGURATION BETWEEN OFF SCHEDULE SENSOR VALUE:</b><br>
               Logic: Select between no linear actuator extension schedule, scheduled linear actuator extension operation, or temperature based operation. {Operation Mode Selection}
     </td>
     <td align="left" valign="top">
@@ -1189,8 +1190,8 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Schedule") echo "checked";?> value="Schedule">Schedule*<br>
   <input type="radio" name="LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
-
     </td>
+   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lavender">
     <td align="right" valign="top"><b>LINEAR ACTUATOR SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1219,6 +1220,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
 
 <span class="error"><?php echo $LINEAR_ACTUATOR_SCHEDULED_TIME_SELECTION_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lavender">
     <td align="right" valign="top"><b>LINEAR ACTUATOR SCHEDULED OPEN RUNTIME VALUE: =</b><br>
@@ -1227,6 +1229,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE" size="5" value="<?php echo $LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE;?>">
   <span class="error">Minutes * <?php echo $LINEAR_ACTUATOR_SCHEDULED_OPEN_RUNTIME_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lavender">
     <td align="right" valign="top"><b>MINIMUM TEMPERATURE SENSOR ACTUATOR RETRACT VALUE: <=</b><br>
@@ -1235,6 +1238,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE;?>">
   <span class="error">Degrees F * <?php echo $MINIMUM_TEMPERATURE_SENSOR_ACTUATOR_RETRACT_VALUE_Err;?></span><br>
     </td>
+   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lightcyan">
     <td align="right" valign="top"><b>OUTPUT ONE CONFIGURATION BETWEEN OFF SCHEDULE SENSOR VALUE:</b><br>
@@ -1246,6 +1250,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/output1_icon.png" alt="Output One Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lightcyan">
     <td align="right" valign="top"><b>OUTPUT ONE SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1274,6 +1279,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
 
 <span class="error"><?php echo $OUTPUT_ONE_SCHEDULED_TIME_SELECTION_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/output1_icon.png" alt="Output One Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:lightcyan">
     <td align="right" valign="top"><b>OUTPUT ONE SCHEDULED OPEN RUNTIME VALUE: =</b><br>
@@ -1282,6 +1288,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE" size="5" value="<?php echo $OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE;?>">
   <span class="error">Minutes * <?php echo $OUTPUT_ONE_SCHEDULED_OPEN_RUNTIME_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/output1_icon.png" alt="Output One Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
    <tr style="background-color:lightcyan">
     <td align="right" valign="top"><b>MINIMUM TEMPERATURE SENSOR OUTPUT ONE OFF VALUE: <=<br>
@@ -1293,6 +1300,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
    <br><input type="text" name="MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE" size="5" value="<?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE;?>">
   <span class="error">% 0-100 * <?php echo $MINIMUM_HUMIDITY_SENSOR_OUTPUT_ONE_OFF_VALUE_Err;?></span><br>
     </td>
+   <td align="center" valign="center"><img src="/output1_icon.png" alt="Output One Icon"  height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon"  height="50" width="50"><br><br><img src="/humidity_icon.png" alt="Humidity Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:seashell">
     <td align="right" valign="top"><b>OUTPUT TWO CONFIGURATION BETWEEN OFF SCHEDULE SENSOR VALUE:</b><br>
@@ -1304,6 +1312,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:seashell">
     <td align="right" valign="top"><b>OUTPUT TWO SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1332,15 +1341,16 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
 
 <span class="error"><?php echo $OUTPUT_TWO_SCHEDULED_TIME_SELECTION_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:seashell">
     <td align="right" valign="top"><b>OUTPUT TWO SCHEDULED OPEN RUNTIME VALUE: =</b><br>
               Logic: Length of output two operation in minutes applied during schedule based output two operation. {Schedule Based Operation}
-
     </td>
     <td align="left" valign="top"><input type="text" name="OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE" size="5" value="<?php echo $OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE;?>">
   <span class="error">Minutes * <?php echo $OUTPUT_TWO_SCHEDULED_OPEN_RUNTIME_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:seashell">
     <td align="right" valign="top"><b>OUTPUT TWO CONFIGURATION BETWEEN TEMPERATURE OR LUMINOSITY VALUE:</b><br>
@@ -1350,7 +1360,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Temperature") echo "checked";?> value="Temperature">Temperature*<br>
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE) == "Luminosity") echo "checked";?> value="Luminosity">Luminosity
   <span class="error">* <?php echo $OUTPUT_TWO_CONFIGURATION_BETWEEN_TEMPERATURE_OR_LUMINOSITY_VALUE_Err;?></span>
-  <br><br>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon"  height="50" width="50"><br><br><img src="/luminosity_icon.png" alt="Luminosity Icon"  height="50" width="50"></td>
     </td>
   </tr>
   <tr style="background-color:seashell">
@@ -1360,6 +1370,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
   <span class="error">Degrees F * <?php echo $MINIMUM_TEMPERATURE_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br>
     </td>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:seashell">
     <td align="right" valign="top"><b>MINIMUM LUMINOSITY SENSOR OUTPUT TWO OFF VALUE: <=</b><br>
@@ -1368,6 +1379,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE" size="5" value="<?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE;?>">
   <span class="error">Volts 0-5 * <?php echo $MINIMUM_LUMINOSITY_SENSOR_OUTPUT_TWO_OFF_VALUE_Err;?></span><br><br>
     </td>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"><br><br><img src="/luminosity_icon.png" alt="Luminosity Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:honeydew">
     <td align="right" valign="top"><b>SOLENOID VALVE CONFIGURATION BETWEEN OFF SCHEDULE SENSOR VALUE:</b><br>
@@ -1379,6 +1391,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/solenoid_icon.png" alt="Solenoid Valve Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:honeydew">
     <td align="right" valign="top"><b>SOLENOID VALVE SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1407,6 +1420,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
 
 <span class="error"><?php echo $SOLENOID_VALVE_SCHEDULED_TIME_SELECTION_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/solenoid_icon.png" alt="Solenoid Valve Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:honeydew">
     <td align="right" valign="top"><b>SOLENOID VALVE SCHEDULED OPEN RUNTIME VALUE: =</b><br>
@@ -1416,6 +1430,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE" size="5" value="<?php echo $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE;?>">
   <span class="error">Minutes * <?php echo $SOLENOID_VALVE_SCHEDULED_OPEN_RUNTIME_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/solenoid_icon.png" alt="Solenoid Valve Icon"  height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon"  height="50" width="50"></td>
   </tr>
   <tr style="background-color:honeydew">
     <td align="right"><b>MINIMUM SOIL MOISTURE SENSOR SOLENOID VALVE OPEN VALUE: >=</b><br>
@@ -1424,6 +1439,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
     <td align="left" valign="top"><input type="text" name="MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE" size="5" value="<?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE;?>">
   <span class="error">Volts 0-5 * <?php echo $MINIMUM_SOIL_MOISTURE_SENSOR_SOLENOID_VALVE_OPEN_VALUE_Err;?></span>
     </td>
+   <td align="center" valign="center"><img src="/solenoid_icon.png" alt="Solenoid Valve Icon"  height="50" width="50"><br><br><img src="/soil_icon.png" alt="Soil Moisture Icon"  height="50" width="50"></td>
   </tr>
  </table>
   <center>
