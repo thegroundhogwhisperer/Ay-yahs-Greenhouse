@@ -1191,7 +1191,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $LINEAR_ACTUATOR_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
-   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"></td>
+   <td align="center" valign="center"><img src="/actuator_icon.png" alt="Linear Actuator Icon"  height="50" width="50"><br><br><img src="/disable_icon.png" alt="Disable Actuator Icon" height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon" height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon" height="50" width="50"></td>
   </tr>
   <tr style="background-color:lavender">
     <td align="right" valign="top"><b>LINEAR ACTUATOR SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1250,7 +1250,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $OUTPUT_ONE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
-   <td align="center" valign="center"><img src="/output1_icon.png" alt="Output One Icon"  height="50" width="50"></td>
+   <td align="center" valign="center"><img src="/output1_icon.png" alt="Output One Icon"  height="50" width="50"><br><br><img src="/disable_icon.png" alt="Disable Actuator Icon" height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon" height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon" height="50" width="50"><br><br><img src="/humidity_icon.png" alt="Humidity Icon" height="50" width="50"></td>
   </tr>
   <tr style="background-color:lightcyan">
     <td align="right" valign="top"><b>OUTPUT ONE SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1312,7 +1312,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $OUTPUT_TWO_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
-   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"></td>
+   <td align="center" valign="center"><img src="/output2_icon.png" alt="Output Two Icon"  height="50" width="50"><br><br><img src="/disable_icon.png" alt="Disable Actuator Icon" height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon" height="50" width="50"><br><br><img src="/temperature_icon.png" alt="Temperature Icon" height="50" width="50"><br><br><img src="/luminosity_icon.png" alt="Luminosity Icon" height="50" width="50"></td>
   </tr>
   <tr style="background-color:seashell">
     <td align="right" valign="top"><b>OUTPUT TWO SCHEDULED TIME SELECTION VALUE:</b><br>
@@ -1391,7 +1391,7 @@ file_put_contents($SCHEDULED_TEMPORARY_CRONTAB_CONFIGURATION_FILE_NAME, $schedul
   <input type="radio" name="SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE" <?php if (isset($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) && trim($SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE) == "Sensor") echo "checked";?> value="Sensor">Sensor*
   <span class="error"><?php echo $SOLENOID_VALVE_CONFIGURATION_BETWEEN_OFF_SENSOR_SCHEDULE_VALUE_Err;?></span>
     </td>
-   <td align="center" valign="center"><img src="/solenoid_icon.png" alt="Solenoid Valve Icon"  height="50" width="50"></td>
+   <td align="center" valign="center"><img src="/solenoid_icon.png" alt="Solenoid Valve Icon"  height="50" width="50"><br><br><img src="/disable_icon.png" alt="Disable Actuator Icon" height="50" width="50"><br><br><img src="/timer_icon.png" alt="Timer Icon" height="50" width="50"><br><br><img src="/soil_icon.png" alt="Soil Moisture Icon" height="50" width="50"></td>
   </tr>
   <tr style="background-color:honeydew">
     <td align="right" valign="top"><b>SOLENOID VALVE SCHEDULED TIME SELECTION VALUE:</b><br>
