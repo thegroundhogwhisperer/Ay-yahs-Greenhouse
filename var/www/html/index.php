@@ -18,7 +18,7 @@ th, td {
 }
 </style>
 </head>
-<body>
+<body bgcolor="#FFFFFF">
  <center>
 <h1 align="center">Ay-yah's Greenhouse Automation System</h1>
   <table style="width:30%" align="center">
@@ -372,15 +372,15 @@ print "   <td>";
     <th>Action Button</th> 
   </tr>
   <tr>
-    <td align="right">Open the window manually:</td>
+    <td align="right">Extend the linear actuator manually:</td>
     <td align="center"><br><form action="openwindowmanual.php" method="post">
-    <input type="image" src="window_open.png" width="100" height="100" alt="Manually open the window" border="1">
+    <input type="image" src="window_open.png" width="100" height="100" alt="Manually extend the linear actuator" border="1">
     </form></td>
   </tr>
   <tr>
-    <td align="right">Close the window manually:</td>
+    <td align="right">Retract the linear actuator manually:</td>
     <td align="center"><br><form action="closewindowmanual.php" method="post">
-    <input type="image" src="window_closed.png" width="100" height="100" alt="Manually close the window" border="1">
+    <input type="image" src="window_closed.png" width="100" height="100" alt="Manually retract the linear actuator" border="1">
     </form></td>
   </tr>
   <tr>
