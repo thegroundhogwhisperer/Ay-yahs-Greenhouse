@@ -50,8 +50,14 @@ DATABASE_TABLE_NAME = 'greenhouse'
 # Number of historic environmental data rows to display in the history window =< 1500
 LIMIT_NUMBER_ROWS_DISPLAYED = '1000'
 
-# text file containing the remote host IP address for the GreenhousePi
+# Text file containing the remote host IP address for the GreenhousePi
 IP_GREENHOUSE_PI_FILE_NAME = 'greenhouseip.txt'
+
+# Camera image low resolution animated .GIF image file name
+LOW_RESOLUTION_GIF_IMAGE = 'greenhouselow.gif'
+
+# Camera image high resoltion .JPG image file name
+HIGH_RESOLUTION_JPG_IMAGE = 'greenhousehigh.jpg'
 
 # Timeout in seconds before 'requests' fails to fetch the remote URL 
 # (e.g. Downloading a file or performing a manual greenhouse operation).
@@ -81,7 +87,7 @@ class MyWindow(Gtk.Window):
 		# Construct a Gtk image object
 		img = Gtk.Image()
 		# Set the image data from the contents of a file
-		img.set_from_file("greenhouselow.gif")
+		img.set_from_file(LOW_RESOLUTION_GIF_IMAGE)
 		# Make the object visible
 		img.show()
 		# Add the image to the window
@@ -354,7 +360,7 @@ def fetch_greenhouse_data():
 
 		filedata = requests.get("http://{}/greenhouselow.gif".format(IP_GREENHOUSE_PI))
 		if filedata.status_code == 200:
-			with open('greenhouselow.gif', 'wb') as f:
+			with open(LOW_RESOLUTION_GIF_IMAGE, 'wb') as f:
 				f.write(filedata.content)
 
 		# catch any error I cannot successfully catch using requests.HTTPError as e:
@@ -376,7 +382,7 @@ def fetch_greenhouse_data():
 
 		filedata = requests.get("http://{}/greenhousehigh.jpg".format(IP_GREENHOUSE_PI))
 		if filedata.status_code == 200:
-			with open('greenhousehigh.jpg', 'wb') as f:
+			with open(HIGH_RESOLUTION_JPG_IMAGE, 'wb') as f:
 				f.write(filedata.content)
 
 		# catch any error I cannot successfully catch using requests.HTTPError as e:
@@ -399,7 +405,7 @@ def fetch_greenhouse_data():
 
 		filedata = requests.get("http://{}/greenhouse.db".format(IP_GREENHOUSE_PI))
 		if filedata.status_code == 200:
-			with open('greenhouse.db', 'wb') as f:
+			with open(SQLITE_DATABASE_FILE, 'wb') as f:
 				f.write(filedata.content)
 
 		# catch any error I cannot successfully catch using requests.HTTPError as e:
@@ -486,7 +492,7 @@ class Large_Image_Window(Gtk.Window):
 		# Construct a Gtk image object
 		img = Gtk.Image() 
 		# Set the image data from the contents of a file
-		img.set_from_file("greenhousehigh.jpg") 
+		img.set_from_file(HIGH_RESOLUTION_JPG_IMAGE) 
 
 		# Add the image to the scrolledwindow
 		scrolled_window.add_with_viewport(img)
