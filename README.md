@@ -10,7 +10,7 @@
 This is a for-fun project created for the purpose of automating and remotely monitoring climate control and irrigation in a small greenhouse. System automation is achieved using an ARM based CPU (Raspberry Pi 3) in combination with a Pimoroni Automation HAT. Remote monitoring of environmental conditions is achieved through a layered communication structure. This layered communication is performed using a combination of technologies such as text-to-speech software, Python scripts, and radio frequency transmissions. 
 
 
-### To learn more about this project please visits our wiki page [here](https://github.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/wiki).  
+### To learn more about this project please visit our wiki page [here](https://github.com/thegroundhogwhisperer/Ay-yahs-Greenhouse/wiki).  
 
 
 
